@@ -19,6 +19,32 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-16, evening — Session 2: FOUNDATION NIGHT (the V2 mandate)
+- **New director seated** under the producer's re-mandate: nothing locked,
+  AAA/publication bar, 5–9 audience, "aim way higher." Tuned to the corner,
+  calibrated against ill-will (469 commits, Steam-ready).
+- **Direction V2 + ROADMAP M1–M5**: soul kept (premise/register/rescue/
+  Callie), age-3 floors struck through with pointers (D17–D24). Six
+  research lanes delivered (structure, movement, visuals, characters,
+  UI/writing, aliveness) — docs/research/v2/.
+- **D24, the night's heart**: producer sent one photo of the boys; Pip is
+  now Ezra, Otto is now Caleb — the LITTLE brother who carries his big
+  brother. First-roll keepers, 60 cr; rigged + 22 clips, 76 cr. CARRY/TOSS/
+  rescue/pound receipts all green after the size flip.
+- **Five parallel build lanes + one round-2**: moveset (flutter/glide/
+  pound-bounce), aliveness (race/ride/shy/duet micro-missions, critters,
+  touch-react), UI/writing (narration bible, moonsong voice, subtitle
+  ribbon, title/options v2), characters (merge tool, AnimationTrees,
+  90m-giant bug caught), graphics ×2 (moon in frame, sage lawn via
+  FRONT_FACING root cause, patchy ground, warm bramble, water).
+- **Director's own catches**: pads=2 missing from my regression runner
+  (false alarm avoided), plush shader A/B verdict (muddier — kept opt-in),
+  dreamling emission bump, camera←settings + gestures + landing puffs +
+  first-use Moon lines wired in integration.
+- Credits: 2,572 → 2,330 (242 total: lantern 30 + v1 rigs/clips 76 +
+  likeness gen 60 + v2 rigs/clips 76). Fleet: ~2.6M agent tokens across
+  12 subagents. Everything committed in lane increments + pushed.
+
 ### 2026-07-16, ~03:40 — Session 1 (cont. 5): the night the game grew up
 - **Shipped this shift:** Wisp + Marmalade (30/30 placements green across
   all worlds), Callie the sidekick (receipts show her mewing toward d01
