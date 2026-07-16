@@ -1,23 +1,23 @@
 {
-  "generated_at": "2026-07-16T02:40:11.9809187-05:00",
+  "generated_at": "2026-07-16T15:36:29.1263769-05:00",
   "model_requested": "meshy-6",
   "preview_only": false,
   "batch_size": 5,
   "items": [
     {
-      "id": "callie",
-      "category": "character",
-      "prompt": "beanie baby style stuffed calico cat toy lying down flat and floppy, understuffed beanbag plush, warm tan brown head with black patch over one side of face, black back and body, white chest belly and paws, white tipped tail, small triangular ears, tiny amber eyes, pink nose, cute sleepy face",
-      "full_prompt": "beanie baby style stuffed calico cat toy lying down flat and floppy, understuffed beanbag plush, warm tan brown head with black patch over one side of face, black back and body, white chest belly and paws, white tipped tail, small triangular ears, tiny amber eyes, pink nose, cute sleepy face, soft plush low poly, rounded chunky toddler-toy proportions, flat colors, matte, no textures needed, game asset, clean silhouette, single object, gentle and friendly, Kenney/KayKit style",
+      "id": "lantern",
+      "category": "prop",
+      "prompt": "small round paper lantern glowing warm honey from within, soft visible inner light, hanging from a short curved dark wooden post on a round wooden base",
+      "full_prompt": "small round paper lantern glowing warm honey from within, soft visible inner light, hanging from a short curved dark wooden post on a round wooden base, soft toy low poly, rounded chunky toddler-toy proportions, painted toy look, warm emissive glow, matte wood, game asset, clean silhouette, single object, gentle and friendly",
       "status": "ok",
-      "preview_task": "019f69d3-5665-7aec-84e7-f81440c1e41b",
+      "preview_task": "019f6ca1-db88-74bf-b32c-2c720a226d3a",
       "preview_status": "SUCCEEDED",
-      "refine_task": "019f69dd-48fd-73ff-9b9c-08efbe2ab9cd",
+      "refine_task": "019f6ca3-d59c-7153-9544-b6e1143aee79",
       "refine_status": "SUCCEEDED",
       "credits": 30,
       "served_model": "meshy-6",
       "served_model_source": "not_reported_by_api_echoing_requested",
-      "glb_path": "D:\\Projects\\soft_landing\\assets\\models\\meshy\\generated\\callie.glb",
+      "glb_path": "D:\\Projects\\soft_landing\\assets\\models\\meshy\\generated\\lantern.glb",
       "error": null
     }
   ],

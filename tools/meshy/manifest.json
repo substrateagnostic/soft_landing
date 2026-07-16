@@ -8,8 +8,10 @@
   {
     "id": "lantern",
     "category": "prop",
-    "prompt": "small paper lantern glowing warm honey, hanging from a short curved wooden post on a round wooden base, soft rounded shapes",
-    "target_height_hint": 0.5
+    "prompt": "small round paper lantern glowing warm honey from within, soft visible inner light, hanging from a short curved dark wooden post on a round wooden base",
+    "target_height_hint": 0.5,
+    "style": "soft toy low poly, rounded chunky toddler-toy proportions, painted toy look, warm emissive glow, matte wood, game asset, clean silhouette, single object, gentle and friendly",
+    "enable_pbr": true
   },
   {
     "id": "firefly_jar",

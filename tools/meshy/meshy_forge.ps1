@@ -195,12 +195,14 @@ function Submit-Preview {
 }
 
 function Submit-Refine {
-    param([string]$PreviewTaskId, [hashtable]$Headers)
+    # $EnablePbr: D22 (DIRECTION_V2) allows PBR per asset — emissive/metal
+    # maps where they serve the toy-softness (e.g. the lantern's glow).
+    param([string]$PreviewTaskId, [hashtable]$Headers, [bool]$EnablePbr = $false)
     $body = [ordered]@{
         mode            = 'refine'
         preview_task_id = $PreviewTaskId
         ai_model        = 'meshy-6'
-        enable_pbr      = $false
+        enable_pbr      = $EnablePbr
         moderation      = $false
         target_formats  = @('glb')
         origin_at       = 'bottom'
@@ -328,7 +330,10 @@ foreach ($m in $toProcess) {
         category            = $m.category
         prompt              = $m.prompt
         target_height_hint  = $m.target_height_hint
-        full_prompt         = ($m.prompt + ', ' + $HouseStyleSuffix)
+        # Optional per-item manifest fields (V2): `style` replaces the house
+        # suffix for this asset; `enable_pbr` requests PBR maps on refine.
+        enable_pbr          = ($m.enable_pbr -eq $true)
+        full_prompt         = ($m.prompt + ', ' + $(if ($m.style) { $m.style } else { $HouseStyleSuffix }))
         preview_task_id     = $null
         preview_status      = $null
         preview_credits     = 0
@@ -487,7 +492,7 @@ if ($PreviewOnly) {
         foreach ($m in $batch) {
             $st = $state[$m.id]
             try {
-                $taskId = Submit-Refine -PreviewTaskId $st.preview_task_id -Headers $Headers
+                $taskId = Submit-Refine -PreviewTaskId $st.preview_task_id -Headers $Headers -EnablePbr $st.enable_pbr
                 $st.refine_task_id = $taskId
                 Write-Host ('  submitted refine ' + $m.id + ' -> ' + $taskId)
             } catch {
