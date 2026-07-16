@@ -102,7 +102,12 @@ func _rescue(player: PlayerBody, history: Array[Vector3], is_pip: bool) -> void:
 
 	print("RESCUE %s" % JSON.stringify({"seat": player.seat}))
 
-	var safe_pos: Vector3 = history[history.size() - 1] if not history.is_empty() else Vector3.ZERO
+	# Not the NEWEST sample: that can be the very lip the player just walked
+	# off (grounded on the corner pixel), and setting them back there re-drops
+	# them — an instant second rescue. A few samples back is ~1.5-2 s of walk,
+	# comfortably inland, and reads as "set down a little way back" anyway.
+	var safe_index: int = max(history.size() - 4, 0)
+	var safe_pos: Vector3 = history[safe_index] if not history.is_empty() else Vector3.ZERO
 	var bubble: BubbleEffect = BUBBLE_SCENE.instantiate()
 	get_tree().current_scene.add_child(bubble)
 	bubble.finished.connect(_on_rescue_finished.bind(player, is_pip))

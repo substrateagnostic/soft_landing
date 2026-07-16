@@ -19,6 +19,26 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-15/16 — Session 1 (cont. 3): grey-box slice BUILT + Gate 2 packet
+- Three parallel agents (core-feel / harness / worlds) landed cleanly on
+  disjoint territory; two of them independently isolated the same scaffold
+  bug (CameraHint shadowing Area3D.priority) — the A, in miniature.
+- Director integration: world switching, Bramble home door, force_mode
+  pad-count seam, returned-dream persistence, camera-relative movement.
+- **Director's feel pass found 7 real bugs via receipts** (the harness's
+  PLAYER_POS instrument earned its keep): world-axis movement, the moat
+  stuck-trap, the 17.5 cm collectible bullseye (now magnetic dreamlings —
+  "dreams want to be found"), d02 buried inside a hill, rescue-to-the-lip
+  double-rescue, edge-triggered DreamDoor mostly filled by solid geometry,
+  zero-scale det==0 spam. All fixed, all receipted in
+  docs/verify/gate2-slice-VERIFY.md.
+- Properties proven: coyote both directions, rescue + control-restore,
+  carry/toss, buddy-follow with jump mirroring, door round trip,
+  collect→return→save→fort-growth across a process restart, determinism.
+- **Gate 2 packet: evidence/gate2_slice.mp4 (66 s)** + 5 stills. Honest
+  UNVERIFIED: buffer positive case, TTS audio quality, d10 embedded in ear
+  bump, sustained-fps receipt.
+
 ### 2026-07-15 — Session 1 (cont. 2): GATE 1 PASSED, Phase 3 launched
 - **Producer greenlight, verbatim: "greenlight! and then some. love it."**
   Meshy key incoming when producer is unloaded. THE BIG NAP is real.

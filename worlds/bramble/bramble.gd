@@ -21,7 +21,11 @@ const COLOR_FUR_DARK: Color = Color("6E4F3E") # darker umber (paws, fur patches,
 # --- Meadow ---------------------------------------------------------------
 const MEADOW_SIZE: Vector2 = Vector2(140.0, 80.0) # X: -70..70, Z: -40..40
 const MOAT_SIZE: Vector2 = Vector2(190.0, 130.0)
-const MOAT_TOP_Y: float = -1.5
+# Below RESCUE_FLOOR_Y on purpose: stepping off the meadow must always end
+# in the Soft Landing, never in a pit a 1.5 m jump can't escape (design
+# floor: gentle rescue, no stuck states). The dark ring reads as the night
+# beyond the meadow.
+const MOAT_TOP_Y: float = -9.0
 const MOAT_THICKNESS: float = 1.0
 const RESCUE_FLOOR_Y: float = -8.0
 
@@ -384,7 +388,9 @@ func _add_fur_patch(center: Vector3) -> void:
 func _build_dreamlings() -> void:
 	var positions: Dictionary = {
 		"d01": Vector3(-48.0, 0.55, 3.0), # meadow approach, near spawn
-		"d02": Vector3(-40.0, 0.55, -6.0), # meadow approach, other side
+		# Clear of the haunch mound's footprint (r16 from x-30,z0): the
+		# original (-40, -6) sat INSIDE the hill — buried and unreachable.
+		"d02": Vector3(-42.0, 0.55, -14.0), # meadow approach, south side
 		"d03": Vector3(3.0, 2.7, PAW_Z_OFFSET), # on the +Z paw ramp
 		"d04": Vector3(3.0, 2.7, -PAW_Z_OFFSET), # on the -Z paw ramp
 		"d05": Vector3(HAUNCH_CENTER.x, HAUNCH_CENTER.y + HAUNCH_RADIUS + 0.3, 0.0), # haunch peak, first plateau

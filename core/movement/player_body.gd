@@ -46,6 +46,7 @@ var _jump_action: String
 
 
 func _ready() -> void:
+	add_to_group("players") # dreamling magnetism, harness tracking
 	var prefix: String = "p%d_" % seat
 	_move_action_left = prefix + "move_left"
 	_move_action_right = prefix + "move_right"

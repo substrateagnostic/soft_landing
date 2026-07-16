@@ -16,16 +16,19 @@ func _ready() -> void:
 	monitorable = false
 	collision_layer = 0
 	collision_mask = 2 # PlayerBody layer
-	body_entered.connect(_on_body_entered)
 
 
-func _on_body_entered(body: Node3D) -> void:
-	if not (body is PlayerBody):
-		return
-	var carried: Array = Dreamling.carried_by(body)
-	if carried.is_empty():
-		return
-	_release_all(carried)
+## Polled, not edge-triggered: a player who collects a dreamling while
+## ALREADY standing in the door (d10 lives right beside it) never re-fires
+## body_entered — the overlap check catches that case every frame. Cheap:
+## one door per world, two possible bodies.
+func _physics_process(_delta: float) -> void:
+	for body: Node3D in get_overlapping_bodies():
+		if not (body is PlayerBody):
+			continue
+		var carried: Array = Dreamling.carried_by(body)
+		if not carried.is_empty():
+			_release_all(carried)
 
 
 func _release_all(carried: Array) -> void:
@@ -36,6 +39,9 @@ func _release_all(carried: Array) -> void:
 
 
 func _schedule_release(dreamling: Dreamling, delay: float) -> void:
+	# Out of the orbit registry immediately, or next frame's poll would
+	# schedule (and count) the same dreamling again during the stagger.
+	dreamling.leave_orbit_early()
 	var timer: SceneTreeTimer = get_tree().create_timer(delay)
 	timer.timeout.connect(_on_release_timer.bind(dreamling))
 

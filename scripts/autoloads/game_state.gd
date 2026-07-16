@@ -42,8 +42,24 @@ func return_dream(world_id: String, id: String) -> void:
 	var returned: Array = dreamlings[world_id]["returned"]
 	if not returned.has(id):
 		returned.append(id)
+	_update_fort_stage()
 	dream_returned.emit(world_id, id)
 	SaveManager.save_game()
+
+
+## The fort grows as dreams come home, wherever they come home from:
+## 1 dream -> stage 1, 5 -> stage 2, 10 -> stage 3 (v0.1 thresholds).
+func _update_fort_stage() -> void:
+	var total: int = total_returned()
+	var stage: int = 0
+	if total >= 10:
+		stage = 3
+	elif total >= 5:
+		stage = 2
+	elif total >= 1:
+		stage = 1
+	if stage > fort_stage:
+		set_fort_stage(stage)
 
 
 func mark_world_completed(world_id: String) -> void:

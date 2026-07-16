@@ -13,6 +13,13 @@ signal collected(id: String)
 const BOB_AMPLITUDE: float = 0.15
 const BOB_HZ: float = 0.5
 const SPIN_SPEED: float = 1.5 # rad/s, idle visual spin
+# Generosity (D12 + the Kirby "fuzzy" lesson): dreams WANT to be found.
+# Within ATTRACT_RADIUS a dreamling drifts toward the nearest player, so a
+# near-miss becomes a catch; with nobody near it drifts home to its perch.
+const ATTRACT_RADIUS: float = 2.2
+const ATTRACT_SPEED: float = 3.5 # m/s, at closest; eases in from the rim
+const HOME_SPEED: float = 1.0
+const PLAYERS_GROUP: String = "players"
 const ORBIT_RADIUS: float = 0.7
 const ORBIT_HEIGHT: float = 1.6
 const ORBIT_ANGULAR_SPEED: float = 1.2 # rad/s, slow shared drift so the ring reads as alive, not static
@@ -32,6 +39,7 @@ static var _orbit_groups: Dictionary = {}
 var _state: State = State.IDLE
 var _bob_phase: float = randf() * TAU
 var _idle_base_local_position: Vector3 = Vector3.ZERO
+var _home_local_position: Vector3 = Vector3.ZERO
 var _carrier: Node3D = null
 var _orbit_phase: float = randf() * TAU
 var _release_elapsed: float = 0.0
@@ -47,6 +55,7 @@ func _ready() -> void:
 	collision_mask = 2 # PlayerBody layer (scenes/players/pip.tscn, otto.tscn)
 	body_entered.connect(_on_body_entered)
 	_idle_base_local_position = position
+	_home_local_position = position
 
 
 func _physics_process(delta: float) -> void:
@@ -64,8 +73,47 @@ func _physics_process(delta: float) -> void:
 ## relative to that platform instead of fighting its motion every frame.
 func _process_idle(delta: float) -> void:
 	_bob_phase = fmod(_bob_phase + delta * BOB_HZ * TAU, TAU)
+	_apply_magnetism(delta)
 	position = _idle_base_local_position + Vector3(0.0, sin(_bob_phase) * BOB_AMPLITUDE, 0.0)
 	_spin(delta)
+
+
+func _apply_magnetism(delta: float) -> void:
+	var parent: Node3D = get_parent() as Node3D
+	if parent == null:
+		return
+	var nearest: Node3D = _nearest_player()
+	var drift_global: Vector3
+	if nearest != null:
+		var to_player: Vector3 = (nearest.global_position + Vector3(0.0, 0.9, 0.0)) - global_position
+		var dist: float = to_player.length()
+		if dist < 0.05:
+			return
+		# Eases in from the rim: barely a lean at the edge, an eager little
+		# rush right next to you.
+		var pull: float = clamp(1.0 - dist / ATTRACT_RADIUS, 0.0, 1.0)
+		drift_global = to_player.normalized() * ATTRACT_SPEED * pull * delta
+	else:
+		var home_global: Vector3 = parent.to_global(_home_local_position)
+		var to_home: Vector3 = home_global - parent.to_global(_idle_base_local_position)
+		if to_home.length() < 0.05:
+			return
+		drift_global = to_home.limit_length(HOME_SPEED * delta)
+	_idle_base_local_position += parent.global_transform.basis.inverse() * drift_global
+
+
+func _nearest_player() -> Node3D:
+	var best: Node3D = null
+	var best_dist: float = ATTRACT_RADIUS
+	for node: Node in get_tree().get_nodes_in_group(PLAYERS_GROUP):
+		var player: Node3D = node as Node3D
+		if player == null:
+			continue
+		var dist: float = player.global_position.distance_to(global_position)
+		if dist < best_dist:
+			best_dist = dist
+			best = player
+	return best
 
 
 func _spin(delta: float) -> void:
@@ -84,7 +132,7 @@ func _on_body_entered(body: Node3D) -> void:
 func _start_following(carrier: Node3D) -> void:
 	_state = State.FOLLOWING
 	_carrier = carrier
-	monitoring = false
+	set_deferred("monitoring", false) # direct set is blocked inside body_entered
 	AudioManager.play_sfx("dreamling_chime")
 	collected.emit(id)
 	_join_orbit_group(carrier)
@@ -123,6 +171,13 @@ func _process_following(delta: float) -> void:
 	_spin(delta)
 
 
+## Called by DreamDoor the moment a return is SCHEDULED, so the staggered
+## release window can't double-schedule (the door polls the orbit registry
+## every frame).
+func leave_orbit_early() -> void:
+	_leave_orbit_group()
+
+
 ## Called by DreamDoor on return. Flies to `point`, shrinks to nothing, then
 ## frees itself (or just hides, if `then_free` is false — kept general per
 ## the contract signature even though the only current caller always frees).
@@ -142,7 +197,9 @@ func _process_releasing(delta: float) -> void:
 	var t: float = clamp(_release_elapsed / RELEASE_DURATION, 0.0, 1.0)
 	var eased: float = 1.0 - pow(1.0 - t, 3.0) # ease-out, a gentle arrival not a snap
 	global_position = _release_start.lerp(_release_target, eased)
-	scale = Vector3.ONE * (1.0 - eased)
+	# Never exactly zero: a zero-scale basis is non-invertible and the
+	# engine logs det==0 errors on the frame before queue_free lands.
+	scale = Vector3.ONE * max(1.0 - eased, 0.01)
 	if t >= 1.0:
 		if _release_then_free:
 			queue_free()

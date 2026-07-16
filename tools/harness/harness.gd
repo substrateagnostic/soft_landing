@@ -180,6 +180,40 @@ func _on_physics_frame() -> void:
 	var elapsed: int = Engine.get_physics_frames() - _playback_start_frame
 	_execute_due_events(elapsed)
 	_maybe_capture_shot(elapsed)
+	_maybe_log_positions(elapsed)
+
+
+## --poslog=N: every N physics frames, one PLAYER_POS line per tracked
+## player. Determinism-safe (frame counts only); used to iterate playback
+## scripts against real trajectories instead of guessing.
+func _maybe_log_positions(elapsed: int) -> void:
+	if not flags.has("poslog"):
+		return
+	var interval: int = int(flags["poslog"])
+	if interval <= 0 or elapsed % interval != 0:
+		return
+	for player: PlayerBody in _tracked_players():
+		var p: Vector3 = player.global_position
+		_emit("PLAYER_POS %s" % JSON.stringify({
+			"t": elapsed, "seat": player.seat,
+			"x": snappedf(p.x, 0.01), "y": snappedf(p.y, 0.01), "z": snappedf(p.z, 0.01),
+		}))
+
+
+func _tracked_players() -> Array[PlayerBody]:
+	var found: Array[PlayerBody] = []
+	var root: Node = get_tree().current_scene
+	if root == null:
+		return found
+	_collect_players(root, found)
+	return found
+
+
+func _collect_players(node: Node, found: Array[PlayerBody]) -> void:
+	for child: Node in node.get_children():
+		if child is PlayerBody:
+			found.append(child as PlayerBody)
+		_collect_players(child, found)
 
 
 func _execute_due_events(elapsed: int) -> void:
@@ -205,6 +239,16 @@ func _execute_event(event: Dictionary) -> void:
 		# negative y = up/forward (-Z); release the opposite action first.
 		_apply_move_component(prefix + "move_left", prefix + "move_right", vx)
 		_apply_move_component(prefix + "move_up", prefix + "move_down", vy)
+	elif action_name == "teleport":
+		# DEV INSTRUMENT ONLY: places a player for targeted property tests
+		# (e.g. proving the ear-return chain without scripting the full
+		# climb). Never a shipped mechanic; loud in the receipt on purpose.
+		var pos: Array = event.get("pos", [0.0, 0.0, 0.0])
+		for player: PlayerBody in _tracked_players():
+			if player.seat == seat:
+				player.global_position = Vector3(float(pos[0]), float(pos[1]), float(pos[2]))
+				player.velocity = Vector3.ZERO
+				_emit("HARNESS_TELEPORT %s" % JSON.stringify({"seat": seat, "pos": pos}))
 	elif action_name.is_empty():
 		push_error("Harness: script event missing 'action': %s" % JSON.stringify(event))
 	else:

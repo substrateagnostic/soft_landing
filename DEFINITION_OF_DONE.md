@@ -15,31 +15,34 @@ checks on vibes. **UNVERIFIED is an honest state.** Status legend:
       it." (chat, 2026-07-15; logged in alexmemory.md)
 
 ## Gate 2 — grey-box slice + harness (producer feel check from video)
-- [ ] Project boots clean: `godot --headless --editor --import --quit --path .`
-      exits 0, zero script errors (receipt: command + output)
-- [ ] Movement controller per D2/D3: coyote + buffer proven by harness script
-      (property: a jump input ≤0.20 s after leaving ground still jumps;
-      ≤0.22 s before landing still jumps) — receipt: harness JSON log
-- [ ] Apex flutter state reachable; fall gravity > rise gravity (log values)
-- [ ] Camera rig per D4: right-stick axes appear NOWHERE in the input map or
-      code (property: grep receipt) + hint-volume yaw demonstrated on video
-- [ ] Co-op per D5/D7: two simulated pads, leash break → bubble warp shown on
-      video; no player-player collision (property: overlap test log)
-- [ ] Soft Landing per D6: scripted fall → bubble → return to last safe
-      ground, no state loss (harness log + video)
-- [ ] Blob shadow + landing ring always-on for both players (video + property:
-      nodes present in both player scenes — scene receipt)
-- [ ] Solo mode: 1 pad → Otto buddy AI follows, toss works (video)
-- [ ] Hub + Bramble grey-box: fort door ↔ bramble round trip, spawn points
-      honored (harness log)
-- [ ] ≥1 dreamling collect → return → GameState count + save file mutation
-      (JSON diff receipt) → fort growth stage 1 visible (still)
-- [ ] TheMoon TTS speaks an objective (property: tts_speak called — stdout
-      log; audio verified by producer on Gate 2 video or noted UNVERIFIED)
-- [ ] Autoplay harness: input-playback script reproduces a full loop
-      deterministically under --fixed-fps (two runs, same event log — diff)
-- [ ] Movie receipt: ≥60 s gameplay mp4 in `evidence/` (windowed capture,
-      D11 recipe) — the Gate 2 packet
+- [x] Project boots clean: import exit 0, zero script errors —
+      `docs/verify/scaffold-VERIFY.md`, re-run post-integration
+      (`docs/verify/gate2-slice-VERIFY.md` §Import)
+- [x] Coyote proven both directions (133 ms fires / 500 ms refuses) —
+      gate2-slice-VERIFY §Coyote. **Buffer positive case [U]** (only the
+      no-late-fire control proven; queued).
+- [x] Apex flutter state + rise/fall gravity asymmetry —
+      `docs/verify/corefeel-VERIFY.md` (state machine + derived gravities)
+- [x] Camera per D4: zero right-stick/axis-2/3 refs (grep receipts,
+      corefeel-VERIFY §d) + hint yaw visible on video
+- [x] Co-op leash → bubble warp: `WARP {"seat":2}` receipts + on video;
+      player-player non-collision via layer config (corefeel-VERIFY)
+- [x] Soft Landing: `RESCUE {"seat":1}` + set down inland + control restored
+      (gate2-slice-VERIFY §Rescue + video @ ~0:40)
+- [x] Blob shadow + landing ring wired in both player scenes (scene receipt)
+      + visible throughout video
+- [x] Solo buddy: zero-P2-input script, Otto trails + mirrors jumps
+      (gate2-slice-VERIFY §Buddy + video final segment)
+- [x] Fort door ↔ bramble round trip: DOOR/WORLD_READY receipt chain
+      (gate2-slice-VERIFY §Doors)
+- [x] Collect → return → save mutation → fort growth stage 1 in a FRESH
+      process: save.json diff + `stills/fort_stage1_nightlights.png`
+- [x] TheMoon speaks: MOON_SAID receipts (welcome/new_area/dream_home).
+      **Audible voice quality [U]** — needs producer ears.
+- [x] Determinism: byte-identical events.jsonl across two runs
+      (docs/verify/harness-VERIFY.md)
+- [x] Movie receipt: `evidence/gate2_slice.mp4` — 66.0 s, 4 segments
+      (approach / meadow+rescue / toss / buddy)
 - [ ] ⛔ Producer feel check passed
 
 ## Gate 3 — art pipeline proof (producer sign-off)

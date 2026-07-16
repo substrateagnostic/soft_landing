@@ -1,0 +1,7 @@
+{
+  "description": "Gate 2 property run (bramble, --pads=2): DEV TELEPORT places Pip on Bramble's ear beside d10 and the DreamDoor; magnetism hands him the dream while he stands in the door, and the polled door releases it home. Proves collect -> return -> GameState -> save mutation -> fort_stage without scripting the full climb. Expected receipts: HARNESS_TELEPORT, collected d10, dream_returned d10, MOON dream_home.",
+  "events": [
+    {"frame": 120, "seat": 1, "action": "teleport", "pos": [50.0, 12.2, 4.5]},
+    {"frame": 420, "seat": 1, "action": "teleport", "pos": [50.0, 15.2, 6.0]}
+  ]
+}

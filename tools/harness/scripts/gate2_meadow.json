@@ -1,0 +1,24 @@
+{
+  "description": "Gate 2 tour, part 1 (bramble, --pads=2): camera settles 3s, then pure-axis legs — Pip collects d01 (north) and d02 (south meadow; magnetism closes the last arm's reach), hops en route (squash/flutter/ring), pauses so the orbit reads, then walks off the south edge on purpose: the Soft Landing catches him and floats him home. Otto tags along, stopping short of the edge. Expected receipts: collected d01, collected d02, RESCUE seat 1.",
+  "events": [
+    {"frame": 180, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 190, "seat": 2, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 300, "seat": 1, "action": "move", "vec": [1.0, 0.0]},
+    {"frame": 310, "seat": 2, "action": "move", "vec": [1.0, 0.0]},
+    {"frame": 380, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 390, "seat": 2, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 450, "seat": 1, "action": "move", "vec": [-1.0, 0.0]},
+    {"frame": 470, "seat": 2, "action": "move", "vec": [-1.0, 0.0]},
+    {"frame": 540, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 546, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 735, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 750, "seat": 2, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 805, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 820, "seat": 2, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 890, "seat": 1, "action": "move", "vec": [-1.0, 0.0]},
+    {"frame": 910, "seat": 2, "action": "move", "vec": [-1.0, 0.0]},
+    {"frame": 1100, "seat": 2, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 1580, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 1640, "seat": 1, "action": "move", "vec": [0.0, 0.0]}
+  ]
+}

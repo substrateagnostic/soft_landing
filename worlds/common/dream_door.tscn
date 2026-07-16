@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://worlds/common/dream_door.gd" id="1"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_door"]
-size = Vector3(2.0, 2.0, 2.0)
+size = Vector3(3.6, 4.6, 3.6)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_door"]
 top_radius = 0.9

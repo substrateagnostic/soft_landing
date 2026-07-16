@@ -1,0 +1,11 @@
+{
+  "description": "Gate 2 tour, establishing shot (bramble, --pads=2): both kids walk east across the meadow toward Bramble — the whole sleeping bear in frame, chest rising and falling, snore geysers sighing on the breath cycle. No objectives; this is the 'meet the giant' beat.",
+  "events": [
+    {"frame": 150, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 165, "seat": 2, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 480, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 486, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 900, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 915, "seat": 2, "action": "move", "vec": [0.0, 0.0]}
+  ]
+}

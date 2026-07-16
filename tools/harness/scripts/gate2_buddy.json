@@ -1,0 +1,11 @@
+{
+  "description": "Gate 2 tour, part 3 (pillow_fort, --pads=1, SOLO): Pip wanders the clearing; Otto buddy-follows on his own — no P2 input in this entire script. Expected: Otto trails Pip at ~2.5 m throughout.",
+  "events": [
+    {"frame": 60, "seat": 1, "action": "move", "vec": [1.0, 0.0]},
+    {"frame": 200, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 320, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 326, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 380, "seat": 1, "action": "move", "vec": [-1.0, 0.3]},
+    {"frame": 500, "seat": 1, "action": "move", "vec": [0.0, 0.0]}
+  ]
+}

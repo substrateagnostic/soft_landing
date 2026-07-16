@@ -1,0 +1,11 @@
+{
+  "description": "Door round-trip property (--pads=1, start pillow_fort): DEV TELEPORT places Pip inside the BrambleDoor trigger, interact -> bramble loads at its spawn; teleport into Bramble's HomeDoor, interact -> fort loads again. Expected receipts: DOOR to bramble + WORLD_READY bramble, DOOR to pillow_fort + WORLD_READY pillow_fort.",
+  "events": [
+    {"frame": 120, "seat": 1, "action": "teleport", "pos": [0.0, 0.6, -9.45]},
+    {"frame": 180, "seat": 1, "action": "interact", "type": "press"},
+    {"frame": 186, "seat": 1, "action": "interact", "type": "release"},
+    {"frame": 420, "seat": 1, "action": "teleport", "pos": [-61.0, 0.6, 1.0]},
+    {"frame": 480, "seat": 1, "action": "interact", "type": "press"},
+    {"frame": 486, "seat": 1, "action": "interact", "type": "release"}
+  ]
+}

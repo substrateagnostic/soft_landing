@@ -86,8 +86,8 @@ func _ensure_moonlight() -> void:
 		return
 	var light := DirectionalLight3D.new()
 	light.name = "Moonlight"
-	light.light_color = Color(0.75, 0.8, 1.0)
-	light.light_energy = 0.6
+	light.light_color = Color(0.82, 0.84, 1.0)
+	light.light_energy = 0.85
 	light.shadow_enabled = true
 	light.rotation_degrees = Vector3(-50.0, -30.0, 0.0)
 	add_child(light)

@@ -1,0 +1,17 @@
+{
+  "description": "Gate 2 tour, part 2 (pillow_fort, --pads=2): Otto walks to Pip, picks him up (CARRY), carries him a step, and gently tosses him (TOSS) — the oldest parent-child game as a co-op verb. Pip walks off after landing, proving control returns. Expected receipts: CARRY, TOSS.",
+  "events": [
+    {"frame": 60, "seat": 2, "action": "move", "vec": [1.0, 0.0]},
+    {"frame": 92, "seat": 2, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 110, "seat": 2, "action": "interact", "type": "press"},
+    {"frame": 116, "seat": 2, "action": "interact", "type": "release"},
+    {"frame": 130, "seat": 2, "action": "interact", "type": "press"},
+    {"frame": 136, "seat": 2, "action": "interact", "type": "release"},
+    {"frame": 200, "seat": 2, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 260, "seat": 2, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 280, "seat": 2, "action": "jump", "type": "press"},
+    {"frame": 286, "seat": 2, "action": "jump", "type": "release"},
+    {"frame": 400, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 460, "seat": 1, "action": "move", "vec": [0.0, 0.0]}
+  ]
+}

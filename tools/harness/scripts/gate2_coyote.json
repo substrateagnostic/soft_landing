@@ -1,0 +1,11 @@
+{
+  "description": "Coyote property (any world, --pads=1): Pip stands grounded (coyote timer full), a DEV TELEPORT lifts him 1.5 m into the air (equivalent to the frame after walking off a ledge: airborne, coyote running), and jump is pressed 8 frames (~133 ms < 200 ms coyote) later. PASS = EVT jumped fires while airborne. Then a control: after landing and waiting out the window (>0.20 s airborne via a second lift), a jump pressed 30 frames (~500 ms) after leaving ground must NOT fire.",
+  "events": [
+    {"frame": 120, "seat": 1, "action": "teleport", "pos": [0.0, 2.0, 0.0]},
+    {"frame": 128, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 134, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 400, "seat": 1, "action": "teleport", "pos": [0.0, 4.0, 0.0]},
+    {"frame": 430, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 436, "seat": 1, "action": "jump", "type": "release"}
+  ]
+}

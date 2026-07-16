@@ -2,46 +2,52 @@
 *Updated at the end of every session. What exists, where the evidence is, one
 cold demo command, what's unverified, and what only you can decide.*
 
-## Session 1 (2026-07-15)
+## Session 1 (2026-07-15 → 16)
 
-### ⛔ GATE 1 — GREENLIGHT NEEDED (the big one)
-Read **PITCH.md** (5 min). The pitch: **THE BIG NAP** — colossal animals
-asleep for a century-long nap, their escaped dreams as collectibles, two kids
-in onesies (Pip the duck = Ezra, Otto the bear = you) carrying dreams home,
-the Moon narrating via TTS, falling always caught by a dreamling bubble
-("the Soft Landing"). Hub: a growing Pillow Fort. World 1: Bramble the bear.
-Register: tender-enormous — drawdown was elegiac, ill-will riotous, this one
-is *hushed and huge*.
+### ⛔ GATE 2 — FEEL CHECK FROM VIDEO (the current gate)
+Watch **`evidence/gate2_slice.mp4`** (66 s, sent to you in chat). Four beats:
+1. *Meet the giant* — both kids cross the meadow toward Bramble at dusk.
+2. *Meadow* — Pip collects two dreamlings (they chase him a little — magnet
+   generosity), hops (squash/flutter/landing ring), then walks off the world
+   edge on purpose: a dreamling bubble catches him — the Soft Landing.
+3. *The toss* — Otto picks Pip up and gently throws him. Control returns.
+4. *Solo buddy* — one pad: Otto follows on his own and mirrors Pip's jumps.
 
-**Say:** "greenlight" (build proceeds to Phase 3 grey-box) · or name changes
-(title, cast names, fiction, camera choice, anything) · or "re-pitch".
+**Say:** "feel check passed" (Phase 4 art pipeline starts) · or name what's
+off (jump arc, camera distance/speed, walk speed, rescue pacing — every feel
+number is an @export; tell me in feelings, I'll translate to numbers).
 
-### Also pending (async, not blocking Phase 3)
-1. **Meshy key** — paste `MESHY_API_KEY=...` into `D:\Projects\soft_landing\.env`
-   or drop Dead_Attestation's `.env` on D:. Needed by Phase 4 (art proof).
-2. **gh auth** — `gh auth login` or paste a token; needed for the post-Gate-1
-   push to github.com/substrateagnostic. Building local until then.
-3. **License** — Apache-2.0 assumed (D16); veto if you want different.
-4. **Viola stems** (whenever, Phase 5): one lullaby melody per giant; specs
-   will follow after Gate 2 — placeholder synth stems used until then.
+### Also pending (async)
+1. **Meshy key** → `D:\Projects\soft_landing\.env` (`MESHY_API_KEY=...`).
+   Blocks Phase 4 art proof.
+2. **gh auth** → `gh auth login` (gh 2.96.0 now installed at D:\Tools\gh).
+   Blocks the public push to github.com/substrateagnostic.
+3. **License** — Apache-2.0 assumed (D16); veto anytime.
+4. **Viola stems** — after Gate 2; spec will follow (per-giant lullaby,
+   layers added per dream returned).
 
-### What exists (all committed, main branch)
-- Founding: GOAL.md (verbatim), AGENTS.md, LICENSE, ops log (alexmemory.md).
-- Phase 0: `evidence/toolchain.md` — NOTE: this Windows partition had NO
-  godot/gh/ffmpeg (previous game nights ran on the Pop!_OS side; D:\Projects
-  is Syncthing-shared). winget installs were still running at last update.
-- Phase 1: `docs/research/` (4 sourced docs), `docs/RESEARCH.md`,
-  `docs/DECISIONS.md` (D1–D16).
-- Phase 2: PITCH.md, GAME_BRIEF.md, SPEC.md, ART_BIBLE.md,
-  DEFINITION_OF_DONE.md.
+### What exists (all committed on main)
+- Docs: GOAL/PITCH/GAME_BRIEF/SPEC/ART_BIBLE/DoD + research (4 docs) +
+  DECISIONS D1–D16.
+- A booting game: title → Pillow Fort hub ↔ Bramble the bear (doors work),
+  full movement (coyote/buffer/apex-flutter/squash), auto-camera
+  (hint volumes, no right stick), co-op (leash bubble-warp, carry/toss),
+  solo buddy AI, Soft Landing rescue, 10 dreamlings with magnetism, ear
+  return, save/persistence (fort night-lights survive restart), Moon TTS
+  seam, deterministic autoplay harness + movie pipeline.
+- Evidence: `evidence/gate2_slice.mp4`, `evidence/stills/*.png`,
+  `docs/verify/*-VERIFY.md` (scaffold, corefeel, harness, worlds, gate2).
 
-### Cold demo command
-None yet — no code until Gate 1 passes (grey-box slice is Phase 3).
+### Cold demo command (from D:\Projects\soft_landing)
+```
+D:\Tools\godot\godot_console.exe --path . -- --skipmenu --world=bramble
+```
+(Plug in 1-2 pads first; 0 pads = keyboard drives Otto: WASD+Space+E.)
 
-### UNVERIFIED list
-- godot / gh / ffmpeg install completion (winget in flight at write time;
-  post-install verification will be appended to evidence/toolchain.md).
-- Meshy key reachability on this partition (blocked on you, item 1).
-- TTS voice quality of Windows SAPI for the Moon (Phase 3 will produce a
-  sample for your ears).
-- Research UNVERIFIED rollup: see docs/RESEARCH.md final section.
+### UNVERIFIED list (honest)
+- Jump-buffer positive case (≤0.22 s pre-landing press) — control case
+  proven, positive case queued.
+- TTS audible voice quality (call path receipted; needs your ears).
+- d10 spawns embedded in the ear bump (magnet rescues it; nudge queued).
+- Sustained 60 fps receipt (Gate 4 item).
+- Meshy key reachability (blocked on you).

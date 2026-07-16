@@ -30,8 +30,8 @@ signal leash_broken(player: PlayerBody)
 @export var leash_k: float = 0.8
 @export var pitch_k: float = 3.0
 
-@export var arm_length: float = 7.0
-@export var base_pitch_degrees: float = -35.0
+@export var arm_length: float = 6.0
+@export var base_pitch_degrees: float = -32.0
 @export var gap_pitch_degrees: float = -50.0
 
 @export var vertical_dead_zone: float = 1.2

@@ -43,7 +43,66 @@ func _ready() -> void:
 	_build_bear_silhouette()
 	_build_camera_hint()
 	_build_bramble_door()
+	_build_fort_growth()
 	super._ready()
+
+
+## The fort remembers (D14): every growth stage adds something warm.
+## Stage 1: night-light orbs over the doorway. Stage 2: a firefly jar by
+## the door. Stage 3: a dream mobile above the roof. Built from the saved
+## GameState.fort_stage, so it's there when you come home.
+func _build_fort_growth() -> void:
+	var stage: int = GameState.fort_stage
+	if stage >= 1:
+		# Strung over the doorway at a kid's eye line, not up on the roof
+		# where the auto-camera crops them out.
+		for i: int in range(3):
+			_add_glow_orb(
+				"NightLight%d" % i,
+				FORT_CENTER + Vector3(-0.9 + 0.9 * i, FORT_HEIGHT * 0.72, FORT_DEPTH * 0.5 + 0.12),
+				0.16
+			)
+	if stage >= 2:
+		var jar := MeshInstance3D.new()
+		jar.name = "FireflyJar"
+		var jar_mesh := CylinderMesh.new()
+		jar_mesh.top_radius = 0.18
+		jar_mesh.bottom_radius = 0.22
+		jar_mesh.height = 0.35
+		var jar_mat := StandardMaterial3D.new()
+		jar_mat.albedo_color = FORT_GLOW_COLOR
+		jar_mat.emission_enabled = true
+		jar_mat.emission = FORT_GLOW_COLOR
+		jar_mat.emission_energy_multiplier = 1.4
+		jar_mesh.material = jar_mat
+		jar.mesh = jar_mesh
+		jar.position = FORT_CENTER + Vector3(DOOR_WIDTH, 0.18, FORT_DEPTH * 0.5 + 0.4)
+		add_child(jar)
+	if stage >= 3:
+		for i: int in range(4):
+			var angle: float = TAU * i / 4.0
+			_add_glow_orb(
+				"MobileDream%d" % i,
+				FORT_CENTER + Vector3(cos(angle) * 0.8, FORT_HEIGHT + 1.3, sin(angle) * 0.8),
+				0.12
+			)
+
+
+func _add_glow_orb(orb_name: String, orb_position: Vector3, radius: float) -> void:
+	var orb := MeshInstance3D.new()
+	orb.name = orb_name
+	var mesh := SphereMesh.new()
+	mesh.radius = radius
+	mesh.height = radius * 2.0
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color("FFF3C4")
+	mat.emission_enabled = true
+	mat.emission = Color("FFF3C4")
+	mat.emission_energy_multiplier = 2.0
+	mesh.material = mat
+	orb.mesh = mesh
+	orb.position = orb_position
+	add_child(orb)
 
 
 func world_id() -> String:
