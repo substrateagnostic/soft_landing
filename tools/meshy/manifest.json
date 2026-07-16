@@ -1,0 +1,26 @@
+[
+  {
+    "id": "pip",
+    "category": "character",
+    "prompt": "small toddler child wearing a duck onesie pajama costume, onesie hood with cartoon duck bill and eyes on top of head, yolk yellow onesie with cream belly panel, mitten hands, rounded chubby single-mass body, short legs, standing with arms slightly out, no separate fingers, cozy sleepy expression",
+    "target_height_hint": 0.9
+  },
+  {
+    "id": "lantern",
+    "category": "prop",
+    "prompt": "small paper lantern glowing warm honey, hanging from a short curved wooden post on a round wooden base, soft rounded shapes",
+    "target_height_hint": 0.5
+  },
+  {
+    "id": "firefly_jar",
+    "category": "prop",
+    "prompt": "round glass mason jar with cork lid, filled with tiny glowing golden fireflies, soft warm glow, slightly oversized cute proportions",
+    "target_height_hint": 0.35
+  },
+  {
+    "id": "cushion",
+    "category": "prop",
+    "prompt": "big round floor cushion pillow, plush and squishy, slightly squashed from being sat on, soft fabric folds, blush pink",
+    "target_height_hint": 0.4
+  }
+]

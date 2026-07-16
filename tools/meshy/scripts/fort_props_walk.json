@@ -1,0 +1,7 @@
+{
+  "description": "Walk Pip east of the fort's footprint from spawn out past the back doorway to the porch lantern, so a single screenshot late in the walk frames the lantern with the blush cushion (near spawn, x=3.5 z=-1) still visible in the mid-ground. Otto (buddy AI, solo mode) follows. For evidence/stills/art fort_props.png (art-pipeline task).",
+  "events": [
+    {"frame": 10, "seat": 1, "action": "move", "vec": [0.15, -1.0]},
+    {"frame": 220, "seat": 1, "action": "move", "vec": [0, 0]}
+  ]
+}

@@ -33,6 +33,12 @@ shape = SubResource("CapsuleShape3D_pip")
 mesh = SubResource("CapsuleMesh_pip")
 surface_material_override/0 = SubResource("StandardMaterial3D_pip")
 
+[node name="ModelSlot" type="Node3D" parent="Visual"]
+script = ExtResource("5")
+model_id = "pip"
+target_height = 0.9
+ground_offset_y = -0.45
+
 [node name="ReadabilityAnchor" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
 

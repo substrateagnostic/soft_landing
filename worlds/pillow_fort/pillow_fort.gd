@@ -63,6 +63,13 @@ func _build_fort_growth() -> void:
 				0.16
 			)
 	if stage >= 2:
+		# FireflyJarVisual is the ground-anchored container ModelSlot needs
+		# (D10): it and the grey-box jar mesh are the only two children.
+		var jar_anchor := Node3D.new()
+		jar_anchor.name = "FireflyJarVisual"
+		jar_anchor.position = FORT_CENTER + Vector3(DOOR_WIDTH, 0.0, FORT_DEPTH * 0.5 + 0.4)
+		add_child(jar_anchor)
+
 		var jar := MeshInstance3D.new()
 		jar.name = "FireflyJar"
 		var jar_mesh := CylinderMesh.new()
@@ -76,8 +83,14 @@ func _build_fort_growth() -> void:
 		jar_mat.emission_energy_multiplier = 1.4
 		jar_mesh.material = jar_mat
 		jar.mesh = jar_mesh
-		jar.position = FORT_CENTER + Vector3(DOOR_WIDTH, 0.18, FORT_DEPTH * 0.5 + 0.4)
-		add_child(jar)
+		jar.position = Vector3(0.0, jar_mesh.height * 0.5, 0.0) # rests on jar_anchor's ground
+		jar_anchor.add_child(jar)
+
+		var jar_slot := ModelSlot.new()
+		jar_slot.name = "FireflyJarModelSlot"
+		jar_slot.model_id = "firefly_jar"
+		jar_slot.target_height = 0.35 # ART_BIBLE scale rules: firefly_jar 0.35
+		jar_anchor.add_child(jar_slot)
 	if stage >= 3:
 		for i: int in range(4):
 			var angle: float = TAU * i / 4.0
@@ -193,7 +206,16 @@ func _build_fort() -> void:
 	interior_light.position = FORT_CENTER + Vector3(0.0, FORT_HEIGHT * 0.6, 0.0)
 	fort.add_child(interior_light)
 
-	# Porch lantern just outside the back doorway.
+	# Porch lantern just outside the back doorway. LanternVisual is the
+	# ground-anchored container ModelSlot needs (D10): it and the grey-box
+	# LanternPost mesh are the only two children, so a GLB swap hides just
+	# the post, never anything else in the fort.
+	var lantern_ground: Vector3 = FORT_CENTER + Vector3(half_w + 0.8, 0.0, -half_d - 0.6)
+	var lantern_visual := Node3D.new()
+	lantern_visual.name = "LanternVisual"
+	lantern_visual.position = lantern_ground
+	fort.add_child(lantern_visual)
+
 	var lantern_post := MeshInstance3D.new()
 	lantern_post.name = "LanternPost"
 	var post_mesh := CylinderMesh.new()
@@ -204,15 +226,21 @@ func _build_fort() -> void:
 	post_mat.albedo_color = FENCE_POST_COLOR
 	post_mesh.material = post_mat
 	lantern_post.mesh = post_mesh
-	lantern_post.position = FORT_CENTER + Vector3(half_w + 0.8, 0.7, -half_d - 0.6)
-	fort.add_child(lantern_post)
+	lantern_post.position = Vector3(0.0, post_mesh.height * 0.5, 0.0) # rests on lantern_visual's ground
+	lantern_visual.add_child(lantern_post)
+
+	var lantern_slot := ModelSlot.new()
+	lantern_slot.name = "LanternModelSlot"
+	lantern_slot.model_id = "lantern"
+	lantern_slot.target_height = 0.5 # ART_BIBLE scale rules: lantern 0.5
+	lantern_visual.add_child(lantern_slot)
 
 	var lantern_light := OmniLight3D.new()
 	lantern_light.name = "LanternGlow"
 	lantern_light.light_color = FORT_GLOW_COLOR
 	lantern_light.light_energy = 1.2
 	lantern_light.omni_range = 4.0
-	lantern_light.position = lantern_post.position + Vector3(0.0, 0.8, 0.0)
+	lantern_light.position = FORT_CENTER + Vector3(half_w + 0.8, 1.5, -half_d - 0.6)
 	fort.add_child(lantern_light)
 
 
@@ -239,11 +267,14 @@ func _add_fort_box(parent: Node3D, size: Vector3, box_position: Vector3, mat: St
 
 
 func _build_cushions() -> void:
-	_add_cushion(Vector3(3.5, 0.0, -1.0), 1.1, CUSHION_BLUSH)
-	_add_cushion(Vector3(-3.2, 0.0, -3.5), 0.9, CUSHION_DUSK_BLUE)
+	# Explicit (not randf()) scale jitter, both within ART_BIBLE's cushion
+	# 0.4 m baseline +/-15%, so screenshot/harness receipts stay
+	# deterministic run to run.
+	_add_cushion(Vector3(3.5, 0.0, -1.0), 1.1, CUSHION_BLUSH, 1.08)
+	_add_cushion(Vector3(-3.2, 0.0, -3.5), 0.9, CUSHION_DUSK_BLUE, 0.93)
 
 
-func _add_cushion(cushion_position: Vector3, radius: float, color: Color) -> void:
+func _add_cushion(cushion_position: Vector3, radius: float, color: Color, scale_jitter: float = 1.0) -> void:
 	var mesh := SphereMesh.new()
 	mesh.radius = radius
 	mesh.height = radius * 1.2 # squashed
@@ -251,11 +282,24 @@ func _add_cushion(cushion_position: Vector3, radius: float, color: Color) -> voi
 	mat.albedo_color = color
 	mesh.material = mat
 
+	# CushionAnchor is the ground-anchored container ModelSlot needs (D10):
+	# it and the grey-box sphere mesh are the only two children, so a GLB
+	# swap hides just this cushion's own primitive.
+	var anchor := Node3D.new()
+	anchor.name = "Cushion"
+	anchor.position = cushion_position + Vector3(0.0, radius * 0.55, 0.0)
+	add_child(anchor)
+
 	var visual := MeshInstance3D.new()
-	visual.name = "Cushion"
+	visual.name = "CushionMesh"
 	visual.mesh = mesh
-	visual.position = cushion_position + Vector3(0.0, radius * 0.55, 0.0)
-	add_child(visual)
+	anchor.add_child(visual)
+
+	var slot := ModelSlot.new()
+	slot.name = "CushionModelSlot"
+	slot.model_id = "cushion"
+	slot.target_height = 0.4 * scale_jitter # ART_BIBLE scale rules: cushion 0.4, varied per-instance
+	anchor.add_child(slot)
 
 	var body := StaticBody3D.new()
 	body.collision_layer = 1
@@ -264,7 +308,7 @@ func _add_cushion(cushion_position: Vector3, radius: float, color: Color) -> voi
 	var sphere_shape := SphereShape3D.new()
 	sphere_shape.radius = radius
 	shape.shape = sphere_shape
-	shape.position = visual.position
+	shape.position = anchor.position
 	shape.scale = Vector3(1.0, mesh.height / (radius * 2.0), 1.0)
 	body.add_child(shape)
 	add_child(body)
