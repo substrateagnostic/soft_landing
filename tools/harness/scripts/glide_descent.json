@@ -1,0 +1,9 @@
+{
+  "description": "GLIDE property (D17 moveset ladder): a held jump while falling descends far slower than free fall. --pads=2 so Otto stays put (no buddy AI). EPISODE A (free fall, control): teleport Pip to (0,15,0) at frame 30, zero input; empirically measured landed EVT@102 -> 72-frame airtime for a 15m drop. EPISODE B (glide): jump press@700 WHILE GROUNDED (fires a normal ground jump, jumped EVT@701 -- deliberately picked so the buffered press resolves unambiguously before any teleport, sidestepping a is_on_floor()-cache quirk where teleporting straight into open air grants one stale extra tick of coyote, see glide-VERIFY notes for the director); teleport to (0,15,0) at frame 705 (5 ticks later, well past the press's own just-pressed window, so no new buffered press exists post-teleport and the flutter branch never fires) with jump held continuously through landing; empirically measured GLIDE_START@706-707, landed EVT@1003 -> 298-frame airtime for the SAME 15m drop, a ~4.1x longer fall. PASS = episode B's total airtime (landed minus its teleport frame, 1003-705=298) is dramatically larger than episode A's (102-30=72), and poslog shows a visibly shallower Y-per-tick slope throughout episode B versus episode A.",
+  "events": [
+    {"frame": 30, "seat": 1, "action": "teleport", "pos": [0.0, 15.0, 0.0]},
+    {"frame": 700, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 705, "seat": 1, "action": "teleport", "pos": [0.0, 15.0, 0.0]},
+    {"frame": 1100, "seat": 1, "action": "jump", "type": "release"}
+  ]
+}

@@ -26,3 +26,16 @@ extends Resource
 @export var squash_scale: Vector3 = Vector3(1.25, 0.8, 1.25)
 @export var squash_duration: float = 0.12
 @export var squash_spring_decay: float = 12.0
+
+## Moveset ladder v1 (D17 movement agent): flutter double-jump, glide,
+## ground-pound bounce. All three ride the existing jump/interact buttons
+## (tap vs. hold vs. context) — no new input floor.
+@export var flutter_height_mult: float = 0.6 # fraction of jump_height for the flutter boost
+@export var flutter_duration: float = 0.18 # brief FLUTTER animation-hook window before normal apex/fall resumes
+@export var glide_gravity_mult: float = 0.4 # applied on top of the derived fall gravity while gliding
+@export var glide_terminal_velocity: float = 3.0 # m/s fall-speed cap while gliding
+@export var glide_air_control_mult: float = 1.3 # slight forward air-control boost while gliding
+@export var pound_hang_duration: float = 0.15 # brief hang before the fast drop
+@export var pound_drop_speed: float = 14.0 # fixed fast-drop speed (m/s), under terminal_velocity
+@export var pound_radius: float = 3.0 # shockwave radius that launches nearby grounded partners
+@export var pound_launch_mult: float = 1.5 # partner launch height as a multiple of THEIR OWN jump_height

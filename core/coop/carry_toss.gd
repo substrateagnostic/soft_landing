@@ -13,6 +13,13 @@ extends Node
 ## make the second press). In both modes, Pip's p1_interact while carried
 ## always means "hop down gently" — that check runs first and consumes the
 ## press so the two paths can never double-fire in the same frame.
+##
+## D17 moveset ladder: this is also the sole owner of interact-button
+## routing for BOTH seats, so it's the correct (and only race-free) place
+## to fall through to PlayerBody.try_pound() whenever carry/toss doesn't
+## claim the press — never carrying, never carried, per the pound-bounce
+## floor rule. try_pound() itself refuses unless the player is in a plain
+## airborne state, so a grounded interact press still safely no-ops here.
 
 @export var carry_range: float = 1.2
 @export var toss_up_velocity: float = 7.5
@@ -46,7 +53,10 @@ func _physics_process(_delta: float) -> void:
 		if _carrying:
 			hop_down()
 		elif not input_driven:
-			_try_solo_toss()
+			if not _try_solo_toss():
+				_pip.try_pound()
+		else:
+			_pip.try_pound() # coop mode: p1_interact is otherwise idle here — free for pound (D17)
 		return # consume this frame's p1_interact either way
 
 	if not input_driven:
@@ -55,16 +65,22 @@ func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("p2_interact"):
 		if _carrying:
 			toss()
-		else:
-			try_pickup()
+		elif not try_pickup():
+			_otto.try_pound() # only reached when there was nothing in range to pick up (D17)
 	elif _carrying and Input.is_action_just_pressed("p2_jump"):
 		toss()
 
 
-func _try_solo_toss() -> void:
+## _try_solo_toss — returns true only if the pick-up-and-toss actually
+## fired, so the caller can fall through to try_pound() when it didn't
+## (Otto out of carry_range is the common case; buddy-Otto typically
+## follows at buddy_ai.gd's follow_distance, well outside carry_range).
+func _try_solo_toss() -> bool:
 	var dist: float = _otto.global_position.distance_to(_pip.global_position)
 	if dist <= carry_range and try_pickup():
 		toss()
+		return true
+	return false
 
 
 func try_pickup() -> bool:

@@ -1,0 +1,11 @@
+{
+  "description": "POUND-bounce property (D17 moveset ladder, co-op verb): Otto pounds near Pip; Pip (grounded, not touched directly) gets launched by the shockwave to well above Pip's own normal jump apex -- a pure gift, no input from Pip at all. --pads=2. Otto and Pip teleported 2.0m apart (outside carry_range 1.2m so p2_interact falls through carry_toss.gd's dispatcher to Otto.try_pound() instead of attempting a pickup; inside pound_radius 3.0m so the shockwave reaches Pip). Otto jump press@60/release@66 (jumped EVT@61); Otto interact press@80/release@86 while airborne triggers the pound (empirically measured: POUND_START@82, POUND_LAND@97, exactly matching Otto's own landed EVT@97). Pip never receives any input in this script. PASS = Pip's Y begins rising within a couple ticks of Otto's POUND_LAND/landed@97 (measured: rise starts@99) and peaks (measured: ~2.77 around t=131-135) clearly above Pip's own normal single-jump apex (~2.02, see flutter_gap.json episode A) -- proving the 1.5x-jump-height gift launch, not a normal jump Pip somehow triggered itself.",
+  "events": [
+    {"frame": 30, "seat": 2, "action": "teleport", "pos": [0.0, 0.45, 0.0]},
+    {"frame": 30, "seat": 1, "action": "teleport", "pos": [2.0, 0.45, 0.0]},
+    {"frame": 60, "seat": 2, "action": "jump", "type": "press"},
+    {"frame": 66, "seat": 2, "action": "jump", "type": "release"},
+    {"frame": 80, "seat": 2, "action": "interact", "type": "press"},
+    {"frame": 86, "seat": 2, "action": "interact", "type": "release"}
+  ]
+}

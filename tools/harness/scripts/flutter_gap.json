@@ -1,0 +1,13 @@
+{
+  "description": "FLUTTER double-jump property (D17 moveset ladder): a second, buffered jump mid-air measurably extends both peak height and total airtime beyond a single jump. Pure vertical on purpose (an earlier draft added a forward hold, but pillow_fort's fort wall sits only ~3.5m from spawn and capped BOTH episodes at the same horizontal distance, which proved nothing extra) -- more hangtime at any nonzero forward speed is strictly more horizontal reach, and a taller apex clears a taller ledge, so height+airtime alone is the rigorous, geometry-independent version of 'crosses a gap a single jump can't'. --pads=2 so Otto stays put (no buddy AI). EPISODE A (single jump, control): teleport Pip to (0,0.5,0) at frame 30, let it settle onto the ground, jump press@50/release@56 (empirically measured: jumped EVT@51, peak Y~2.02 around t=80-82, landed EVT@106 -> 55-frame airtime, jumped-to-landed). EPISODE B (flutter): teleport to (0,0.5,0) at frame 300, settle, jump press@320/release@326 (jumped EVT@321); a SECOND jump tap@335/release@341 while still rising (well before the ~348 apex, so no ambiguity with glide-entry) triggers the flutter (empirically measured, deterministic across repeat runs: FLUTTER print@336, peak Y~2.64 around t=356-362, landed EVT@387 -> 66-frame airtime). PASS = episode B's airtime (landed-frame minus jumped-frame) is clearly greater than episode A's (66 vs 55), AND poslog shows episode B's peak Y (~2.64) clearly exceeds episode A's (~2.02).",
+  "events": [
+    {"frame": 30, "seat": 1, "action": "teleport", "pos": [0.0, 0.5, 0.0]},
+    {"frame": 50, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 56, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 300, "seat": 1, "action": "teleport", "pos": [0.0, 0.5, 0.0]},
+    {"frame": 320, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 326, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 335, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 341, "seat": 1, "action": "jump", "type": "release"}
+  ]
+}
