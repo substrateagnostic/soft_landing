@@ -1,0 +1,11 @@
+{
+  "description": "Finale seg B (--pads=2, marmalade): the kids walk into the lamplit village toward the sleeping cat; d01 likely magnets en route. Pure atmosphere + scale.",
+  "events": [
+    {"frame": 240, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 250, "seat": 2, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 600, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 610, "seat": 2, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 720, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 900, "seat": 1, "action": "move", "vec": [0.0, 0.0]}
+  ]
+}

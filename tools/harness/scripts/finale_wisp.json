@@ -1,0 +1,13 @@
+{
+  "description": "Finale seg C (--pads=2, wisp): shore walk toward the moonlit lake and the drifting whale, one hop, a pause to let the world breathe.",
+  "events": [
+    {"frame": 240, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 250, "seat": 2, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 360, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 366, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 480, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 490, "seat": 2, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 600, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 720, "seat": 1, "action": "move", "vec": [0.0, 0.0]}
+  ]
+}

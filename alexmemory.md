@@ -19,6 +19,23 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-16, ~03:40 — Session 1 (cont. 5): the night the game grew up
+- **Shipped this shift:** Wisp + Marmalade (30/30 placements green across
+  all worlds), Callie the sidekick (receipts show her mewing toward d01
+  across a meadow — the stuffy points at dreams), Pip/Otto/Callie GLBs
+  in-engine, chime ladder + stems audible (caught my own defined-but-
+  never-called _update_stems in the video's volume receipt: −22 dB → −14.9
+  after the fix), d07 thermal-parent exemption, Meshy llms.txt intel
+  (3-day retention!) into pipeline.md + memory.
+- **overnight_tour.mp4 (55 s, WITH AUDIO):** Callie pickup → carried
+  through the Bramble door (world switch on camera) → chime ladder with
+  purr → Marmalade's lamplit square (the shot of the night: both onesie
+  kids under the cat's silhouette) → Wisp's shore. Sent to producer.
+- Camera polish list grew: fort-east SpringArm squeeze at Callie's cushion,
+  at-rest facing, Wisp reeds/framing. All queued, none floor-violating.
+- Credits: 150 total (6 assets). Tokens: heavy but far under cap.
+  Everything pushed through github.com/substrateagnostic/soft_landing.
+
 ### 2026-07-16 — Session 1 (cont. 4): GATE 2 APPROVED; overnight chairs; the burn
 - **Producer, verbatim:** "continue without me gating on playtesting; we can
   refine later … overall design is approved; director and producer chairs

@@ -33,6 +33,9 @@ func _ready() -> void:
 	_setup_camera()
 	_setup_coop()
 	_setup_quitafter()
+	_update_stems()
+	# Layer unlocks land the moment a dream comes home, not on next visit.
+	GameState.dream_returned.connect(func(_w: String, _id: String) -> void: _update_stems())
 	TheMoon.say("new_area")
 
 
@@ -227,4 +230,5 @@ func _switch_world(world_id: String) -> void:
 			_soft_landing.rescue_floor_y = _world.rescue_floor_y()
 		else:
 			_soft_landing.rescue_floor_y = FALLBACK_RESCUE_FLOOR_Y
+	_update_stems()
 	TheMoon.say("new_area")
