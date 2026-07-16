@@ -16,16 +16,18 @@ gravity ≈ 1.55× rise; apex hang; terminal velocity cap ~20 m/s; move 4.0 m/s,
 accel 40 / decel 25 m/s²; air control 0.5; lerp_angle mesh turning ~10·delta.
 (movement.md §7.) These are starting points — the playtest tunes them.
 
-**D3 — Fixed jump height. No variable jump.** A 4-year-old cannot modulate
-button-hold duration; variable height punishes exactly our player.
-(movement.md §3.) The code path stays stubbed for a possible later ceiling.
+**D3 — ~~Fixed jump height. No variable jump.~~** ~~A 4-year-old cannot modulate
+button-hold duration; variable height punishes exactly our player.~~
+*Superseded 2026-07-16 → D17 (moveset ladder). The base jump stays fixed and
+generous; the ceiling grew.* (DIRECTION_V2.md)
 
 **D4 — Auto-camera architecture:** SpringArm3D with sphere cast, player
 excluded, geometry-only collision mask; target = player's ground-projected
 position with vertical dead zone; exponential-decay smoothing
 (`1-exp(-k·delta)`); yaw from designer hint volumes, damped velocity leash as
-fallback; pitch biases downward over gaps. **Right stick never read** (floor).
-(camera_readability.md §A; Kirby FL precedent.)
+fallback; pitch biases downward over gaps. ~~**Right stick never read** (floor).~~
+*Right-stick clause superseded 2026-07-16 → D18; auto-camera architecture
+itself stands and remains the default.* (camera_readability.md §A.)
 
 **D5 — Co-op camera: single shared camera + leash + bubble auto-warp.**
 Anchor weighted ~70/30 toward P1 (the child) — the star seat holds the frame,
@@ -50,18 +52,22 @@ anti-lessons.) Solo: P2 becomes buddy AI (follow + walk-up-interact = toss).
 **D8 — Input map (the floor, verbatim across all modes):** left stick = move,
 A/south = jump, B/east or X/west = interact. Nothing else required, ever.
 Extra verbs (ceiling) may be *added* later but the game must remain 100%
-completable on stick+jump+interact. Never inverted, no camera stick.
+completable on stick+jump+interact. Never inverted~~, no camera stick~~.
+*Camera-stick clause superseded 2026-07-16 → D18. The completability floor
+is unchanged and load-bearing.*
 
 **D9 — Readability kit (always on):** blob shadow (decal/projected circle,
 full strength) under every character at all times + landing ring that marks
 the exact landing point while airborne. Realistic shadows may exist for mood
 but never carry landing information. (camera_readability.md §C.)
 
-**D10 — Art pipeline: Meshy static meshes + procedural squash-and-stretch.**
-No auto-rigging (walk/run only, humanoid-only — wrong tool; pipeline.md).
-Characters are single soft meshes animated by code (bounce, tilt, squash,
-flutter). Import seam: `assets/models/meshy/generated/<id>.glb` behind a
-manifest, swappable for any other GLB source.
+**D10 — Art pipeline: Meshy meshes behind a manifest seam.** ~~No
+auto-rigging (walk/run only, humanoid-only — wrong tool; pipeline.md).
+Characters are single soft meshes animated by code.~~
+*Rigging clause superseded 2026-07-16 → D19 (full rig + animation pipeline);
+the manifest/seam architecture stands and is what makes the upgrade cheap.*
+Import seam: `assets/models/meshy/generated/<id>.glb` behind a manifest,
+swappable for any other GLB source.
 
 **D11 — Video receipts:** windowed run (never `--headless` — Movie Maker
 requires a real window), `--write-movie evidence/<name>.avi --fixed-fps 60`,
@@ -74,9 +80,11 @@ count-up), count shown as objects/pips not just numerals, **nothing
 missable**, post-session reveal of what remains, and the collection
 materializes in a hub space that visibly grows. (design_study.md §5.)
 
-**D13 — TTS seam:** every objective/instruction a 4-year-old must understand
+**D13 — TTS seam:** every objective/instruction a young player must understand
 is spoken. Godot `DisplayServer.tts_*` (Windows SAPI) behind an autoload seam
 so a nicer voice can be swapped in later. Diegetic speaker defined in PITCH.md.
+*Scope revised 2026-07-16 → D20: TTS is the accessibility layer, not the
+narrative voice. The seam and the spoken-objectives floor survive.*
 
 **D14 — Persistence:** single save slot, JSON via an autoload SaveManager
 (garden_train lineage), auto-save on every collectible/world event. The world
@@ -89,3 +97,44 @@ register declared: drawdown *elegiac* · ill-will *riotous* · this one
 
 **D16 — License Apache-2.0** (GOAL default; producer may override —
 NEEDS_YOU.md).
+
+## 2026-07-16 — V2 decisions (the AAA mandate; rationale in DIRECTION_V2.md)
+
+**D17 — Moveset ladder.** Base jump unchanged (fixed height, generous
+forgiveness). Added ceiling verbs: double-jump **flutter** (onesie flaps),
+**roll** (move-stick + jump ceiling variant TBD by feel), **ground-pound
+bounce** (pound near partner = partner launches higher — co-op verb), and
+**glide**. The D8 completability floor is law: every dreamling reachable on
+stick+jump+interact alone; ceiling verbs open shortcuts, styles, and
+secrets, never requirements.
+
+**D18 — Camera: auto by default, hands allowed.** The D4 auto-camera stays
+the default and must remain excellent (it is the 5-year-old's and the
+no-hands seat's camera). Right stick now nudges yaw with gentle
+auto-recenter; a full manual mode lives in options. Never inverted by
+default; sensitivity sliders.
+
+**D19 — Characters are rigged and animated.** Meshy rig/animate endpoints
+(or Mixamo retarget through the same seam) produce skeletal animation;
+AnimationTree locomotion; procedural squash-stretch/flutter juice is a layer
+ON TOP of skeletal, not instead of. Quadruped fallback for Callie decided by
+research (docs/research/v2/character_pipeline.md).
+
+**D20 — The Moon is written.** A narration bible with personality, running
+jokes, and a line for every dreamling mission. Delivery: gibberish-voice
+(pitched syllable synthesis) + minimal readable text. TTS remains as the
+accessibility layer and still covers every objective (D13 floor).
+
+**D21 — Dreamlings are micro-missions.** Every dreamling has an archetype
+(taxonomy per docs/research/v2/structure_progression.md) and a one-line
+story. Density cadence from D12 survives; nothing missable survives.
+
+**D22 — Art direction V2: painted soft-toy AAA.** Palette and register from
+ART_BIBLE.md survive; flatness does not. Per-world lighting design, sky /
+volumetric haze / stylized water / wind vegetation / post stack; PBR on
+where it serves the toy-softness. Recipes per docs/research/v2/visuals_recipes.md.
+
+**D23 — Playful challenges allowed; punishment still banned.** Optional
+races/chases/timing games with celebration-only outcomes. No lockouts, no
+lose states, no score shaming. Losing a race means the dreamling giggles
+and offers again.
