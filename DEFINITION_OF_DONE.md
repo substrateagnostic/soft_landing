@@ -11,7 +11,8 @@ checks on vibes. **UNVERIFIED is an honest state.** Status legend:
 - [x] Phase 0 audit — `evidence/toolchain.md`
 - [x] Phase 1 research, 4 sourced docs + synthesis + decisions —
       `docs/research/*`, `docs/RESEARCH.md`, `docs/DECISIONS.md` (git 0a5e8f6)
-- [ ] ⛔ Producer greenlight of PITCH.md (title, cast, fiction, camera choice)
+- [x] ⛔ Producer greenlight of PITCH.md — "greenlight! and then some. love
+      it." (chat, 2026-07-15; logged in alexmemory.md)
 
 ## Gate 2 — grey-box slice + harness (producer feel check from video)
 - [ ] Project boots clean: `godot --headless --editor --import --quit --path .`

@@ -23,5 +23,23 @@ Syncthing share with the Pop!_OS side — `.stfolder` marker present).
 - This partition's Godot install status will be re-verified below once winget
   completes (version output captured verbatim).
 
-## Post-install verification
-(to be appended when installs complete)
+## Post-install verification (2026-07-15, later the same session)
+
+winget proved unhealthy on this machine: both a `winget list` and the triple
+`winget install` ran 30+ minutes with zero output and zero installs; both
+background jobs were killed. **Fallback: direct downloads to `D:\Tools\`**
+(producer granted blanket install permission mid-session):
+
+| Tool | Source | Verification (command → output) |
+|---|---|---|
+| Godot 4.6.2 | github.com/godotengine/godot releases, `Godot_v4.6.2-stable_win64.exe.zip` (79,831,334 bytes) | `D:\Tools\godot\godot_console.exe --version` → `4.6.2.stable.official.71f334935` |
+| gh CLI 2.96.0 | github.com/cli/cli releases, `gh_2.96.0_windows_amd64.zip` | `gh --version` → `gh version 2.96.0 (2026-07-02)` |
+| ffmpeg 8.1.2 | gyan.dev `ffmpeg-release-essentials.zip` | `ffmpeg -version` → `ffmpeg version 8.1.2-essentials_build-www.gyan.dev` |
+
+- Version choice: 4.6.2-stable over latest 4.7.1-stable — matches the
+  sibling-proven engine and all Phase 1 research (D1). Both GUI and console
+  exes present; hardlink shims `godot.exe` / `godot_console.exe` created.
+- User PATH extended (persistent): `D:\Tools\godot;D:\Tools\gh\bin;`
+  `D:\Tools\ffmpeg\ffmpeg-8.1.2-essentials_build\bin`.
+- `gh auth status` → "You are not logged into any GitHub hosts." → logged in
+  NEEDS_YOU.md; building local until producer auths (per GOAL).
