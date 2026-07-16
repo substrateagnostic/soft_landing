@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://core/movement/player_body.gd" id="1"]
+[ext_resource type="Script" path="res://core/art/model_slot.gd" id="7"]
 [ext_resource type="Resource" path="res://data/tuning/otto_movement.tres" id="2"]
 [ext_resource type="PackedScene" path="res://core/readability/blob_shadow.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://core/readability/landing_ring.tscn" id="4"]
@@ -33,6 +34,12 @@ shape = SubResource("CapsuleShape3D_otto")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Visual"]
 mesh = SubResource("CapsuleMesh_otto")
 surface_material_override/0 = SubResource("StandardMaterial3D_otto")
+
+[node name="ModelSlot" type="Node3D" parent="Visual"]
+script = ExtResource("7")
+model_id = "otto"
+target_height = 1.3
+ground_offset_y = -0.65
 
 [node name="ReadabilityAnchor" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.65, 0)

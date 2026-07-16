@@ -22,5 +22,17 @@
     "category": "prop",
     "prompt": "big round floor cushion pillow, plush and squishy, slightly squashed from being sat on, soft fabric folds, blush pink",
     "target_height_hint": 0.4
+  },
+  {
+    "id": "otto",
+    "category": "character",
+    "prompt": "child wearing a bear onesie pajama costume, onesie hood with two round bear ears on top of head, cocoa brown onesie with cream belly panel, mitten hands, rounded chubby single-mass body, slightly tall and round proportions, standing with arms relaxed at sides, no separate fingers, calm cozy sleepy expression",
+    "target_height_hint": 1.3
+  },
+  {
+    "id": "callie",
+    "category": "character",
+    "prompt": "beanie baby style stuffed calico cat toy lying down flat and floppy, understuffed beanbag plush, warm tan brown head with black patch over one side of face, black back and body, white chest belly and paws, white tipped tail, small triangular ears, tiny amber eyes, pink nose, cute sleepy face",
+    "target_height_hint": 0.18
   }
 ]
