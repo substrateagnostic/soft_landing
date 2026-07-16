@@ -1,0 +1,14 @@
+# Godot
+.godot/
+*.translation
+export_presets.cfg
+
+# Secrets
+.env
+
+# Local evidence working dirs (curated receipts ARE committed)
+evidence/_scratch/
+
+# OS noise
+Thumbs.db
+Desktop.ini
