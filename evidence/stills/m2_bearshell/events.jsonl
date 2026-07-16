@@ -1,0 +1,9 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/m2_bearshell","quitafter":"15","rollover":true,"shots":"300,540,760","skipmenu":true,"world":"bramble"}
+EVT {"seat":1,"t":5,"type":"landed"}
+EVT {"seat":2,"t":7,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_bearshell/shot_300.png
+EVT {"seat":1,"t":459,"type":"landed"}
+EVT {"seat":2,"t":461,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_bearshell/shot_540.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_bearshell/shot_760.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 15.0s)

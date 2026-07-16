@@ -138,10 +138,92 @@ func _ready() -> void:
 	_build_home_door()
 	_build_ambient_lighting()
 	_build_grass_fields()
+	_build_bear_shell() # before _build_rollover: the sequence looks it up
 	_build_breath_weather()
 	_build_rollover()
 	_build_dreamkeepers()
 	_build_dressing()
+
+
+# --- The readable bear (producer note: the roll-over must READ) --------------
+# A bear-proportioned mesh can never drape the 111m x 12m mound chain
+# (9:1 — the mounds were never bear-shaped). V1: the visible, keystone-
+# performing bear sleeps beside the ear door at the level's east end; the
+# mounds remain his blanketed bulk. Full terrain-rebuild-around-him is an
+# M3 card. Rigged scene preferred (keystone clips); static GLB fallback.
+
+const BEAR_SHELL_POSITION: Vector3 = Vector3(44.0, 0.0, 27.0) # toss-turn envelope stays on the meadow
+const BEAR_SHELL_HEIGHT: float = 13.0 # static-fallback lying height
+const BEAR_SHELL_RIG_STANDING_HEIGHT: float = 28.0 # rig is T-pose; sleep clip lies him down
+const BEAR_SHELL_YAW_DEGREES: float = 0.0 # tuned by still
+const BEAR_SHELL_RIG_SCENE: String = "res://scenes/players/rigs/bramble_bear_rig_rig.tscn"
+
+
+func _build_bear_shell() -> void:
+	var anchor := Node3D.new()
+	anchor.name = "BearShellAnchor"
+	anchor.position = BEAR_SHELL_POSITION
+	anchor.rotation_degrees.y = BEAR_SHELL_YAW_DEGREES
+	add_child(anchor)
+
+	# Soft collision so nobody walks inside him (visual mesh has none).
+	var body := StaticBody3D.new()
+	body.name = "BearShellBody"
+	body.collision_layer = 1
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var capsule := CapsuleShape3D.new()
+	capsule.radius = 7.0
+	capsule.height = 22.0
+	shape.shape = capsule
+	shape.rotation_degrees = Vector3(90.0, 90.0, 0.0) # lying along X
+	shape.position = Vector3(0.0, 5.0, 0.0)
+	body.add_child(shape)
+	anchor.add_child(body)
+
+	# Rigged giant preferred (keystone clips); static GLB shell fallback.
+	if ResourceLoader.exists(BEAR_SHELL_RIG_SCENE):
+		var packed: PackedScene = load(BEAR_SHELL_RIG_SCENE)
+		var rig: Node3D = packed.instantiate() as Node3D
+		if rig != null:
+			rig.name = "BearRig"
+			var mesh_instance: MeshInstance3D = _find_first_mesh(rig)
+			if mesh_instance != null and mesh_instance.mesh != null:
+				# Mesh-local AABB only — the glTF importer bakes a 0.01
+				# scale on the Armature that skinning already accounts for
+				# (rigged_model_slot.gd's 90m-giant lesson).
+				var aabb: AABB = mesh_instance.mesh.get_aabb()
+				if aabb.size.y > 0.0:
+					var s: float = BEAR_SHELL_RIG_STANDING_HEIGHT / aabb.size.y
+					rig.scale = Vector3.ONE * s
+					rig.position.y = -aabb.position.y * s * 0.0 # clips keep feet at origin
+			anchor.add_child(rig)
+			var player: AnimationPlayer = rig.get_node_or_null("AnimationPlayer") as AnimationPlayer
+			if player == null:
+				for child: Node in rig.get_children():
+					if child is AnimationPlayer:
+						player = child
+						break
+			if player != null and player.has_animation("sleep"):
+				player.play("sleep")
+			print("MODEL_SWAP %s" % JSON.stringify({"id": "bramble_bear_rig", "rigged": true, "keystone": true}))
+			return
+
+	var slot := ModelSlot.new()
+	slot.name = "BearShellSlot"
+	slot.model_id = "bramble_bear"
+	slot.target_height = BEAR_SHELL_HEIGHT
+	anchor.add_child(slot)
+
+
+func _find_first_mesh(node: Node) -> MeshInstance3D:
+	if node is MeshInstance3D:
+		return node
+	for child: Node in node.get_children():
+		var found: MeshInstance3D = _find_first_mesh(child)
+		if found != null:
+			return found
+	return null
 
 
 # --- Dreamkeepers (M2, director wire-up of the dormant data file) ------------

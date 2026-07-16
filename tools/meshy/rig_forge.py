@@ -35,11 +35,11 @@ BASE = "https://api.meshy.ai/openapi/v1"
 #   otto 019f69d1-8fa0-7647-b756-bc2dfca1dd69  (h 1.3)
 # v2 = D24 likeness casting (Pip=Ezra, Otto=Caleb, heights 0.9/0.8).
 CHARACTERS = {
-    # pip_v2 019f6cc0-bc90-7747-82f4-f0ae8e359031 (h 0.9) / otto_v2
-    # 019f6cc0-bf13-7bf3-a486-3f4bea3cf8e6 (h 0.8) — rigged, on disk.
-    # M2 dreamkeepers (moth's wings are a humanoid-rigger risk — 5cr gamble):
-    "lamb_keeper": {"input_task_id": "019f6d0d-12fd-7229-8af4-f0769a2ab2b8", "height_meters": 0.85},
-    "moth_shepherd": {"input_task_id": "019f6d0d-15bd-722a-b2e8-d5541787c4ac", "height_meters": 1.0},
+    # Rigged, on disk: pip_v2 (h .9), otto_v2 (h .8), lamb_keeper (h .85),
+    # moth_shepherd (h 1.0). Current: the GIANT — Bramble himself. Rigged
+    # at human scale (1.8) for the rigger's sake; the engine scales him to
+    # hill size (skeletal animation is scale-invariant).
+    "bramble_bear_rig": {"input_task_id": "019f6d4a-d790-74d6-ac47-b39d910e7891", "height_meters": 1.8},
 }
 
 # Shared clip set (name -> action_id). Kid register only — no combat clips.
@@ -47,11 +47,13 @@ CHARACTERS = {
 # 303, pickup 276, sleep 269, dance 64; pip jump 44/skip 118, otto jump
 # 61/carry 551 — already rigged. Dreamkeepers get the NPC subset.)
 SHARED_CLIPS = {
-    "idle": 0,             # Idle
-    "walk": 30,            # Casual Walk
-    "wave": 28,            # Big Wave Hello
-    "sleep": 269,          # Sleep
-    "cheer": 303,          # Cheer with Both Hands
+    # The keystone kit (producer note 2026-07-16: sit up, deep breath,
+    # flop back to sleep): Sleep is the permanent idle — a breathing giant.
+    "sleep": 269,          # Sleep (idle loop)
+    "toss_turn": 270,      # Toss and Turn — the roll-over itself
+    "wake": 271,           # Wake Up and Look Up — the stir
+    "breathe": 336,        # Long Breathe and Look Around — the deep breath
+    "doze": 268,           # Sit and Doze Off — the flop back
 }
 PER_CHAR_CLIPS = {}
 

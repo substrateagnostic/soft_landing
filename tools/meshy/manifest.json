@@ -144,5 +144,23 @@
     "category": "prop",
     "prompt": "tiny plush moth with round fuzzy body and big soft pale wings, cream and dusty blue, cute",
     "target_height_hint": 0.25
+  },
+  {
+    "id": "bramble_bear_a",
+    "category": "giant",
+    "prompt": "enormous sleeping bear plush toy lying stretched out on its side, full body seen from above, fast asleep with closed eyes and gentle smile, head at one end with one round ear up, big soft chest, huge round haunch hip at the other end, stubby paws tucked, warm umber brown fur with cream muzzle and belly, giant stuffed animal",
+    "target_height_hint": 12.0
+  },
+  {
+    "id": "bramble_bear_b",
+    "category": "giant",
+    "prompt": "giant sleeping teddy bear lying on its side curled slightly, viewed in profile, deeply asleep, closed sleepy eyes, round soft head with small round ears, plump chest and big rounded hip, short plush limbs resting, chunky soft toy proportions, warm brown with lighter snout and tummy patch",
+    "target_height_hint": 12.0
+  },
+  {
+    "id": "bramble_bear_rig",
+    "category": "giant",
+    "prompt": "giant plush teddy bear standing upright in T pose with arms straight out, chunky rounded soft toy proportions, thick body and short legs, warm umber brown fur, cream muzzle and round belly patch, small round ears, sleepy closed eyes, gentle peaceful smile, huggable stuffed animal",
+    "target_height_hint": 1.8
   }
 ]

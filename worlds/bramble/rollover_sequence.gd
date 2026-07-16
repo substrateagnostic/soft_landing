@@ -44,6 +44,28 @@ signal rollover_finished
 
 const BUBBLE_SCENE: PackedScene = preload("res://core/rescue/bubble_effect.tscn")
 
+# --- Cinematic camera (producer note 2026-07-16: "didn't see something
+# that clearly read as the bear rolling over" — the gameplay camera never
+# frames the whole giant, so the roll read as a slab shifting. The
+# sequence now takes the lens: letterboxed wide shot of the full bear,
+# slow dolly through the settle, then a push to the far-meadow reveal). --
+const CINE_WIDE_POS: Vector3 = Vector3(9.0, 40.0, 88.0)
+const CINE_WIDE_LOOK: Vector3 = Vector3(9.0, 6.0, 0.0)
+const CINE_DOLLY_POS: Vector3 = Vector3(28.0, 34.0, 76.0)
+const CINE_MEADOW_POS: Vector3 = Vector3(-20.0, 24.0, -16.0)
+const CINE_MEADOW_LOOK: Vector3 = Vector3(-20.0, 1.0, -52.0)
+const CINE_TAIL: float = 3.0 # seconds on the meadow after the settle
+const CINE_DOLLY_TIME: float = 16.0 # slow creep spanning the keystone clips
+const CINE_BEAR_LOOK: Vector3 = Vector3(46.0, 8.0, 28.0) # drift toward HIM
+const LETTERBOX_FRACTION: float = 0.085 # 0.11 clipped the Moon's subtitle
+const LETTERBOX_FADE: float = 0.6
+
+# Optional visual shell: if the world has a node named "BearShellAnchor"
+# (the Meshy giant-bear model), the sequence rolls IT — the readable bear —
+# in sync with the haunch mound underneath.
+const SHELL_ROLL_DEGREES: float = -26.0
+const SHELL_SETTLE_SINK: float = 0.8
+
 # --- Haunch settle (the one moving body part) -------------------------------
 const HAUNCH_SETTLE_OFFSET: Vector3 = Vector3(0.0, -1.0, 4.0) # sinks 1m, shifts toward the far meadow
 const HAUNCH_SETTLE_YAW_DEGREES: float = 35.0 # the mound is a sphere -- spinning it is invisible on its own
@@ -135,14 +157,159 @@ func _play_sequence(forced: bool) -> void:
 	# the full ROTATE_DURATION in parallel underneath the already-solid
 	# far meadow.
 	_reveal_far_meadow()
+	_cine_begin()
 	_bubble_all_players()
 	_tween_haunch_settle()
 
-	var timer: SceneTreeTimer = get_tree().create_timer(ROTATE_DURATION)
-	await timer.timeout
+	# The keystone (producer direction): the giant stirs, sits up, takes
+	# one enormous breath, tosses-and-turns, and settles back to sleep —
+	# played by the rigged bear if present, rigid-roll fallback otherwise.
+	var keystone: AnimationPlayer = _find_shell_anim_player()
+	if keystone != null:
+		await _play_keystone(keystone)
+	else:
+		_tween_shell_roll()
+		var timer: SceneTreeTimer = get_tree().create_timer(ROTATE_DURATION)
+		await timer.timeout
+
+	_cine_meadow_push()
+	var tail: SceneTreeTimer = get_tree().create_timer(CINE_TAIL)
+	await tail.timeout
+	_cine_end()
 
 	print("ROLLOVER %s" % JSON.stringify({"phase": "end", "forced": forced}))
 	rollover_finished.emit()
+
+
+const KEYSTONE_CLIPS: Array[String] = ["wake", "breathe", "toss_turn"]
+const KEYSTONE_CLIP_CAP: float = 8.0 # per-clip safety net; never hang the sequence
+
+
+func _find_shell_anim_player() -> AnimationPlayer:
+	var shell: Node3D = _world.get_node_or_null("BearShellAnchor") as Node3D
+	if shell == null:
+		return null
+	var rig: Node = shell.get_node_or_null("BearRig")
+	if rig == null:
+		return null
+	for child: Node in rig.get_children():
+		if child is AnimationPlayer:
+			return child
+	return null
+
+
+func _play_keystone(player: AnimationPlayer) -> void:
+	for clip: String in KEYSTONE_CLIPS:
+		if not player.has_animation(clip):
+			continue
+		player.play(clip)
+		print("ROLLOVER %s" % JSON.stringify({"phase": "keystone", "clip": clip}))
+		var cap: SceneTreeTimer = get_tree().create_timer(
+			minf(player.get_animation(clip).length + 0.3, KEYSTONE_CLIP_CAP))
+		await cap.timeout
+	if player.has_animation("sleep"):
+		player.play("sleep")
+
+
+# --- Cinematic camera --------------------------------------------------------
+
+var _cine_cam: Camera3D = null
+var _cine_look: Vector3 = Vector3.ZERO
+var _prev_cam: Camera3D = null
+var _letterbox: CanvasLayer = null
+var _bar_top: ColorRect = null
+var _bar_bottom: ColorRect = null
+
+
+func _cine_begin() -> void:
+	_prev_cam = get_viewport().get_camera_3d()
+	if _cine_cam == null:
+		_cine_cam = Camera3D.new()
+		_cine_cam.name = "RolloverCineCamera"
+		_world.add_child(_cine_cam)
+	_cine_cam.position = CINE_WIDE_POS
+	_cine_look = CINE_WIDE_LOOK
+	_cine_cam.look_at_from_position(CINE_WIDE_POS, CINE_WIDE_LOOK, Vector3.UP)
+	_cine_cam.current = true
+	_show_letterbox(true)
+	var tween: Tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.set_parallel(true)
+	tween.tween_property(_cine_cam, "position", CINE_DOLLY_POS, CINE_DOLLY_TIME)
+	tween.tween_property(self, "_cine_look", CINE_BEAR_LOOK, CINE_DOLLY_TIME * 0.6)
+
+
+func _cine_meadow_push() -> void:
+	if _cine_cam == null:
+		return
+	var tween: Tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.set_parallel(true)
+	tween.tween_property(_cine_cam, "position", CINE_MEADOW_POS, CINE_TAIL * 0.8)
+	tween.tween_property(self, "_cine_look", CINE_MEADOW_LOOK, CINE_TAIL * 0.8)
+
+
+func _cine_end() -> void:
+	if is_instance_valid(_prev_cam):
+		_prev_cam.current = true
+	_show_letterbox(false)
+
+
+func _process(_delta: float) -> void:
+	if _cine_cam != null and _cine_cam.current:
+		_cine_cam.look_at(_cine_look, Vector3.UP)
+
+
+func _show_letterbox(shown: bool) -> void:
+	if _letterbox == null:
+		_letterbox = CanvasLayer.new()
+		_letterbox.name = "RolloverLetterbox"
+		_letterbox.layer = 90
+		_world.add_child(_letterbox)
+		_bar_top = _make_bar(true)
+		_bar_bottom = _make_bar(false)
+	var bar_height: float = get_viewport().get_visible_rect().size.y * LETTERBOX_FRACTION
+	var tween: Tween = create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(_bar_top, "offset_bottom", bar_height if shown else 0.0, LETTERBOX_FADE)
+	tween.tween_property(_bar_bottom, "offset_top", -bar_height if shown else 0.0, LETTERBOX_FADE)
+
+
+func _make_bar(top: bool) -> ColorRect:
+	var bar := ColorRect.new()
+	bar.color = Color(0.05, 0.06, 0.12) # near-black dusk, not pure black
+	if top:
+		bar.anchor_left = 0.0
+		bar.anchor_right = 1.0
+		bar.anchor_top = 0.0
+		bar.anchor_bottom = 0.0
+		bar.offset_bottom = 0.0
+	else:
+		bar.anchor_left = 0.0
+		bar.anchor_right = 1.0
+		bar.anchor_top = 1.0
+		bar.anchor_bottom = 1.0
+		bar.offset_top = 0.0
+	_letterbox.add_child(bar)
+	return bar
+
+
+# --- Bear shell roll (optional, present once the giant model lands) ----------
+
+func _tween_shell_roll() -> void:
+	var shell: Node3D = _world.get_node_or_null("BearShellAnchor") as Node3D
+	if shell == null:
+		return
+	var tween: Tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.set_parallel(true)
+	tween.tween_property(shell, "rotation_degrees:x",
+		shell.rotation_degrees.x + SHELL_ROLL_DEGREES, ROTATE_DURATION)
+	tween.tween_property(shell, "position:y",
+		shell.position.y - SHELL_SETTLE_SINK, ROTATE_DURATION)
+	tween.tween_property(shell, "position:z",
+		shell.position.z + HAUNCH_SETTLE_OFFSET.z, ROTATE_DURATION)
 
 
 ## Reuses the exact rescue/warp visual vocabulary (core/rescue/
@@ -178,6 +345,13 @@ func _apply_already_open_state() -> void:
 	_haunch_visual.position = _haunch_rest_position + HAUNCH_SETTLE_OFFSET
 	_haunch_body.position = _haunch_body_rest_position + HAUNCH_SETTLE_OFFSET
 	_haunch_visual.rotation_degrees.y = HAUNCH_SETTLE_YAW_DEGREES
+	# Shell (if the world built one before this ran — bramble.gd's _ready
+	# ordering guarantees it) rests in the rolled pose on revisit.
+	var shell: Node3D = _world.get_node_or_null("BearShellAnchor") as Node3D
+	if shell != null:
+		shell.rotation_degrees.x += SHELL_ROLL_DEGREES
+		shell.position.y -= SHELL_SETTLE_SINK
+		shell.position.z += HAUNCH_SETTLE_OFFSET.z
 	_reveal_far_meadow()
 
 

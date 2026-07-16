@@ -35,8 +35,7 @@ const LOOPING_CLIPS: Array[String] = ["idle", "walk", "run", "fall", "sleep", "s
 # Already merged on disk (scenes/players/rigs/): pip/otto v1 (provenance),
 # pip_v2/otto_v2 (D24 leads, 11 clips each). Current batch: M2 dreamkeepers.
 const CHARACTERS: Dictionary = {
-	"lamb_keeper": ["idle", "walk", "wave", "sleep", "cheer"],
-	"moth_shepherd": ["idle", "walk", "wave", "sleep", "cheer"],
+	"bramble_bear_rig": ["sleep", "toss_turn", "wake", "breathe", "doze"],
 }
 
 

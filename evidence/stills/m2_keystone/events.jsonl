@@ -1,0 +1,10 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/m2_keystone","quitafter":"28","rollover":true,"shots":"300,600,900,1300","skipmenu":true,"world":"bramble"}
+EVT {"seat":1,"t":5,"type":"landed"}
+EVT {"seat":2,"t":7,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_keystone/shot_300.png
+EVT {"seat":1,"t":459,"type":"landed"}
+EVT {"seat":2,"t":461,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_keystone/shot_600.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_keystone/shot_900.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_keystone/shot_1300.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 28.0s)
