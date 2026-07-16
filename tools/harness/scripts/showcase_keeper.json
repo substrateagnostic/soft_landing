@@ -1,0 +1,8 @@
+{
+  "description": "M2 showcase (fort, 1 pad): Pip walks from spawn toward the lamb dreamkeeper at (-4.7, -3.8) — camera-settle idle first, then pure-axis legs west and north, stopping inside the 4m wake radius. Expected: DREAMKEEPER wake + wave receipts while the camera watches.",
+  "events": [
+    {"frame": 200, "seat": 1, "action": "move", "vec": [-1.0, 0.0]},
+    {"frame": 275, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 350, "seat": 1, "action": "move", "vec": [0.0, 0.0]}
+  ]
+}

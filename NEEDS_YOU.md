@@ -2,6 +2,36 @@
 *Updated at the end of every session. What exists, where the evidence is,
 one cold demo command, what's unverified, and what only you can decide.*
 
+## Session 2, second wave — M2: BRAMBLE THE PROOF WORLD (same night)
+
+- **THE ROLL-OVER is real**: return all 10 of Bramble's dreams (or run with
+  `--rollover` to preview) and the bear settles in his sleep — every kid on
+  a moving part gets caught in a soft bubble and floated to the FAR MEADOW
+  on his other side, now dressed with real art (berry bushes, moon daisies,
+  a picnic waiting). The rescue system IS the ride. Video in chat.
+- **Breath-becomes-weather**: every ~44s his long exhale becomes a soft
+  updraft by the snout — an elevator on the bear's own rhythm (receipted:
+  4.75m → 11.49m lift after the agent caught its own too-weak updraft).
+- **All 10 Bramble dreamlings authored** (2 race, 2 ride, 1 shy, 1 duet,
+  1 geyser-flourish, 3 open) — and every archetype is now LIVE-VERIFIED
+  including duet's solo fallback at exactly 10.0s. Moon budget: 541/900.
+- **The game has a full soundscape**: flutter/glide/pound have voices
+  (pillow-thump, not drum), footsteps, world ambience beds that follow you,
+  dreamlings giggle positionally, props boop when poked, menus tick.
+- **Dreamkeepers live here now**: a sleepy lamb guest at the fort (wakes,
+  faces you, waves — zero dialogue, presence only), the moth shepherd on
+  Wisp's shore and in Bramble's meadow. They cheer from afar when any
+  dream comes home.
+- **All four worlds dressed** with the 15-asset batch (pines, mushroom
+  lamps, stump doors, moon daisies...). Placements 4/4 green throughout.
+- Credits after the night: ~1,840 of the shared pool.
+
+### ⛔ New decisions pending (M2)
+1. **Roll-over feel** — 8s settle, bubble-lift pacing: watch the video,
+   tell me in feelings.
+2. **Dreamkeeper register** — lamb/moth are wordless by design (the Moon
+   talks, the world gestures). Veto if you want them chattier.
+
 ## Session 2 — FOUNDATION NIGHT (2026-07-16, the V2 mandate)
 
 ### What happened (all pushed to github.com/substrateagnostic/soft_landing)

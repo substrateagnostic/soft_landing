@@ -19,6 +19,21 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-16, late — Session 2, wave 2: M2 BRAMBLE PROOF WORLD
+- Four parallel lanes + director integration, same night as Foundation:
+  set pieces (breath-elevator + THE ROLL-OVER with bubble-lift to a far
+  meadow), missions (10/10 authored; ride/shy/duet live-verified — duet
+  solo fallback at exactly 600 frames), audio v2 (verbs voiced, ambience
+  beds, positional giggles — volumedetect receipts), dreamkeepers (lamb
+  fort guest + moth shepherd, rigged Meshy bipeds, wordless
+  wake/wave/cheer), 15-asset dressing across all four worlds.
+- Set-piece agent caught: updraft weaker than gravity, far-meadow
+  collision timing fall-through, a contaminated save silently changing
+  --rollover behavior. Mission agent found the "10s fallback vs 5s test
+  exposure" conflict before it shipped.
+- Credits: 2,330 → 1,840 (batch-2 450 + dreamkeeper rigs 40).
+- Placements 4/4 green throughout; everything committed + pushed.
+
 ### 2026-07-16, evening — Session 2: FOUNDATION NIGHT (the V2 mandate)
 - **New director seated** under the producer's re-mandate: nothing locked,
   AAA/publication bar, 5–9 audience, "aim way higher." Tuned to the corner,
