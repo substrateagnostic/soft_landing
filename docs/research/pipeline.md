@@ -394,3 +394,28 @@ the AVI header is left broken.
   against the raw OpenAPI spec if `should_remesh` is ever omitted from a
   request in the soft_landing pipeline (the recommendation above sets it
   explicitly, which sidesteps the ambiguity either way).
+
+---
+
+## Addendum (2026-07-16, from docs.meshy.ai/llms.txt — producer pointer)
+
+Deltas vs the research above, for future instances:
+
+- **Asset retention: 3 days max** (non-Enterprise). Meshy-hosted model URLs
+  and task records go stale fast — the committed GLBs in this repo are the
+  ONLY durable record. Never re-derive from task IDs in forge_report.json.
+- **Image-to-3D and Multi-Image-to-3D exist.** Big lever for likeness work:
+  Callie could be regenerated from PHOTOS of the actual stuffy (multiple
+  angles) instead of a text prompt, if the text version misses her.
+- **Retexture endpoint**: fix a texture read (e.g. the firefly jar's missing
+  glow-dots) without regenerating geometry — cheaper than a re-roll.
+- **SSE streaming** (`/<endpoint>/:id/stream`) and **webhooks** exist as
+  alternatives to polling; polling remains fine for batch forge runs.
+- **Models**: `meshy-6` (default) / `meshy-5` / `latest`. Formats via
+  `model_urls.<format>`: GLB, FBX, OBJ, USDZ.
+- **Rate limits** (matches sibling doc): Pro 20 req/s + 10 queued, Studio
+  20/s + 20, Enterprise 100/s + 50+.
+- **A Meshy MCP server exists** (`claude mcp add meshy`) — future sessions
+  could drive Meshy via MCP tools instead of tools/meshy/meshy_forge.ps1.
+  The forge stays canonical here (deterministic receipts, house-style
+  suffix enforcement, credit caps), but MCP is handy for one-off explorations.

@@ -90,6 +90,7 @@ const FUR_PATCH_SPREAD: float = 1.6
 const FUR_BLADE_HEIGHT: float = 0.9
 
 var _chest: BreathingChest = null
+var _geyser_a: SnoreGeyser = null # d07 rides this column (placement exemption)
 
 
 func _ready() -> void:
@@ -316,11 +317,11 @@ func _build_ear_and_door() -> void:
 
 func _build_geysers() -> void:
 	var geyser_y: float = _sphere_surface_y(HEAD_CENTER, HEAD_RADIUS, GEYSER_ANCHOR_X, GEYSER_ANCHOR_Z)
-	_add_geyser(Vector3(GEYSER_ANCHOR_X, geyser_y, GEYSER_ANCHOR_Z), 1.0)
+	_geyser_a = _add_geyser(Vector3(GEYSER_ANCHOR_X, geyser_y, GEYSER_ANCHOR_Z), 1.0)
 	_add_geyser(Vector3(GEYSER_ANCHOR_X, geyser_y, -GEYSER_ANCHOR_Z), 3.5)
 
 
-func _add_geyser(base_position: Vector3, phase_offset: float) -> void:
+func _add_geyser(base_position: Vector3, phase_offset: float) -> SnoreGeyser:
 	var geyser := SnoreGeyser.new()
 	geyser.name = "SnoreGeyser"
 	geyser.radius = GEYSER_RADIUS
@@ -330,6 +331,7 @@ func _add_geyser(base_position: Vector3, phase_offset: float) -> void:
 	geyser.phase_offset = phase_offset
 	geyser.position = base_position
 	add_child(geyser)
+	return geyser
 
 
 func _build_paw_ramps() -> void:
@@ -397,7 +399,6 @@ func _build_dreamlings() -> void:
 		"d03": Vector3(3.0, 2.7, PAW_Z_OFFSET), # on the +Z paw ramp
 		"d04": Vector3(3.0, 2.7, -PAW_Z_OFFSET), # on the -Z paw ramp
 		"d05": Vector3(HAUNCH_CENTER.x, HAUNCH_CENTER.y + HAUNCH_RADIUS + 0.3, 0.0), # haunch peak, first plateau
-		"d07": Vector3(GEYSER_ANCHOR_X, 0.0, GEYSER_ANCHOR_Z), # y filled in below, atop the geyser column
 		"d08": Vector3(SHELF_ANCHOR_X, 0.0, SHELF_ANCHOR_Z), # y filled in below, on the shoulder shelf
 		"d09": Vector3(FUR_PATCH_HAUNCH_X, 0.0, FUR_PATCH_HAUNCH_Z), # y filled in below, hidden in fur
 		# P3 fix (docs/verify/properties-VERIFY.md): was EAR_ANCHOR_Z - 1.5,
@@ -408,7 +409,6 @@ func _build_dreamlings() -> void:
 		# DreamDoor, y still anchored on the bump surface below.
 		"d10": Vector3(EAR_ANCHOR_X, 0.0, EAR_ANCHOR_Z - 2.3),
 	}
-	positions["d07"].y = _sphere_surface_y(HEAD_CENTER, HEAD_RADIUS, GEYSER_ANCHOR_X, GEYSER_ANCHOR_Z) + GEYSER_HEIGHT - 0.3
 	positions["d08"].y = _sphere_surface_y(SHOULDER_CENTER, SHOULDER_RADIUS, SHELF_ANCHOR_X, SHELF_ANCHOR_Z) + SHELF_HEIGHT_ABOVE_ANCHOR + 0.6
 	positions["d09"].y = _sphere_surface_y(HAUNCH_CENTER, HAUNCH_RADIUS, FUR_PATCH_HAUNCH_X, FUR_PATCH_HAUNCH_Z) + 0.35
 	positions["d10"].y = _sphere_surface_y(HEAD_CENTER, HEAD_RADIUS, EAR_ANCHOR_X, EAR_ANCHOR_Z) + EAR_BUMP_HEIGHT
@@ -419,6 +419,11 @@ func _build_dreamlings() -> void:
 	# d06 rides the chest: parented to it, so it moves with the breath.
 	var chest_top_local: Vector3 = Vector3(0.0, CHEST_THICKNESS * 0.5 + 0.3, 0.0)
 	_add_dreamling("d06", chest_top_local, _chest)
+
+	# d07 rides the +Z snore geyser: parented to the column (the marmalade
+	# thermal exemption pattern) so the placement property understands it —
+	# a dreamling atop an updraft has no ground beneath by design.
+	_add_dreamling("d07", Vector3(0.0, GEYSER_HEIGHT - 0.3, 0.0), _geyser_a)
 
 
 func _add_dreamling(id: String, local_position: Vector3, parent: Node3D) -> void:

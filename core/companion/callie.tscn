@@ -1,0 +1,109 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://core/companion/callie.gd" id="1"]
+[ext_resource type="Script" path="res://core/art/model_slot.gd" id="2"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pickup"]
+radius = 1.2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+radius = 0.045
+height = 0.16
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_black"]
+albedo_color = Color(0.169, 0.141, 0.125, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_head"]
+radius = 0.052
+height = 0.104
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tan"]
+albedo_color = Color(0.788, 0.584, 0.361, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_patch"]
+radius = 0.032
+height = 0.064
+
+[sub_resource type="PrismMesh" id="PrismMesh_ear"]
+size = Vector3(0.03, 0.035, 0.02)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_white"]
+albedo_color = Color(0.961, 0.949, 0.91, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_belly"]
+radius = 0.04
+height = 0.05
+
+[sub_resource type="SphereMesh" id="SphereMesh_paws"]
+radius = 0.035
+height = 0.045
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_tail"]
+radius = 0.016
+height = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_tailtip"]
+radius = 0.02
+height = 0.04
+
+[node name="Callie" type="Area3D"]
+script = ExtResource("1")
+
+[node name="PickupRange" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_pickup")
+
+[node name="FallbackVisual" type="Node3D" parent="."]
+
+[node name="BodyBlack" type="MeshInstance3D" parent="FallbackVisual"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.045, 0)
+mesh = SubResource("CapsuleMesh_body")
+surface_material_override/0 = SubResource("StandardMaterial3D_black")
+
+[node name="HeadTan" type="MeshInstance3D" parent="FallbackVisual"]
+position = Vector3(0, 0.06, -0.135)
+mesh = SubResource("SphereMesh_head")
+surface_material_override/0 = SubResource("StandardMaterial3D_tan")
+
+[node name="HeadPatch" type="MeshInstance3D" parent="FallbackVisual"]
+position = Vector3(0.022, 0.075, -0.145)
+mesh = SubResource("SphereMesh_patch")
+surface_material_override/0 = SubResource("StandardMaterial3D_black")
+
+[node name="EarL" type="MeshInstance3D" parent="FallbackVisual"]
+position = Vector3(-0.02, 0.105, -0.145)
+mesh = SubResource("PrismMesh_ear")
+surface_material_override/0 = SubResource("StandardMaterial3D_tan")
+
+[node name="EarR" type="MeshInstance3D" parent="FallbackVisual"]
+position = Vector3(0.02, 0.105, -0.145)
+mesh = SubResource("PrismMesh_ear")
+surface_material_override/0 = SubResource("StandardMaterial3D_tan")
+
+[node name="BellyWhite" type="MeshInstance3D" parent="FallbackVisual"]
+position = Vector3(0, 0.035, -0.06)
+mesh = SubResource("SphereMesh_belly")
+surface_material_override/0 = SubResource("StandardMaterial3D_white")
+
+[node name="PawsWhite" type="MeshInstance3D" parent="FallbackVisual"]
+position = Vector3(0, 0.02, -0.12)
+mesh = SubResource("SphereMesh_paws")
+surface_material_override/0 = SubResource("StandardMaterial3D_white")
+
+[node name="TailBlack" type="MeshInstance3D" parent="FallbackVisual"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.03, 0.13)
+mesh = SubResource("CapsuleMesh_tail")
+surface_material_override/0 = SubResource("StandardMaterial3D_black")
+
+[node name="TailTipWhite" type="MeshInstance3D" parent="FallbackVisual"]
+position = Vector3(0, 0.028, 0.175)
+mesh = SubResource("SphereMesh_tailtip")
+surface_material_override/0 = SubResource("StandardMaterial3D_white")
+
+[node name="ModelSlot" type="Node3D" parent="FallbackVisual"]
+script = ExtResource("2")
+model_id = "callie"
+target_height = 0.18
+
+[node name="MewPlayer" type="AudioStreamPlayer3D" parent="."]
+
+[node name="PurrPlayer" type="AudioStreamPlayer3D" parent="."]

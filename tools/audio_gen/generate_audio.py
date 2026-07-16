@@ -437,6 +437,61 @@ def make_land_soft() -> np.ndarray:
     return finalize_oneshot(x, fade_out_ms=60.0)
 
 
+def make_mew_soft() -> np.ndarray:
+    """mew_soft — Callie's tiny breathy meow (docs/design/world-cards/
+    callie.md: "tiny, breathy, never insistent"). A pitch-bent tone (rises
+    520 -> 720 Hz over the first third, eases back to 480 Hz by the end --
+    the classic small-cat "mew" contour) with a little triangle-core warmth
+    mixed under the sine (same trick as the drone layers, keeps it from
+    reading as a pure test tone), plus airy swept noise for breathiness.
+    One shared swell envelope (40 ms soft attack, 300 ms release) over both
+    layers so nothing snaps on or off. ~0.5 s, peak <= -12 dBFS (register
+    floor: soft attack, quiet, never insistent)."""
+    dur = 0.5
+    n = int(dur * SR)
+    t = np.arange(n) / SR
+    rise_n = n // 3
+    fall_n = n - rise_n
+    freq = np.concatenate([
+        520.0 + (720.0 - 520.0) * (np.arange(rise_n) / max(rise_n - 1, 1)),
+        720.0 + (480.0 - 720.0) * (np.arange(fall_n) / max(fall_n - 1, 1)),
+    ])
+    tone = np.sin(2.0 * np.pi * np.cumsum(freq) / SR)
+    tone = 0.8 * tone + 0.2 * triangle(600.0, t)
+    rng = seeded_rng("mew_soft")
+    breath = swept_noise(n, rng, 700.0, 2200.0, sweep_env=np.sin(np.pi * t / dur))
+    env = env_swell(t, dur=dur, attack=0.04, release=0.30)
+    x = (0.75 * tone + 0.35 * breath) * env
+    return finalize_oneshot(x, fade_out_ms=120.0)
+
+
+def _purr_gen(t: np.ndarray) -> np.ndarray:
+    """purr_loop generator — a low rumble (55 Hz sine core, cat-purr
+    register) amplitude-modulated by a ~25 Hz pulse train. The pulse itself
+    is a half-rectified sine raised to a power (not a square edge), so each
+    pulse has its own soft attack/decay rather than a buzzy click -- that
+    double modulation (tone x pulse) is what reads as a purr instead of a
+    plain droning hum. The modulation floor (0.35) keeps it from ever
+    hitting true silence between pulses, same as a real purr never fully
+    stopping mid-cycle."""
+    carrier = sine(55.0, t)
+    pulse = np.clip(np.sin(2.0 * np.pi * 25.0 * t), 0.0, None) ** 1.5
+    am = 0.35 + 0.65 * pulse
+    return carrier * am
+
+
+def make_purr_loop() -> np.ndarray:
+    """purr_loop — Callie's warm loop while her carrier holds dreamlings
+    (docs/design/world-cards/callie.md: "low, warm, loopable ~4 s"). Built
+    with the same render_seamless_loop crossfade helper the music stems use
+    (loop-clean ends by construction, no fade_io -- a fade would break the
+    loop), then low-passed at 180 Hz to keep it low/warm with no buzz from
+    the pulse train's own harmonics. ~4.0 s, peak <= -16 dBFS (quiet enough
+    to sit under everything else while carried)."""
+    x = render_seamless_loop(_purr_gen, 4.0, xfade_ms=XFADE_MS)
+    return lowpass_fft(x, SR, cutoff_hz=180.0)
+
+
 def make_ui_select() -> np.ndarray:
     """ui_select — a single tiny music-box blip, same bell-partial family
     as the dreamling chime (pitch A5) so the UI feels made of the same
@@ -462,6 +517,12 @@ SFX_MANIFEST: list[tuple[str, object, float]] = [
     ("toss",         make_toss, -7.0),
     ("land_soft",    make_land_soft, -12.0),
     ("ui_select",    make_ui_select, -8.0),
+    # Callie (docs/design/world-cards/callie.md): a one-shot mew and a
+    # seamless purr loop. purr_loop lands in assets/audio/sfx/ (not
+    # stems/) like every other loop-flagged one-off sound in this pack --
+    # only the four-layer Bramble/pillow_fort drones live under stems/.
+    ("mew_soft",     make_mew_soft, -12.0),
+    ("purr_loop",    make_purr_loop, -16.0),
 ]
 
 

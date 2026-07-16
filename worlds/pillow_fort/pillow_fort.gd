@@ -23,6 +23,10 @@ const FORT_GLOW_COLOR: Color = Color("F2C879") # honey glow
 const CUSHION_BLUSH: Color = Color("E8B4C8")
 const CUSHION_DUSK_BLUE: Color = Color("2E3B5E")
 
+const CALLIE_SCENE: PackedScene = preload("res://core/companion/callie.tscn")
+const CALLIE_CUSHION_RADIUS: float = 0.32
+const CALLIE_CUSHION_HEIGHT_SCALE: float = 0.55 # squashed flatter than the walkable cushions (_add_cushion)
+
 const FENCE_POST_COUNT: int = 8
 const FENCE_POST_RADIUS: float = 11.5 # just inside the clearing edge
 const FENCE_POST_HEIGHT: float = 0.9
@@ -44,6 +48,7 @@ func _ready() -> void:
 	_build_camera_hint()
 	_build_bramble_door()
 	_build_fort_growth()
+	_build_callie_home()
 	super._ready()
 
 
@@ -116,6 +121,49 @@ func _add_glow_orb(orb_name: String, orb_position: Vector3, radius: float) -> vo
 	orb.mesh = mesh
 	orb.position = orb_position
 	add_child(orb)
+
+
+## The stuffed cat's home cushion (docs/design/world-cards/callie.md), beside
+## the fort's right side wall. Guarded against duplicating a Callie who is
+## still going to exist (core/companion/callie.gd's own static
+## active_instance bookkeeping + will_persist() — read-only from here, see
+## that script's header/method comments for the full world-switch-survival
+## trace, including why a plain `state == CARRIED` or is_instance_valid()
+## check isn't enough).
+func _build_callie_home() -> void:
+	if Callie.active_instance != null and is_instance_valid(Callie.active_instance) \
+			and Callie.active_instance.will_persist():
+		print("CALLIE_COUNT %s" % JSON.stringify({
+			"count": get_tree().get_nodes_in_group("callie").size(), "skipped_duplicate": true,
+		}))
+		return
+
+	var half_w: float = FORT_WIDTH * 0.5
+	# OUTSIDE the right wall, matching every other prop in this file
+	# (LanternVisual, FireflyJarVisual, the walkable cushions in
+	# _build_cushions()): the fort itself is a fully enclosed shell (4 solid
+	# walls + roof, only the small back doorway gap), so anything placed
+	# INSIDE it is invisible to the fixed ClearingCameraHint framing and
+	# unreachable except through that one narrow gap.
+	var cushion_position: Vector3 = FORT_CENTER + Vector3(half_w + 0.5, 0.0, 0.5)
+
+	var mesh := SphereMesh.new()
+	mesh.radius = CALLIE_CUSHION_RADIUS
+	mesh.height = CALLIE_CUSHION_RADIUS * 2.0 * CALLIE_CUSHION_HEIGHT_SCALE
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = CUSHION_BLUSH
+	mesh.material = mat
+
+	var cushion := MeshInstance3D.new()
+	cushion.name = "CallieCushion"
+	cushion.mesh = mesh
+	cushion.position = cushion_position + Vector3(0.0, mesh.height * 0.5, 0.0)
+	add_child(cushion)
+
+	var callie: Callie = CALLIE_SCENE.instantiate() as Callie
+	callie.name = "Callie"
+	callie.position = cushion_position + Vector3(0.0, mesh.height, 0.0)
+	add_child(callie)
 
 
 func world_id() -> String:
