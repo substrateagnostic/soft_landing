@@ -1,0 +1,25 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/v2_characters","pads":"2","quitafter":"15","script":"tools/harness/scripts/gate2_toss.json","shots":"125,220,290","skipmenu":true,"world":"pillow_fort"}
+EVT {"mode":0,"mode_name":"COOP","t":1,"type":"mode_changed"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(2)
+HARNESS_NOTE script loaded: res://tools/harness/scripts/gate2_toss.json (12 events) - Gate 2 tour, part 2 (pillow_fort, --pads=2): Otto walks to Pip, picks him up (CARRY), carries him a step, and gently tosses him (TOSS) — the oldest parent-child game as a co-op verb. Pip walks off after landing, proving control returns. Expected receipts: CARRY, TOSS.
+EVT {"seat":1,"t":6,"type":"landed"}
+EVT {"seat":2,"t":6,"type":"landed"}
+HARNESS_EVENT {"action":"move","frame":60,"seat":2,"vec":[1.0,0.0]}
+HARNESS_EVENT {"action":"move","frame":92,"seat":2,"vec":[0.0,0.0]}
+HARNESS_EVENT {"action":"interact","frame":110,"seat":2,"type":"press"}
+HARNESS_EVENT {"action":"interact","frame":116,"seat":2,"type":"release"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/v2_characters/shot_125.png
+HARNESS_EVENT {"action":"interact","frame":130,"seat":2,"type":"press"}
+HARNESS_EVENT {"action":"interact","frame":136,"seat":2,"type":"release"}
+EVT {"seat":1,"t":194,"type":"landed"}
+HARNESS_EVENT {"action":"move","frame":200,"seat":2,"vec":[0.0,-1.0]}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/v2_characters/shot_220.png
+HARNESS_EVENT {"action":"move","frame":260,"seat":2,"vec":[0.0,0.0]}
+HARNESS_EVENT {"action":"jump","frame":280,"seat":2,"type":"press"}
+EVT {"seat":2,"t":281,"type":"jumped"}
+HARNESS_EVENT {"action":"jump","frame":286,"seat":2,"type":"release"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/v2_characters/shot_290.png
+EVT {"seat":2,"t":335,"type":"landed"}
+HARNESS_EVENT {"action":"move","frame":400,"seat":1,"vec":[0.0,-1.0]}
+HARNESS_EVENT {"action":"move","frame":460,"seat":1,"vec":[0.0,0.0]}
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 15.0s)

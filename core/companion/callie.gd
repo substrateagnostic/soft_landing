@@ -49,6 +49,18 @@ var state: State = State.NAPPING
 @export var sniff_turn_speed: float = 4.0
 @export var breath_period: float = 5.0
 @export var breath_amplitude: float = 0.06
+## D19 visual-life polish: a slow, tiny yaw wobble layered under the
+## existing breath-scale bob while NAPPING -- deliberately a different
+## period than breath_period so the two never lock into a single
+## mechanical-looking cycle. Gameplay-inert (rotation only, no collision on
+## this Area3D depends on facing).
+@export var sway_period: float = 7.3
+@export var sway_amplitude_deg: float = 3.0
+## D19 polish: brief scale pulse on _play_mew() (a "perked up" reaction),
+## reusing the same tween-squash idiom as _play_flop_tween() below.
+@export var perk_pulse_up_duration: float = 0.12
+@export var perk_pulse_down_duration: float = 0.18
+@export var perk_pulse_scale: Vector3 = Vector3(1.08, 0.94, 1.08)
 @export var flop_duration: float = 0.35
 @export var set_down_forward_offset: float = 0.5
 ## Fallback perch height if a carrier's CollisionShape3D/CapsuleShape3D
@@ -64,6 +76,8 @@ var _carrier: PlayerBody = null
 var _claim_cooldown_timer: float = 0.0
 var _mew_cooldown_timer: float = 0.0
 var _breath_phase: float = 0.0
+var _sway_phase: float = 0.0
+var _sway_base_yaw: float = 0.0 # rotation.y at the moment NAPPING was (re)entered
 ## World-door bug guard: WorldDoor (worlds/common/world_door.gd) and Callie
 ## both independently read the SAME raw "p%d_interact just_pressed" signal
 ## with no consumption/arbitration between them. Carrying Callie through any
@@ -267,13 +281,17 @@ func _current_world_root() -> Node3D:
 
 
 # ---------------------------------------------------------------------------
-# NAPPING — breath-scale bob
+# NAPPING — breath-scale bob + a slow micro-sway (D19 visual-life polish)
 # ---------------------------------------------------------------------------
 
 func _process_napping(delta: float) -> void:
 	_breath_phase = fmod(_breath_phase + delta * TAU / breath_period, TAU)
 	var s: float = 1.0 + sin(_breath_phase) * breath_amplitude
 	_visual.scale = Vector3(1.0, s, 1.0)
+
+	_sway_phase = fmod(_sway_phase + delta * TAU / sway_period, TAU)
+	var sway_rad: float = deg_to_rad(sway_amplitude_deg) * sin(_sway_phase)
+	_visual.rotation.y = _sway_base_yaw + sway_rad
 
 
 # ---------------------------------------------------------------------------
@@ -350,6 +368,18 @@ func _play_mew(target_id: String) -> void:
 	print("CALLIE_MEW %s" % JSON.stringify({"target": target_id, "t": Engine.get_physics_frames()}))
 	if _mew_player.stream != null:
 		_mew_player.play()
+	_play_perk_pulse()
+
+
+## D19 visual-life polish: a small "perked up" scale pulse each time she
+## mews, reusing _play_flop_tween()'s tween-squash idiom. Purely cosmetic —
+## does not touch _play_mew()'s own cooldown/targeting/audio logic above.
+func _play_perk_pulse() -> void:
+	var tween: Tween = create_tween()
+	tween.tween_property(_visual, "scale", perk_pulse_scale, perk_pulse_up_duration) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(_visual, "scale", Vector3.ONE, perk_pulse_down_duration) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
 
 func _update_purr() -> void:
@@ -378,6 +408,12 @@ func _maybe_speak_marmalade_line() -> void:
 # ---------------------------------------------------------------------------
 
 func _set_state(new_state: State, announce: bool = true) -> void:
+	if new_state == State.NAPPING and _visual != null:
+		# Re-anchor the micro-sway to wherever she's currently facing (not
+		# always yaw=0) and restart its phase at zero so it eases in from the
+		# resting pose instead of snapping.
+		_sway_base_yaw = _visual.rotation.y
+		_sway_phase = 0.0
 	state = new_state
 	state_changed.emit(state)
 	if announce:

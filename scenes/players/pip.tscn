@@ -4,7 +4,8 @@
 [ext_resource type="Resource" path="res://data/tuning/pip_movement.tres" id="2"]
 [ext_resource type="PackedScene" path="res://core/readability/blob_shadow.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://core/readability/landing_ring.tscn" id="4"]
-[ext_resource type="Script" path="res://core/art/model_slot.gd" id="5"]
+[ext_resource type="Script" path="res://core/art/rigged_model_slot.gd" id="5"]
+[ext_resource type="Script" path="res://core/art/character_animator.gd" id="6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pip"]
 radius = 0.28
@@ -33,11 +34,14 @@ shape = SubResource("CapsuleShape3D_pip")
 mesh = SubResource("CapsuleMesh_pip")
 surface_material_override/0 = SubResource("StandardMaterial3D_pip")
 
-[node name="ModelSlot" type="Node3D" parent="Visual"]
+[node name="RiggedModelSlot" type="Node3D" parent="Visual"]
 script = ExtResource("5")
-model_id = "pip"
+model_id = "pip_v2"
 target_height = 0.9
 ground_offset_y = -0.45
+
+[node name="CharacterAnimator" type="Node" parent="Visual"]
+script = ExtResource("6")
 
 [node name="ReadabilityAnchor" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)

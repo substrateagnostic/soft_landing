@@ -1,7 +1,8 @@
 [gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://core/movement/player_body.gd" id="1"]
-[ext_resource type="Script" path="res://core/art/model_slot.gd" id="7"]
+[ext_resource type="Script" path="res://core/art/rigged_model_slot.gd" id="7"]
+[ext_resource type="Script" path="res://core/art/character_animator.gd" id="8"]
 [ext_resource type="Resource" path="res://data/tuning/otto_movement.tres" id="2"]
 [ext_resource type="PackedScene" path="res://core/readability/blob_shadow.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://core/readability/landing_ring.tscn" id="4"]
@@ -9,12 +10,12 @@
 [ext_resource type="Script" path="res://core/coop/buddy_ai.gd" id="6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_otto"]
-radius = 0.36
-height = 1.3
+radius = 0.32
+height = 0.85
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_otto"]
-radius = 0.36
-height = 1.3
+radius = 0.32
+height = 0.85
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_otto"]
 albedo_color = Color(0.611765, 0.478431, 0.356863, 1)
@@ -35,21 +36,24 @@ shape = SubResource("CapsuleShape3D_otto")
 mesh = SubResource("CapsuleMesh_otto")
 surface_material_override/0 = SubResource("StandardMaterial3D_otto")
 
-[node name="ModelSlot" type="Node3D" parent="Visual"]
+[node name="RiggedModelSlot" type="Node3D" parent="Visual"]
 script = ExtResource("7")
-model_id = "otto"
-target_height = 1.3
-ground_offset_y = -0.65
+model_id = "otto_v2"
+target_height = 0.8
+ground_offset_y = -0.425
+
+[node name="CharacterAnimator" type="Node" parent="Visual"]
+script = ExtResource("8")
 
 [node name="ReadabilityAnchor" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.65, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.425, 0)
 
 [node name="BlobShadow" parent="ReadabilityAnchor" instance=ExtResource("3")]
 
 [node name="LandingRing" parent="ReadabilityAnchor" instance=ExtResource("4")]
 
 [node name="CarrySocket" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0.28)
 
 [node name="CarryToss" type="Node" parent="."]
 script = ExtResource("5")

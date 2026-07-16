@@ -1,0 +1,6 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/v2_swap","quitafter":"5","shots":"120,240","skipmenu":true}
+EVT {"seat":1,"t":2,"type":"landed"}
+EVT {"seat":2,"t":2,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/v2_swap/shot_120.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/v2_swap/shot_240.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 5.0s)
