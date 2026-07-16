@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpreviewmodel1"]
+
+[ext_resource type="Script" path="res://tools/meshy/preview_model.gd" id="1"]
+
+[node name="PreviewModel" type="Node3D"]
+script = ExtResource("1")

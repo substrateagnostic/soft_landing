@@ -30,10 +30,13 @@ OUT_BASE = ROOT / "assets" / "models" / "meshy" / "rigged"
 REPORT_PATH = ROOT / "tools" / "meshy" / "rig_report.json"
 BASE = "https://api.meshy.ai/openapi/v1"
 
-# Refine task ids from the original generations (git 733428c + API task list).
+# Refine task ids. v1 (kept for provenance, superseded by D24 likeness):
+#   pip  019f69c2-d1a4-772f-8358-6cf526baaa81  (h 0.9)
+#   otto 019f69d1-8fa0-7647-b756-bc2dfca1dd69  (h 1.3)
+# v2 = D24 likeness casting (Pip=Ezra, Otto=Caleb, heights 0.9/0.8).
 CHARACTERS = {
-    "pip": {"input_task_id": "019f69c2-d1a4-772f-8358-6cf526baaa81", "height_meters": 0.9},
-    "otto": {"input_task_id": "019f69d1-8fa0-7647-b756-bc2dfca1dd69", "height_meters": 1.3},
+    "pip_v2": {"input_task_id": "019f6cc0-bc90-7747-82f4-f0ae8e359031", "height_meters": 0.9},
+    "otto_v2": {"input_task_id": "019f6cc0-bf13-7bf3-a486-3f4bea3cf8e6", "height_meters": 0.8},
 }
 
 # Shared clip set (name -> action_id). Kid register only — no combat clips.
@@ -49,8 +52,8 @@ SHARED_CLIPS = {
     "dance": 64,           # All Night Dance (fort celebration)
 }
 PER_CHAR_CLIPS = {
-    "pip": {"jump": 44, "skip": 118},   # Happy Jump Female (lighter) + Skip Forward (Pip skips!)
-    "otto": {"jump": 61, "carry": 551}, # Happy Jump Male + Carry Heavy Object Walk (carrying Pip)
+    "pip_v2": {"jump": 44, "skip": 118},   # Happy Jump (lighter) + Skip Forward (Pip skips!)
+    "otto_v2": {"jump": 61, "carry": 551}, # Happy Jump + Carry Heavy Object Walk (carrying Pip)
 }
 
 POLL_INTERVAL = 10.0

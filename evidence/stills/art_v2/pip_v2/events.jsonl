@@ -1,0 +1,6 @@
+HARNESS_FLAGS {"model":"pip_v2","outdir":"evidence/stills/art_v2/pip_v2","quitafter":"4.2","shots":"30,90,150,210"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/art_v2/pip_v2/shot_30.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/art_v2/pip_v2/shot_90.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/art_v2/pip_v2/shot_150.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/art_v2/pip_v2/shot_210.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 4.2s)

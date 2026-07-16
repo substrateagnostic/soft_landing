@@ -1,32 +1,48 @@
 {
-  "generated_at": "2026-07-16T15:36:29.1263769-05:00",
+  "generated_at": "2026-07-16T16:07:45.8612344-05:00",
   "model_requested": "meshy-6",
   "preview_only": false,
   "batch_size": 5,
   "items": [
     {
-      "id": "lantern",
-      "category": "prop",
-      "prompt": "small round paper lantern glowing warm honey from within, soft visible inner light, hanging from a short curved dark wooden post on a round wooden base",
-      "full_prompt": "small round paper lantern glowing warm honey from within, soft visible inner light, hanging from a short curved dark wooden post on a round wooden base, soft toy low poly, rounded chunky toddler-toy proportions, painted toy look, warm emissive glow, matte wood, game asset, clean silhouette, single object, gentle and friendly",
+      "id": "pip_v2",
+      "category": "character",
+      "prompt": "small 4 year old boy wearing a honey yellow duck onesie pajama costume, onesie hood up shaped like a soft round duck head with a small flat duck beak above his forehead like a cap brim, his face fully visible and uncovered, short tousled blond hair peeking out of the hood, big blue grey eyes, round rosy cheeks, gentle happy expression, cream colored belly panel, tiny duck tail on the back, footed pajama feet, standing upright in T pose with arms out",
+      "full_prompt": "small 4 year old boy wearing a honey yellow duck onesie pajama costume, onesie hood up shaped like a soft round duck head with a small flat duck beak above his forehead like a cap brim, his face fully visible and uncovered, short tousled blond hair peeking out of the hood, big blue grey eyes, round rosy cheeks, gentle happy expression, cream colored belly panel, tiny duck tail on the back, footed pajama feet, standing upright in T pose with arms out, soft plush low poly, rounded chunky toddler-toy proportions, flat colors, matte, no textures needed, game asset, clean silhouette, single object, gentle and friendly, Kenney/KayKit style",
       "status": "ok",
-      "preview_task": "019f6ca1-db88-74bf-b32c-2c720a226d3a",
+      "preview_task": "019f6cbd-4455-73d5-ad3d-588f3233c56e",
       "preview_status": "SUCCEEDED",
-      "refine_task": "019f6ca3-d59c-7153-9544-b6e1143aee79",
+      "refine_task": "019f6cc0-bc90-7747-82f4-f0ae8e359031",
       "refine_status": "SUCCEEDED",
       "credits": 30,
       "served_model": "meshy-6",
       "served_model_source": "not_reported_by_api_echoing_requested",
-      "glb_path": "D:\\Projects\\soft_landing\\assets\\models\\meshy\\generated\\lantern.glb",
+      "glb_path": "D:\\Projects\\soft_landing\\assets\\models\\meshy\\generated\\pip_v2.glb",
+      "error": null
+    },
+    {
+      "id": "otto_v2",
+      "category": "character",
+      "prompt": "chubby round faced 2 year old toddler boy wearing a soft light grey bear onesie pajama, onesie hood up with two tiny round bear ears, his face fully visible and uncovered, wispy light blond baby hair, very round rosy cheeks, calm sleepy unbothered expression, white chest panel with tiny scattered pastel animal doodle prints, small round bear tail, footed pajama feet, standing upright in T pose with arms out",
+      "full_prompt": "chubby round faced 2 year old toddler boy wearing a soft light grey bear onesie pajama, onesie hood up with two tiny round bear ears, his face fully visible and uncovered, wispy light blond baby hair, very round rosy cheeks, calm sleepy unbothered expression, white chest panel with tiny scattered pastel animal doodle prints, small round bear tail, footed pajama feet, standing upright in T pose with arms out, soft plush low poly, rounded chunky toddler-toy proportions, flat colors, matte, no textures needed, game asset, clean silhouette, single object, gentle and friendly, Kenney/KayKit style",
+      "status": "ok",
+      "preview_task": "019f6cbd-4f1b-7b36-a222-18ac4d22cdca",
+      "preview_status": "SUCCEEDED",
+      "refine_task": "019f6cc0-bf13-7bf3-a486-3f4bea3cf8e6",
+      "refine_status": "SUCCEEDED",
+      "credits": 30,
+      "served_model": "meshy-6",
+      "served_model_source": "not_reported_by_api_echoing_requested",
+      "glb_path": "D:\\Projects\\soft_landing\\assets\\models\\meshy\\generated\\otto_v2.glb",
       "error": null
     }
   ],
   "summary": {
-    "total": 1,
-    "ok": 1,
+    "total": 2,
+    "ok": 2,
     "preview_only": 0,
     "failed": 0,
     "resumed_skip": 0,
-    "total_credits": 30.0
+    "total_credits": 60.0
   }
 }

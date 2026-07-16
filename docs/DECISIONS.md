@@ -138,3 +138,14 @@ where it serves the toy-softness. Recipes per docs/research/v2/visuals_recipes.m
 races/chases/timing games with celebration-only outcomes. No lockouts, no
 lose states, no score shaming. Losing a race means the dreamling giggles
 and offers again.
+
+**D24 — The kids are THE kids (producer reference photo, 2026-07-16).**
+Pip = Ezra: blond, rosy-cheeked, duck onesie with the hood as a soft duck
+head — face fully visible (kills the weak duck-bill from batch 1).
+Otto = Caleb: the round little brother in a grey critter-print bear
+onesie — Otto's fiction flips from "taller, slower" to "littler, rounder,
+surprisingly mighty, unbothered." The toddler carries his big brother
+because nobody told him he can't; his pound-bounce is the toddler
+cannonball, true to life. Heights: Pip 0.9 m, Otto 0.8 m. Likeness comes
+from photo-informed *prompts* (hair/face/palette), never photo geometry —
+the kids stay soft toys. The reference photo stays local, out of the repo.

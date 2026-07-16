@@ -36,5 +36,17 @@
     "category": "character",
     "prompt": "beanie baby style stuffed calico cat toy lying down flat and floppy, understuffed beanbag plush, warm tan brown head with black patch over one side of face, black back and body, white chest belly and paws, white tipped tail, small triangular ears, tiny amber eyes, pink nose, cute sleepy face",
     "target_height_hint": 0.18
+  },
+  {
+    "id": "pip_v2",
+    "category": "character",
+    "prompt": "small 4 year old boy wearing a honey yellow duck onesie pajama costume, onesie hood up shaped like a soft round duck head with a small flat duck beak above his forehead like a cap brim, his face fully visible and uncovered, short tousled blond hair peeking out of the hood, big blue grey eyes, round rosy cheeks, gentle happy expression, cream colored belly panel, tiny duck tail on the back, footed pajama feet, standing upright in T pose with arms out",
+    "target_height_hint": 0.9
+  },
+  {
+    "id": "otto_v2",
+    "category": "character",
+    "prompt": "chubby round faced 2 year old toddler boy wearing a soft light grey bear onesie pajama, onesie hood up with two tiny round bear ears, his face fully visible and uncovered, wispy light blond baby hair, very round rosy cheeks, calm sleepy unbothered expression, white chest panel with tiny scattered pastel animal doodle prints, small round bear tail, footed pajama feet, standing upright in T pose with arms out",
+    "target_height_hint": 0.8
   }
 ]
