@@ -1,0 +1,11 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/m2_dressing/pillow_fort","pads":"1","quitafter":"6","script":"evidence/_scratch/dressing_m2/shots_fort.json","shots":"20,90,240","skipmenu":true}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(1)
+HARNESS_NOTE script loaded: res://evidence/_scratch/dressing_m2/shots_fort.json (1 events) - Dressing M2 still capture (pillow_fort, --pads=1): teleport Pip within WAKE_RADIUS of the lamb Dreamkeeper (-4.7,0,-3.8) so it wakes and waves; shots at settle, wake/idle, and mid-wave.
+EVT {"seat":1,"t":2,"type":"landed"}
+EVT {"seat":2,"t":2,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_dressing/pillow_fort/shot_20.png
+HARNESS_TELEPORT {"pos":[-4.7,0.6,-1.8],"seat":1}
+HARNESS_EVENT {"action":"teleport","frame":60,"pos":[-4.7,0.6,-1.8],"seat":1}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_dressing/pillow_fort/shot_90.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_dressing/pillow_fort/shot_240.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 6.0s)

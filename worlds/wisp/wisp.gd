@@ -165,6 +165,44 @@ const REED_BLADE_WIDTH: float = 0.09
 # Note 2 ("flat single-color ground"): cool shore <-> a warm sand hint.
 const GROUND_TINT_B: Color = Color("8C8570")
 
+const DREAMKEEPER_SCENE: PackedScene = preload("res://worlds/common/dreamkeeper.tscn")
+const DREAMKEEPER_DATA_PATH_FORMAT: String = "res://data/dreamkeepers/%s.json"
+
+# --- Dressing M2 props (assets/models/meshy/generated/, tools/meshy/
+# manifest.json target_height_hint values). All scattered across the shore
+# ring (SHORE_CENTER, SHORE_SIZE), clear of SPAWN_PIP/SPAWN_OTTO, HomeDoor,
+# both reed patches, the lily chain start, and every d0x dreamling position
+# by >=2 m -- checked against this file's own const/dreamling positions.
+# Nothing here carries collision except the two stone_soft + the stump_door
+# (per the brief), so nothing else can physically block a route. -----------
+const STONE_SOFT_HEIGHT: float = 0.7
+const STONE_SOFT_COLLISION_RADIUS: float = 0.35
+const STONE_SOFT_POSITIONS: Array[Vector3] = [
+	Vector3(-71.0, 0.0, 13.0), # north of ReedPatch1, "reed-adjacent"
+	Vector3(-83.0, 0.0, -6.0), # near ReedPatch2
+]
+const STUMP_DOOR_HEIGHT: float = 0.8
+const STUMP_DOOR_COLLISION_RADIUS: float = 0.4
+const STUMP_DOOR_POSITION: Vector3 = Vector3(-84.0, 0.0, 9.0) # on the shore, north of HomeDoor
+const CLOVER_TUFT_HEIGHT: float = 0.3
+const CLOVER_TUFT_POSITIONS: Array[Vector3] = [
+	Vector3(-69.0, 0.0, 10.5), # reed-adjacent (ReedPatch1)
+	Vector3(-79.5, 0.0, -8.5), # reed-adjacent (ReedPatch2)
+]
+const MOON_DAISY_HEIGHT: float = 0.4
+const MOON_DAISY_POSITIONS: Array[Vector3] = [
+	Vector3(-73.0, 0.0, 5.0),
+	Vector3(-66.0, 0.0, -4.0),
+	Vector3(-80.0, 0.0, 16.0),
+	Vector3(-59.0, 0.0, -18.0),
+]
+const SEED_PUFF_HEIGHT: float = 0.35
+const SEED_PUFF_POSITIONS: Array[Vector3] = [
+	Vector3(-77.0, 0.0, 20.0),
+	Vector3(-63.0, 0.0, 18.0),
+	Vector3(-85.0, 0.0, -18.0),
+]
+
 var _whale: WhaleDrift = null
 var _water_spout: WaterSpout = null
 var _lily_pads: Array[LilyPad] = []
@@ -184,6 +222,8 @@ func _ready() -> void:
 	_build_camera_hints()
 	_build_home_door()
 	_build_ambient_lighting()
+	_build_dreamkeepers()
+	_build_dressing()
 	super._ready()
 
 
@@ -654,3 +694,127 @@ func _add_camera_hint(hint_name: String, center: Vector3, size: Vector3, yaw_deg
 	shape.position = center
 	hint.add_child(shape)
 	add_child(hint)
+
+
+# --- Dreamkeepers (Dressing M2) ---------------------------------------------
+
+## Direct per-world spawn call (not a WorldBase._wire_* hook): this pass's
+## territory excludes editing worlds/common/world_base.gd. Data-driven from
+## data/dreamkeepers/wisp.json (schema: id, rig, pos, face_yaw).
+func _build_dreamkeepers() -> void:
+	var path: String = DREAMKEEPER_DATA_PATH_FORMAT % world_id()
+	if not FileAccess.file_exists(path):
+		return
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if not (parsed is Dictionary):
+		push_warning("Wisp: dreamkeeper data at %s did not parse to a Dictionary" % path)
+		return
+	var list: Variant = (parsed as Dictionary).get("dreamkeepers", [])
+	if not (list is Array):
+		return
+	for entry: Variant in (list as Array):
+		if entry is Dictionary:
+			_spawn_dreamkeeper(entry as Dictionary)
+
+
+func _spawn_dreamkeeper(entry: Dictionary) -> void:
+	var pos_raw: Variant = entry.get("pos", [])
+	if not (pos_raw is Array) or (pos_raw as Array).size() < 3:
+		push_warning("Wisp: dreamkeeper entry '%s' has no valid 'pos' -- skipped" % String(entry.get("id", "?")))
+		return
+	var pos_arr: Array = pos_raw as Array
+	var keeper: Dreamkeeper = DREAMKEEPER_SCENE.instantiate() as Dreamkeeper
+	keeper.name = "Dreamkeeper_%s" % String(entry.get("id", "keeper"))
+	# Set BEFORE add_child -- see dreamkeeper.gd's own header / pillow_fort.
+	# gd's identical comment / critter.gd's kind/world_id precedent.
+	keeper.keeper_id = String(entry.get("id", ""))
+	keeper.rig_id = String(entry.get("rig", ""))
+	keeper.face_yaw_degrees = float(entry.get("face_yaw", 0.0))
+	keeper.position = Vector3(float(pos_arr[0]), float(pos_arr[1]), float(pos_arr[2]))
+	add_child(keeper)
+
+
+# --- Dressing M2 props -------------------------------------------------------
+
+func _build_dressing() -> void:
+	for i: int in STONE_SOFT_POSITIONS.size():
+		_add_dressing_prop("StoneSoft%d" % i, "stone_soft", STONE_SOFT_HEIGHT, STONE_SOFT_POSITIONS[i],
+			_dressing_sphere(STONE_SOFT_HEIGHT * 0.5, COLOR_SHORE))
+		_add_prop_cylinder_collision(STONE_SOFT_POSITIONS[i], STONE_SOFT_COLLISION_RADIUS, STONE_SOFT_HEIGHT)
+
+	_add_dressing_prop("StumpDoorVisual", "stump_door", STUMP_DOOR_HEIGHT, STUMP_DOOR_POSITION,
+		_dressing_box(Vector3(0.5, STUMP_DOOR_HEIGHT, 0.3), Color("8A6552")))
+	_add_prop_cylinder_collision(STUMP_DOOR_POSITION, STUMP_DOOR_COLLISION_RADIUS, STUMP_DOOR_HEIGHT)
+
+	for i: int in CLOVER_TUFT_POSITIONS.size():
+		_add_dressing_prop("CloverTuft%d" % i, "clover_tuft", CLOVER_TUFT_HEIGHT, CLOVER_TUFT_POSITIONS[i],
+			_dressing_sphere(0.15, Color("6E8F6A")))
+
+	for i: int in MOON_DAISY_POSITIONS.size():
+		_add_dressing_prop("MoonDaisy%d" % i, "moon_daisy", MOON_DAISY_HEIGHT, MOON_DAISY_POSITIONS[i],
+			_dressing_sphere(0.12, Color("F5F2E8")))
+
+	for i: int in SEED_PUFF_POSITIONS.size():
+		_add_dressing_prop("SeedPuff%d" % i, "seed_puff", SEED_PUFF_HEIGHT, SEED_PUFF_POSITIONS[i],
+			_dressing_sphere(0.14, Color("E8E4D8")))
+
+
+func _dressing_box(size: Vector3, color: Color) -> Mesh:
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mesh.material = mat
+	return mesh
+
+
+func _dressing_sphere(radius: float, color: Color) -> Mesh:
+	var mesh := SphereMesh.new()
+	mesh.radius = radius
+	mesh.height = radius * 2.0
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mesh.material = mat
+	return mesh
+
+
+## Ground-anchored container (D10 pattern, matching every other prop in this
+## file): `anchor` + the primitive mesh are the only two children until a
+## ModelSlot swap hides the primitive.
+func _add_dressing_prop(anchor_name: String, model_id: String, target_height: float, prop_position: Vector3, primitive_mesh: Mesh) -> void:
+	var anchor := Node3D.new()
+	anchor.name = anchor_name
+	anchor.position = prop_position
+	add_child(anchor)
+
+	var visual := MeshInstance3D.new()
+	visual.name = "Primitive"
+	visual.mesh = primitive_mesh
+	visual.position = Vector3(0.0, target_height * 0.5, 0.0)
+	anchor.add_child(visual)
+
+	var slot := ModelSlot.new()
+	slot.name = "ModelSlot"
+	slot.model_id = model_id
+	slot.target_height = target_height
+	anchor.add_child(slot)
+
+
+## Simple static cylinder collider (brief: "only stump_door + stone_soft +
+## soft_pine get simple static collision cylinders" -- everything else in
+## this pass stays walk-through, generosity floor).
+func _add_prop_cylinder_collision(prop_position: Vector3, radius: float, height: float) -> void:
+	var body := StaticBody3D.new()
+	body.name = "PropCollision"
+	body.collision_layer = 1
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var cyl := CylinderShape3D.new()
+	cyl.radius = radius
+	cyl.height = height
+	shape.shape = cyl
+	shape.position = prop_position + Vector3(0.0, height * 0.5, 0.0)
+	body.add_child(shape)
+	add_child(body)

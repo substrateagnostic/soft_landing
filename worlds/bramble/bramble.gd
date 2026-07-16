@@ -99,6 +99,12 @@ const GRASS_PATCH_B_CENTER: Vector3 = Vector3(-2.0, 0.0, 25.0) # open meadow fla
 const GRASS_PATCH_SIZE: Vector2 = Vector2(14.0, 10.0)
 const GRASS_DENSITY: int = 220
 
+# --- Breath-becomes-weather (M2 set piece #1, worlds/bramble/breath_weather.gd) --
+# Flat meadow near the snout's X coordinate but offset in Z -- see
+# breath_weather.gd's own placement-note comment for why z=24 instead of
+# z=0 (dead ahead of the snout is still on the head sphere's slope).
+const BREATH_UPDRAFT_POSITION: Vector3 = Vector3(58.0, 0.0, 24.0)
+
 # --- ROUND 2 additions: bear-direction warm fill + patchy meadow ground ----
 # Note 5 ("warm bramble up"): a sleeping animal is warm -- a broad, low-
 # energy warm wash centered over the chest/back, distinct from the small
@@ -132,6 +138,147 @@ func _ready() -> void:
 	_build_home_door()
 	_build_ambient_lighting()
 	_build_grass_fields()
+	_build_breath_weather()
+	_build_rollover()
+	_build_dreamkeepers()
+	_build_dressing()
+
+
+# --- Dreamkeepers (M2, director wire-up of the dormant data file) ------------
+
+const DREAMKEEPER_SCENE: PackedScene = preload("res://worlds/common/dreamkeeper.tscn")
+const DREAMKEEPER_DATA_PATH_FORMAT: String = "res://data/dreamkeepers/%s.json"
+
+
+func _build_dreamkeepers() -> void:
+	var path: String = DREAMKEEPER_DATA_PATH_FORMAT % world_id()
+	if not FileAccess.file_exists(path):
+		return
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if not (parsed is Dictionary):
+		push_warning("Bramble: dreamkeeper data at %s did not parse to a Dictionary" % path)
+		return
+	var list: Variant = (parsed as Dictionary).get("dreamkeepers", [])
+	if not (list is Array):
+		return
+	for entry: Variant in (list as Array):
+		if entry is Dictionary:
+			_spawn_dreamkeeper(entry as Dictionary)
+
+
+func _spawn_dreamkeeper(entry: Dictionary) -> void:
+	var pos_raw: Variant = entry.get("pos", [])
+	if not (pos_raw is Array) or (pos_raw as Array).size() < 3:
+		push_warning("Bramble: dreamkeeper entry '%s' has no valid 'pos' -- skipped" % String(entry.get("id", "?")))
+		return
+	var pos_arr: Array = pos_raw as Array
+	var keeper: Dreamkeeper = DREAMKEEPER_SCENE.instantiate() as Dreamkeeper
+	keeper.name = "Dreamkeeper_%s" % String(entry.get("id", "keeper"))
+	# Set BEFORE add_child (established codebase ordering -- see
+	# dreamkeeper.gd's own header).
+	keeper.keeper_id = String(entry.get("id", ""))
+	keeper.rig_id = String(entry.get("rig", ""))
+	keeper.face_yaw_degrees = float(entry.get("face_yaw", 0.0))
+	keeper.position = Vector3(float(pos_arr[0]), float(pos_arr[1]), float(pos_arr[2]))
+	add_child(keeper)
+
+
+# --- Dressing (M2 batch-2 props; all visual-only walk-through, fort's
+# convention -- zero route interference with harness choreography) -----------
+
+const MOON_DAISY_POSITIONS: Array[Vector3] = [
+	Vector3(-52.0, 0.0, -6.0), Vector3(-45.0, 0.0, 20.0),
+	Vector3(-35.0, 0.0, 26.0), Vector3(-58.0, 0.0, 18.0),
+]
+const CLOVER_POSITIONS: Array[Vector3] = [
+	Vector3(-50.0, 0.0, -20.0), Vector3(-38.0, 0.0, 18.0),
+	Vector3(-25.0, 0.0, -30.0), Vector3(-15.0, 0.0, 32.0),
+]
+const MUSHROOM_LAMP_POSITIONS: Array[Vector3] = [
+	Vector3(-60.0, 0.0, -8.0), Vector3(-48.0, 0.0, 14.0), Vector3(-62.0, 0.0, 10.0),
+]
+const SEED_PUFF_POSITIONS: Array[Vector3] = [
+	Vector3(55.0, 0.0, 20.0), Vector3(60.0, 0.0, 28.0), Vector3(52.0, 0.0, 26.0),
+]
+const PINE_BIG_POSITIONS: Array[Vector3] = [
+	Vector3(-66.0, 0.0, -30.0), Vector3(-66.0, 0.0, 30.0),
+]
+const PINE_SMALL_POSITIONS: Array[Vector3] = [
+	Vector3(-64.0, 0.0, -18.0), Vector3(-30.0, 0.0, 34.0), Vector3(5.0, 0.0, -36.0),
+]
+const STONE_POSITIONS: Array[Vector3] = [
+	Vector3(10.0, 0.0, -34.0), Vector3(-8.0, 0.0, 36.0),
+]
+
+
+func _build_dressing() -> void:
+	for i: int in MOON_DAISY_POSITIONS.size():
+		_add_dressing_prop("MoonDaisy%d" % i, "moon_daisy", 0.4, MOON_DAISY_POSITIONS[i],
+			_dressing_sphere(0.15, Color("FFF3C4")))
+	for i: int in CLOVER_POSITIONS.size():
+		_add_dressing_prop("CloverTuft%d" % i, "clover_tuft", 0.3, CLOVER_POSITIONS[i],
+			_dressing_sphere(0.15, Color("6E8F6A")))
+	for i: int in MUSHROOM_LAMP_POSITIONS.size():
+		_add_dressing_prop("MushroomLamp%d" % i, "mushroom_lamp", 0.5, MUSHROOM_LAMP_POSITIONS[i],
+			_dressing_sphere(0.25, Color("F2C879")))
+	for i: int in SEED_PUFF_POSITIONS.size():
+		_add_dressing_prop("SeedPuff%d" % i, "seed_puff", 0.35, SEED_PUFF_POSITIONS[i],
+			_dressing_sphere(0.17, Color("F5F2E8")))
+	for i: int in PINE_BIG_POSITIONS.size():
+		_add_dressing_prop("SoftPine%d" % i, "soft_pine", 3.0, PINE_BIG_POSITIONS[i],
+			_dressing_cone(1.0, 3.0, Color("7C9082")))
+	for i: int in PINE_SMALL_POSITIONS.size():
+		_add_dressing_prop("SoftPineSmall%d" % i, "soft_pine_small", 1.8, PINE_SMALL_POSITIONS[i],
+			_dressing_cone(0.6, 1.8, Color("7C9082")))
+	for i: int in STONE_POSITIONS.size():
+		_add_dressing_prop("StoneSoft%d" % i, "stone_soft", 0.7, STONE_POSITIONS[i],
+			_dressing_sphere(0.35, Color(0.55, 0.58, 0.52)))
+	_add_dressing_prop("StumpDoor", "stump_door", 0.8, Vector3(-68.0, 0.0, 0.0),
+		_dressing_sphere(0.4, Color("6E4F3E")))
+	_add_dressing_prop("HaystackPillow", "haystack_pillow", 0.8, Vector3(30.0, 0.0, 28.0),
+		_dressing_sphere(0.4, Color("E8C97A")))
+
+
+func _add_dressing_prop(anchor_name: String, prop_model_id: String, prop_height: float, prop_position: Vector3, primitive_mesh: Mesh) -> void:
+	var anchor := Node3D.new()
+	anchor.name = anchor_name
+	anchor.position = prop_position
+	add_child(anchor)
+
+	var visual := MeshInstance3D.new()
+	visual.name = "Primitive"
+	visual.mesh = primitive_mesh
+	visual.position = Vector3(0.0, prop_height * 0.5, 0.0)
+	anchor.add_child(visual)
+
+	var slot := ModelSlot.new()
+	slot.name = "ModelSlot"
+	slot.model_id = prop_model_id
+	slot.target_height = prop_height
+	anchor.add_child(slot)
+
+
+func _dressing_sphere(radius: float, color: Color) -> Mesh:
+	var mesh := SphereMesh.new()
+	mesh.radius = radius
+	mesh.height = radius * 2.0
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mesh.material = mat
+	return mesh
+
+
+func _dressing_cone(radius: float, height: float, color: Color) -> Mesh:
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = 0.0
+	mesh.bottom_radius = radius
+	mesh.height = height
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mesh.material = mat
+	return mesh
 	super._ready()
 
 
@@ -180,6 +327,31 @@ func _add_grass_patch(patch_name: String, center: Vector3, rng_seed: int) -> voi
 	field.name = patch_name
 	add_child(field)
 	field.scatter(center, GRASS_PATCH_SIZE, GRASS_DENSITY, rng_seed)
+
+
+## M2 set piece #1 ("the breath becomes weather"): the ambient, always-on
+## Divine-Beast body-function. See worlds/bramble/breath_weather.gd.
+func _build_breath_weather() -> void:
+	var weather := BreathWeather.new()
+	weather.name = "BreathWeather"
+	weather.position = BREATH_UPDRAFT_POSITION
+	add_child(weather)
+
+
+## M2 set piece #2 ("THE ROLL-OVER"): the one-time transformative
+## Divine-Beast body-function. See worlds/bramble/rollover_sequence.gd.
+## Wired after _build_haunch() (called earlier in _ready()) so the Haunch/
+## HaunchBody nodes it settles already exist.
+func _build_rollover() -> void:
+	var rollover := RolloverSequence.new()
+	rollover.name = "RolloverSequence"
+	# setup() BEFORE add_child(): entering the tree fires _ready()
+	# synchronously, so a reversed order would run _ready() with _world/
+	# _haunch_visual/_haunch_body still unset (caught live: SCRIPT ERROR
+	# "Invalid access to property... on a base object of type 'Nil'" at
+	# rollover_sequence.gd's _ready(), see bramble-setpieces-VERIFY.md).
+	rollover.setup(self, get_node("Haunch") as MeshInstance3D, get_node("HaunchBody") as StaticBody3D)
+	add_child(rollover)
 
 
 func world_id() -> String:

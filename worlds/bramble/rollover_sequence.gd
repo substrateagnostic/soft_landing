@@ -1,0 +1,401 @@
+class_name RolloverSequence
+extends Node3D
+## RolloverSequence — Bramble's one-time transformative body-function: THE
+## ROLL-OVER (docs/research/v2/aliveness_wow.md §3, Top 12 #1: "her paw
+## curls open... she rolls over in her sleep... turning what was a wall of
+## tall grass into new walkable ground"; DIRECTION_V2.md Pillar 1: "once
+## per world the giant MOVES and the level transforms while you're on it —
+## gently, hugely, safely").
+##
+## Trigger: GameState.world_completed("bramble") -- WorldBase already fires
+## this the moment all 10 dreamlings return (worlds/common/world_base.gd
+## _check_completion), and GameState persists dreamlings[world_id].completed
+## (SaveManager mirrors GameState.dreamlings verbatim), so "once per save"
+## falls straight out of that existing signal: it only fires the FIRST time
+## this world instance crosses 10/10 in a session, and a fresh visit after
+## a save that already completed it never re-fires (no dreamling is left to
+## return). On a revisit after a PRIOR session already completed the world,
+## GameState.is_world_completed("bramble") is already true at _ready() --
+## the far meadow is built straight into its FINAL resting state with no
+## rumble/Moon-line/animation, matching SPEC.md D14 ("the world remembers").
+##
+## --rollover (Harness.flags) force-arms the sequence ~3s after load
+## regardless of dream count, dev/capture only (ROLLOVER {"forced":true}) --
+## this bypasses the completion gate on purpose, so a forced capture run may
+## still show uncollected dreamlings on the haunch after it settles; that is
+## expected and confined to the forced dev path (see
+## docs/verify/bramble-setpieces-VERIFY.md).
+##
+## Safety: EVERY connected player is bubble-lifted (core/rescue/
+## bubble_effect.tscn -- the same rescue/warp visual vocabulary; "reuse the
+## pattern... a dreamling-bubble visual flourish", never a custom rescue)
+## off the bear and onto the far meadow BEFORE anything moves, so nothing a
+## player is standing on is ever disturbed under them. Only the haunch
+## mound (its visual + its own StaticBody3D collision) settles a short,
+## gentle distance -- the chest (BreathingChest, already its own moving
+## platform), the shoulder shelf (d08's former perch), and the whole
+## head/ear/geysers (d07's SnoreGeyser parent, the DreamDoor return point
+## every future visit depends on) are never touched, per the brief's "NOT
+## collision underneath existing dreamling placements... keep d07's geyser
+## parent stable."
+
+signal rollover_started
+signal rollover_finished
+
+const BUBBLE_SCENE: PackedScene = preload("res://core/rescue/bubble_effect.tscn")
+
+# --- Haunch settle (the one moving body part) -------------------------------
+const HAUNCH_SETTLE_OFFSET: Vector3 = Vector3(0.0, -1.0, 4.0) # sinks 1m, shifts toward the far meadow
+const HAUNCH_SETTLE_YAW_DEGREES: float = 35.0 # the mound is a sphere -- spinning it is invisible on its own
+# (perfectly symmetric), but the brief's language is "rotates/settles"; the
+# settle (translation) above is what actually reads, and the spin costs
+# nothing extra while keeping "rotates" literally true too.
+const ROTATE_DURATION: float = 8.0 # brief: "over ~8 seconds"
+const FORCED_DELAY: float = 3.0
+const BUBBLE_DURATION: float = 4.0 # slower/more majestic than the rescue default (2.5s) -- "gently, hugely"
+const BUBBLE_LANDING_SPACING: float = 1.4 # two players never land on the exact same point
+
+# --- Far meadow (new ground beyond the existing meadow's z=-40 edge) -------
+const COLOR_MEADOW: Color = Color("7C9082")
+const COLOR_MOSS: Color = Color("8C9463")
+const COLOR_FUR_DARK: Color = Color("6E4F3E")
+const COLOR_LANTERN: Color = Color("F2C879")
+const COLOR_ROSE: Color = Color("D9A5B3")
+const COLOR_MILK: Color = Color("F5F2E8")
+
+# South of the existing meadow's z=-40 edge, staying within the moat
+# backdrop's z=-65 bound (worlds/bramble/bramble.gd MOAT_SIZE) so the new
+# ground never pokes past the world's existing void-backdrop layer.
+const FAR_MEADOW_CENTER: Vector2 = Vector2(-20.0, -51.5) # (x, z)
+const FAR_MEADOW_SIZE: Vector2 = Vector2(50.0, 23.0) # x: -45..5, z: -40..-63
+const BRIDGE_CENTER: Vector2 = Vector2(-20.0, -40.0) # the seam -- a low fur ridge, never a gate/barrier
+const BRIDGE_SIZE: Vector2 = Vector2(30.0, 4.0)
+const FAR_MEADOW_LANDING: Vector3 = Vector3(-20.0, 0.6, -52.0)
+const FLOWER_RNG_SEED: int = 7 # deterministic decorative jitter -- GrassField's own convention (core/env/grass_field.gd), never the shared global RNG stream
+
+var _world: Node3D = null
+var _haunch_visual: MeshInstance3D = null
+var _haunch_body: StaticBody3D = null
+var _haunch_rest_position: Vector3 = Vector3.ZERO
+var _haunch_body_rest_position: Vector3 = Vector3.ZERO
+
+var _far_meadow_root: Node3D = null
+var _played: bool = false
+
+
+func setup(world: Node3D, haunch_visual: MeshInstance3D, haunch_body: StaticBody3D) -> void:
+	_world = world
+	_haunch_visual = haunch_visual
+	_haunch_body = haunch_body
+
+
+func _ready() -> void:
+	_haunch_rest_position = _haunch_visual.position
+	_haunch_body_rest_position = _haunch_body.position
+	_build_far_meadow_geometry() # built once, hidden+disabled -- reveal is a visibility/collision flip, never a rebuild
+
+	if GameState.is_world_completed("bramble"):
+		_apply_already_open_state()
+		return
+
+	GameState.world_completed.connect(_on_world_completed)
+	if Harness.flag("rollover", false):
+		var timer: SceneTreeTimer = get_tree().create_timer(FORCED_DELAY)
+		timer.timeout.connect(_on_forced_trigger)
+
+
+func _on_world_completed(world_id: String) -> void:
+	if world_id != "bramble" or _played:
+		return
+	_play_sequence(false)
+
+
+func _on_forced_trigger() -> void:
+	if _played:
+		return
+	_play_sequence(true)
+
+
+func _play_sequence(forced: bool) -> void:
+	_played = true
+	print("ROLLOVER %s" % JSON.stringify({"phase": "start", "forced": forced}))
+	rollover_started.emit()
+	AudioManager.play_sfx("bear_rollover_rumble") # fails soft (AudioManager convention) until an asset lands
+	TheMoon.say("world_complete")
+
+	# Ground goes solid FIRST, immediately -- caught live (see
+	# docs/verify/bramble-setpieces-VERIFY.md): gating the far meadow's
+	# collision behind the full ROTATE_DURATION wait left a window where
+	# BUBBLE_DURATION's shorter flight already set players down onto still-
+	# disabled collision, and they fell through into a generic RESCUE
+	# instead of landing on the new ground. "Never let the floor vanish
+	# beneath anyone without the catch" cuts both ways -- the floor must
+	# also never be MISSING beneath where the catch sets them down. The
+	# haunch settle (the only thing actually moving) still plays out over
+	# the full ROTATE_DURATION in parallel underneath the already-solid
+	# far meadow.
+	_reveal_far_meadow()
+	_bubble_all_players()
+	_tween_haunch_settle()
+
+	var timer: SceneTreeTimer = get_tree().create_timer(ROTATE_DURATION)
+	await timer.timeout
+
+	print("ROLLOVER %s" % JSON.stringify({"phase": "end", "forced": forced}))
+	rollover_finished.emit()
+
+
+## Reuses the exact rescue/warp visual vocabulary (core/rescue/
+## bubble_effect.gd, already shared by soft_landing.gd's rescue and
+## seat_manager.gd's carry-lag warp) rather than any bespoke lift --
+## "emit no custom rescue" per the brief. Unconditional (every connected
+## player, wherever they stand) is the simplest SAFE reading of "players
+## anywhere on moving parts get caught": nothing can ever be disturbed out
+## from under someone if no one is ever left standing on the moving parts
+## in the first place.
+func _bubble_all_players() -> void:
+	var offset: float = 0.0
+	for player: Node in get_tree().get_nodes_in_group("players"):
+		if not (player is PlayerBody):
+			continue
+		var bubble: BubbleEffect = BUBBLE_SCENE.instantiate()
+		get_tree().current_scene.add_child(bubble)
+		var landing: Vector3 = FAR_MEADOW_LANDING + Vector3(offset, 0.0, 0.0)
+		offset += BUBBLE_LANDING_SPACING
+		bubble.play(player as PlayerBody, landing, "bubble_catch", BUBBLE_DURATION)
+
+
+func _tween_haunch_settle() -> void:
+	var tween: Tween = create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(_haunch_visual, "position", _haunch_rest_position + HAUNCH_SETTLE_OFFSET, ROTATE_DURATION)
+	tween.tween_property(_haunch_body, "position", _haunch_body_rest_position + HAUNCH_SETTLE_OFFSET, ROTATE_DURATION)
+	tween.tween_property(_haunch_visual, "rotation_degrees:y", HAUNCH_SETTLE_YAW_DEGREES, ROTATE_DURATION)
+
+
+func _apply_already_open_state() -> void:
+	_haunch_visual.position = _haunch_rest_position + HAUNCH_SETTLE_OFFSET
+	_haunch_body.position = _haunch_body_rest_position + HAUNCH_SETTLE_OFFSET
+	_haunch_visual.rotation_degrees.y = HAUNCH_SETTLE_YAW_DEGREES
+	_reveal_far_meadow()
+
+
+func _reveal_far_meadow() -> void:
+	_far_meadow_root.visible = true
+	for shape: CollisionShape3D in _collect_collision_shapes(_far_meadow_root):
+		shape.disabled = false
+
+
+func _collect_collision_shapes(node: Node) -> Array[CollisionShape3D]:
+	var found: Array[CollisionShape3D] = []
+	for child: Node in node.get_children():
+		if child is CollisionShape3D:
+			found.append(child as CollisionShape3D)
+		found.append_array(_collect_collision_shapes(child))
+	return found
+
+
+# ---------------------------------------------------------------------------
+# Geometry — built once at _ready (hidden/disabled), revealed by flipping
+# visibility + collision, matching SnoreGeyser's own "toggle, never rebuild"
+# convention.
+# ---------------------------------------------------------------------------
+
+func _build_far_meadow_geometry() -> void:
+	_far_meadow_root = Node3D.new()
+	_far_meadow_root.name = "FarMeadow"
+	_far_meadow_root.visible = false
+	_world.add_child(_far_meadow_root)
+
+	_add_ground_slab("FarMeadowGround", FAR_MEADOW_SIZE, 0.0, 1.0, COLOR_MEADOW, FAR_MEADOW_CENTER)
+	var moss_mat: ShaderMaterial = _ground_patch_material(COLOR_MEADOW, COLOR_MOSS)
+	(_far_meadow_root.get_node("FarMeadowGround") as MeshInstance3D).set_surface_override_material(0, moss_mat)
+
+	# The "wall of tall grass... turned into new walkable ground" callback
+	# (aliveness_wow.md Top 12 #1) as a low fur-colored threshold ridge --
+	# cosmetic seam marker only, never a barrier (design floor: no gates).
+	_add_ground_slab("FurRidge", BRIDGE_SIZE, 0.3, 0.9, COLOR_FUR_DARK, BRIDGE_CENTER)
+
+	_add_camera_hint_far_meadow()
+	_add_decorative_props()
+
+
+func _add_ground_slab(slab_name: String, size: Vector2, top_y: float, thickness: float, color: Color, xz_center: Vector2) -> void:
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(size.x, thickness, size.y)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mesh.material = mat
+
+	var center: Vector3 = Vector3(xz_center.x, top_y - thickness * 0.5, xz_center.y)
+
+	var visual := MeshInstance3D.new()
+	visual.name = slab_name
+	visual.mesh = mesh
+	visual.position = center
+	_far_meadow_root.add_child(visual)
+
+	var body := StaticBody3D.new()
+	body.name = slab_name + "Body"
+	body.collision_layer = 1
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var box_shape := BoxShape3D.new()
+	box_shape.size = mesh.size
+	shape.shape = box_shape
+	shape.position = center
+	shape.disabled = true # flipped by _reveal_far_meadow()
+	body.add_child(shape)
+	_far_meadow_root.add_child(body)
+
+
+func _ground_patch_material(tint_a: Color, tint_b: Color) -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://assets/shaders/ground_patches.gdshader") as Shader
+	mat.set_shader_parameter("tint_a", tint_a)
+	mat.set_shader_parameter("tint_b", tint_b)
+	return mat
+
+
+func _add_camera_hint_far_meadow() -> void:
+	var hint := CameraHint.new()
+	hint.name = "FarMeadowHint"
+	hint.priority = 1
+	hint.yaw_degrees = 180.0 # facing back north, toward the seam/bridge
+	hint.blend_time = 1.0
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(FAR_MEADOW_SIZE.x, 8.0, FAR_MEADOW_SIZE.y)
+	shape.shape = box
+	shape.position = Vector3(FAR_MEADOW_CENTER.x, 3.0, FAR_MEADOW_CENTER.y)
+	shape.disabled = true # flipped by _reveal_far_meadow()
+	hint.add_child(shape)
+	_far_meadow_root.add_child(hint)
+
+
+## A quiet vista, not a new gameplay space -- 2-3 decorative primitives per
+## the brief ("primitives fine; Meshy props land later"), ART_BIBLE.md
+## palette only, no collision drama (a single walkable boulder, everything
+## else is scenery).
+func _add_decorative_props() -> void:
+	_add_toadstool(FAR_MEADOW_CENTER + Vector2(-12.0, -6.0))
+	_add_boulder(FAR_MEADOW_CENTER + Vector2(8.0, 4.0))
+	_add_flower_cluster(FAR_MEADOW_CENTER + Vector2(2.0, -8.0))
+	# M2 batch-2 Meshy props (director dressing pass): the reward vista
+	# deserves real art. All under _far_meadow_root so they hide/reveal
+	# with the sequence; all visual-only walk-through (fort convention).
+	_add_meshy_prop("FarBerryBushA", "berry_bush", 0.9, FAR_MEADOW_CENTER + Vector2(-16.0, 4.0))
+	_add_meshy_prop("FarBerryBushB", "berry_bush", 0.9, FAR_MEADOW_CENTER + Vector2(14.0, -5.0))
+	_add_meshy_prop("FarSoftPine", "soft_pine", 3.0, FAR_MEADOW_CENTER + Vector2(-20.0, -8.0))
+	_add_meshy_prop("FarMoonDaisyA", "moon_daisy", 0.4, FAR_MEADOW_CENTER + Vector2(-5.0, 6.0))
+	_add_meshy_prop("FarMoonDaisyB", "moon_daisy", 0.4, FAR_MEADOW_CENTER + Vector2(6.0, -9.0))
+	_add_meshy_prop("FarMoonDaisyC", "moon_daisy", 0.4, FAR_MEADOW_CENTER + Vector2(11.0, 7.0))
+	_add_meshy_prop("FarCloverA", "clover_tuft", 0.3, FAR_MEADOW_CENTER + Vector2(-9.0, -2.0))
+	_add_meshy_prop("FarCloverB", "clover_tuft", 0.3, FAR_MEADOW_CENTER + Vector2(4.0, 3.0))
+	# Offset from center: FAR_MEADOW_LANDING is the bubble-drop point --
+	# nothing sits where a child lands.
+	_add_meshy_prop("FarPicnic", "picnic_basket", 0.4, FAR_MEADOW_CENTER + Vector2(9.0, 9.0))
+
+
+func _add_meshy_prop(prop_name: String, prop_model_id: String, prop_height: float, xz: Vector2) -> void:
+	var anchor := Node3D.new()
+	anchor.name = prop_name
+	anchor.position = Vector3(xz.x, 0.0, xz.y)
+	_far_meadow_root.add_child(anchor)
+	var slot := ModelSlot.new()
+	slot.name = "ModelSlot"
+	slot.model_id = prop_model_id
+	slot.target_height = prop_height
+	anchor.add_child(slot)
+
+
+func _add_toadstool(xz: Vector2) -> void:
+	var stem_mesh := CylinderMesh.new()
+	stem_mesh.top_radius = 0.5
+	stem_mesh.bottom_radius = 0.6
+	stem_mesh.height = 2.2
+	var stem_mat := StandardMaterial3D.new()
+	stem_mat.albedo_color = COLOR_MILK
+	stem_mesh.material = stem_mat
+	var stem := MeshInstance3D.new()
+	stem.name = "ToadstoolStem"
+	stem.mesh = stem_mesh
+	stem.position = Vector3(xz.x, 1.1, xz.y)
+	_far_meadow_root.add_child(stem)
+
+	var cap_mesh := SphereMesh.new()
+	cap_mesh.radius = 1.3
+	cap_mesh.height = 1.6
+	var cap_mat := StandardMaterial3D.new()
+	cap_mat.albedo_color = COLOR_LANTERN
+	cap_mesh.material = cap_mat
+	var cap := MeshInstance3D.new()
+	cap.name = "ToadstoolCap"
+	cap.mesh = cap_mesh
+	cap.position = Vector3(xz.x, 2.3, xz.y)
+	_far_meadow_root.add_child(cap)
+
+
+func _add_boulder(xz: Vector2) -> void:
+	const RADIUS: float = 1.6
+	var mesh := SphereMesh.new()
+	mesh.radius = RADIUS
+	mesh.height = RADIUS * 2.0
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = COLOR_FUR_DARK
+	mesh.material = mat
+
+	var center: Vector3 = Vector3(xz.x, RADIUS * 0.5, xz.y) # half-buried, like the mound anatomy elsewhere in this world
+
+	var visual := MeshInstance3D.new()
+	visual.name = "Boulder"
+	visual.mesh = mesh
+	visual.position = center
+	_far_meadow_root.add_child(visual)
+
+	var body := StaticBody3D.new()
+	body.name = "BoulderBody"
+	body.collision_layer = 1
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var sphere_shape := SphereShape3D.new()
+	sphere_shape.radius = RADIUS
+	shape.shape = sphere_shape
+	shape.position = center
+	shape.disabled = true # flipped by _reveal_far_meadow()
+	body.add_child(shape)
+	_far_meadow_root.add_child(body)
+
+
+func _add_flower_cluster(xz: Vector2) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = FLOWER_RNG_SEED
+
+	var stem_mat := StandardMaterial3D.new()
+	stem_mat.albedo_color = COLOR_MEADOW
+	var bloom_mat := StandardMaterial3D.new()
+	bloom_mat.albedo_color = COLOR_ROSE
+
+	for i: int in range(4):
+		var offset: Vector2 = Vector2(rng.randf_range(-1.2, 1.2), rng.randf_range(-1.2, 1.2))
+		var stem_height: float = rng.randf_range(0.9, 1.3)
+
+		var stem_mesh := BoxMesh.new()
+		stem_mesh.size = Vector3(0.12, stem_height, 0.12)
+		stem_mesh.material = stem_mat
+		var stem := MeshInstance3D.new()
+		stem.name = "FlowerStem_%d" % i
+		stem.mesh = stem_mesh
+		stem.position = Vector3(xz.x + offset.x, stem_height * 0.5, xz.y + offset.y)
+		_far_meadow_root.add_child(stem)
+
+		var bloom_mesh := SphereMesh.new()
+		bloom_mesh.radius = 0.35
+		bloom_mesh.height = 0.5
+		bloom_mesh.material = bloom_mat
+		var bloom := MeshInstance3D.new()
+		bloom.name = "FlowerBloom_%d" % i
+		bloom.mesh = bloom_mesh
+		bloom.position = Vector3(xz.x + offset.x, stem_height, xz.y + offset.y)
+		_far_meadow_root.add_child(bloom)

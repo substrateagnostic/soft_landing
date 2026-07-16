@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://core/movement/player_body.gd" id="1"]
 [ext_resource type="Script" path="res://core/art/rigged_model_slot.gd" id="7"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://core/readability/landing_ring.tscn" id="4"]
 [ext_resource type="Script" path="res://core/coop/carry_toss.gd" id="5"]
 [ext_resource type="Script" path="res://core/coop/buddy_ai.gd" id="6"]
+[ext_resource type="Script" path="res://core/audio/player_audio.gd" id="9"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_otto"]
 radius = 0.32
@@ -60,3 +61,6 @@ script = ExtResource("5")
 
 [node name="BuddyAI" type="Node" parent="."]
 script = ExtResource("6")
+
+[node name="PlayerAudio" type="Node" parent="."]
+script = ExtResource("9")

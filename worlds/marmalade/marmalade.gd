@@ -152,6 +152,38 @@ const EAR_DOOR_LIFT: float = 0.5
 const D10_ANCHOR_X: float = 50.0
 const D10_ANCHOR_Z: float = -1.5
 
+# --- Dressing M2 props (assets/models/meshy/generated/, tools/meshy/
+# manifest.json target_height_hint values). Lane props sit on the village
+# lane centerline (z=0) between consecutive HOUSE_LAYOUT x columns rather
+# than on any house footprint; the picnic basket and berry-bush pairs sit
+# off the spawn's direct forward line; the two rooftop moths perch on
+# houses with neither a chimney nor an awning (HOUSE_LAYOUT indices 0 and
+# 9) so they never compete with d02/d04's existing placements. No collision
+# on anything here (none of mushroom_lamp/berry_bush/picnic_basket/
+# moth_small are in the brief's stump_door/stone_soft/soft_pine collision
+# list) -- generosity floor, and it means nothing here can physically block
+# tools/harness/scripts/finale_marmalade.json's walk-in route. -------------
+const MUSHROOM_LAMP_HEIGHT: float = 0.5
+const MUSHROOM_LAMP_POSITIONS: Array[Vector3] = [
+	Vector3(-59.0, 0.0, 0.0),
+	Vector3(-53.0, 0.0, 0.0),
+	Vector3(-47.0, 0.0, 0.0),
+	Vector3(-41.0, 0.0, 0.0),
+]
+const BERRY_BUSH_HEIGHT: float = 0.9
+const BERRY_BUSH_POSITIONS: Array[Vector3] = [
+	Vector3(-64.0, 0.0, -6.0),
+	Vector3(-64.0, 0.0, 7.0),
+	Vector3(-39.0, 0.0, -6.0),
+	Vector3(-39.0, 0.0, 7.0),
+]
+const PICNIC_BASKET_HEIGHT: float = 0.4
+const PICNIC_BASKET_POSITION: Vector3 = Vector3(-63.0, 0.0, -3.5) # the village square, off the spawn's direct +X line
+const MOTH_SMALL_HEIGHT: float = 0.25
+## Which HOUSE_LAYOUT entries get a rooftop moth (indices, not positions --
+## both chosen for no chimney/awning so the perch never overlaps d02/d04).
+const MOTH_SMALL_HOUSE_INDICES: Array[int] = [0, 9]
+
 var _tail_bridge: TailBridge = null
 var _thermal_a: PurrThermal = null
 var _d02_position: Vector3 = Vector3.ZERO
@@ -173,6 +205,7 @@ func _ready() -> void:
 	_build_dreamlings()
 	_build_camera_hints()
 	_build_home_door()
+	_build_dressing()
 	super._ready()
 
 
@@ -727,3 +760,75 @@ func _add_camera_hint(hint_name: String, center: Vector3, size: Vector3, yaw_deg
 	shape.position = center
 	hint.add_child(shape)
 	add_child(hint)
+
+
+# --- Dressing M2 props -------------------------------------------------------
+
+func _build_dressing() -> void:
+	for i: int in MUSHROOM_LAMP_POSITIONS.size():
+		_add_dressing_prop("MushroomLamp%d" % i, "mushroom_lamp", MUSHROOM_LAMP_HEIGHT, MUSHROOM_LAMP_POSITIONS[i],
+			_dressing_sphere(0.2, COLOR_WINDOW))
+
+	for i: int in BERRY_BUSH_POSITIONS.size():
+		_add_dressing_prop("BerryBush%d" % i, "berry_bush", BERRY_BUSH_HEIGHT, BERRY_BUSH_POSITIONS[i],
+			_dressing_sphere(0.4, Color("6E8F6A")))
+
+	_add_dressing_prop("PicnicBasketVisual", "picnic_basket", PICNIC_BASKET_HEIGHT, PICNIC_BASKET_POSITION,
+		_dressing_box(Vector3(0.5, 0.3, 0.35), COLOR_ROOF))
+
+	for house_index: int in MOTH_SMALL_HOUSE_INDICES:
+		_add_rooftop_moth(HOUSE_LAYOUT[house_index] as Array)
+
+
+## Perches a static moth_small on a house's roof slope, just off the ridge
+## line so it doesn't sit exactly on d02/d04's own placements (both of
+## which are on chimneys/awnings, never on the bare roof slope itself).
+func _add_rooftop_moth(house_entry: Array) -> void:
+	var house_x: float = house_entry[0]
+	var house_z: float = house_entry[1]
+	var roof_peak: float = HOUSE_WALL_SIZE.y + HOUSE_ROOF_HEIGHT
+	var perch: Vector3 = Vector3(house_x + 0.4, roof_peak + 0.1, house_z + 0.3)
+	_add_dressing_prop("RooftopMoth_%d_%d" % [int(house_x), int(house_z)], "moth_small", MOTH_SMALL_HEIGHT, perch,
+		_dressing_sphere(0.08, Color("F5F2E8")))
+
+
+func _dressing_box(size: Vector3, color: Color) -> Mesh:
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mesh.material = mat
+	return mesh
+
+
+func _dressing_sphere(radius: float, color: Color) -> Mesh:
+	var mesh := SphereMesh.new()
+	mesh.radius = radius
+	mesh.height = radius * 2.0
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mesh.material = mat
+	return mesh
+
+
+## Ground-anchored container (D10 pattern, matching every other prop in this
+## file): `anchor` + the primitive mesh are the only two children until a
+## ModelSlot swap hides the primitive. No collision -- see the const block's
+## doc comment above.
+func _add_dressing_prop(anchor_name: String, model_id: String, target_height: float, prop_position: Vector3, primitive_mesh: Mesh) -> void:
+	var anchor := Node3D.new()
+	anchor.name = anchor_name
+	anchor.position = prop_position
+	add_child(anchor)
+
+	var visual := MeshInstance3D.new()
+	visual.name = "Primitive"
+	visual.mesh = primitive_mesh
+	visual.position = Vector3(0.0, target_height * 0.5, 0.0)
+	anchor.add_child(visual)
+
+	var slot := ModelSlot.new()
+	slot.name = "ModelSlot"
+	slot.model_id = model_id
+	slot.target_height = target_height
+	anchor.add_child(slot)

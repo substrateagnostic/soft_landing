@@ -30,6 +30,38 @@ const CALLIE_SCENE: PackedScene = preload("res://core/companion/callie.tscn")
 const CALLIE_CUSHION_RADIUS: float = 0.32
 const CALLIE_CUSHION_HEIGHT_SCALE: float = 0.55 # squashed flatter than the walkable cushions (_add_cushion)
 
+const DREAMKEEPER_SCENE: PackedScene = preload("res://worlds/common/dreamkeeper.tscn")
+const DREAMKEEPER_DATA_PATH_FORMAT: String = "res://data/dreamkeepers/%s.json"
+
+# --- Dressing M2 props (assets/models/meshy/generated/, tools/meshy/
+# manifest.json target_height_hint values) -- all placed WEST of the fort's
+# center line or hugging the fence, deliberately clear of the east-cushion
+# swing + Callie-cushion + BrambleDoor corridor that
+# tools/harness/scripts/finale_home.json's Pip route walks (spawn -> around
+# the blush cushion -> Callie's cushion (east, x~2.75) -> BrambleDoor at
+# (0,0,-9.45)) -- see docs/verify/dressing-m2-VERIFY.md for the harness
+# receipt proving that route is still unobstructed. None of these props
+# carry collision (visual-only, generosity floor) so they cannot physically
+# block anything regardless of placement -- the west bias is purely so nothing
+# reads as cluttering the shot along that walked path.
+const PICNIC_BASKET_HEIGHT: float = 0.4
+const PICNIC_BASKET_POSITION: Vector3 = Vector3(-0.8, 0.0, 4.6) # "near the fort mouth" -- just outside the spawn-facing wall
+const BIRDHOUSE_LANTERN_HEIGHT: float = 0.6
+const BIRDHOUSE_LANTERN_POSITION: Vector3 = Vector3(-3.4, 0.0, -8.6) # porch side, mirrors LanternVisual but west of the door corridor
+const HAYSTACK_PILLOW_HEIGHT: float = 0.8
+const HAYSTACK_PILLOW_POSITION: Vector3 = Vector3(-7.0, 0.0, 2.0)
+const CLOVER_TUFT_HEIGHT: float = 0.3
+const CLOVER_TUFT_POSITIONS: Array[Vector3] = [
+	Vector3(-6.0, 0.0, 3.2),
+	Vector3(-7.8, 0.0, 0.8),
+	Vector3(-5.5, 0.0, -0.5),
+]
+const SOFT_PINE_SMALL_HEIGHT: float = 1.8
+const SOFT_PINE_SMALL_POSITIONS: Array[Vector3] = [
+	Vector3(9.0, 0.0, 6.0),
+	Vector3(-9.0, 0.0, 7.0),
+]
+
 const FENCE_POST_COUNT: int = 8
 const FENCE_POST_RADIUS: float = 11.5 # just inside the clearing edge
 const FENCE_POST_HEIGHT: float = 0.9
@@ -52,6 +84,8 @@ func _ready() -> void:
 	_build_bramble_door()
 	_build_fort_growth()
 	_build_callie_home()
+	_build_dreamkeepers()
+	_build_dressing()
 	super._ready()
 
 
@@ -475,5 +509,122 @@ func _add_world_door(door_name: String, target: String, door_position: Vector3, 
 		exit_requested_to.emit(target)
 		exit_requested.emit()
 	)
+
+
+# --- Dreamkeepers (Dressing M2) ---------------------------------------------
+
+## Direct per-world spawn call (not a WorldBase._wire_* hook): this pass's
+## territory excludes editing worlds/common/world_base.gd. Data-driven from
+## data/dreamkeepers/pillow_fort.json (schema: id, rig, pos, face_yaw) so a
+## producer can retune the guest's spot without a code change.
+func _build_dreamkeepers() -> void:
+	var path: String = DREAMKEEPER_DATA_PATH_FORMAT % world_id()
+	if not FileAccess.file_exists(path):
+		return
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if not (parsed is Dictionary):
+		push_warning("PillowFort: dreamkeeper data at %s did not parse to a Dictionary" % path)
+		return
+	var list: Variant = (parsed as Dictionary).get("dreamkeepers", [])
+	if not (list is Array):
+		return
+	for entry: Variant in (list as Array):
+		if entry is Dictionary:
+			_spawn_dreamkeeper(entry as Dictionary)
+
+
+func _spawn_dreamkeeper(entry: Dictionary) -> void:
+	var pos_raw: Variant = entry.get("pos", [])
+	if not (pos_raw is Array) or (pos_raw as Array).size() < 3:
+		push_warning("PillowFort: dreamkeeper entry '%s' has no valid 'pos' -- skipped" % String(entry.get("id", "?")))
+		return
+	var pos_arr: Array = pos_raw as Array
+	var keeper: Dreamkeeper = DREAMKEEPER_SCENE.instantiate() as Dreamkeeper
+	keeper.name = "Dreamkeeper_%s" % String(entry.get("id", "keeper"))
+	# Set BEFORE add_child (established codebase ordering -- see
+	# dreamkeeper.gd's own header, critter.gd's kind/world_id doc comment):
+	# Dreamkeeper._ready() reads these directly, and _ready() is never
+	# guaranteed synchronous inside add_child() in this codebase.
+	keeper.keeper_id = String(entry.get("id", ""))
+	keeper.rig_id = String(entry.get("rig", ""))
+	keeper.face_yaw_degrees = float(entry.get("face_yaw", 0.0))
+	keeper.position = Vector3(float(pos_arr[0]), float(pos_arr[1]), float(pos_arr[2]))
+	add_child(keeper)
+
+
+# --- Dressing M2 props -------------------------------------------------------
+
+func _build_dressing() -> void:
+	_add_dressing_prop("PicnicBasketVisual", "picnic_basket", PICNIC_BASKET_HEIGHT, PICNIC_BASKET_POSITION,
+		_box_primitive(Vector3(0.5, 0.3, 0.35), Color("D98E4A")))
+	_add_dressing_prop("BirdhouseLanternVisual", "birdhouse_lantern", BIRDHOUSE_LANTERN_HEIGHT, BIRDHOUSE_LANTERN_POSITION,
+		_box_primitive(Vector3(0.3, 0.5, 0.3), FORT_GLOW_COLOR))
+	_add_dressing_prop("HaystackPillowVisual", "haystack_pillow", HAYSTACK_PILLOW_HEIGHT, HAYSTACK_PILLOW_POSITION,
+		_sphere_primitive(0.5, Color("E8C97A")))
+	for i: int in CLOVER_TUFT_POSITIONS.size():
+		_add_dressing_prop("CloverTuft%d" % i, "clover_tuft", CLOVER_TUFT_HEIGHT, CLOVER_TUFT_POSITIONS[i],
+			_sphere_primitive(0.15, Color("6E8F6A")))
+	for i: int in SOFT_PINE_SMALL_POSITIONS.size():
+		_add_dressing_prop("SoftPineSmall%d" % i, "soft_pine_small", SOFT_PINE_SMALL_HEIGHT, SOFT_PINE_SMALL_POSITIONS[i],
+			_cone_primitive(0.6, SOFT_PINE_SMALL_HEIGHT, Color("7C9082")))
+
+
+## Fresh, per-call grey-box primitive mesh: a small flattened box, matching
+## the fallback-visual contract every ModelSlot prop in this codebase
+## follows (must remain fully functional with zero GLBs on disk).
+func _box_primitive(size: Vector3, color: Color) -> Mesh:
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mesh.material = mat
+	return mesh
+
+
+func _sphere_primitive(radius: float, color: Color) -> Mesh:
+	var mesh := SphereMesh.new()
+	mesh.radius = radius
+	mesh.height = radius * 2.0
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mesh.material = mat
+	return mesh
+
+
+func _cone_primitive(radius: float, height: float, color: Color) -> Mesh:
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = 0.0
+	mesh.bottom_radius = radius
+	mesh.height = height
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mesh.material = mat
+	return mesh
+
+
+## Ground-anchored container (D10 pattern, every other prop in this file):
+## `anchor` + the primitive mesh are the only two children until a
+## ModelSlot swap hides the primitive, so a GLB landing never disturbs
+## anything else in the fort. No collision -- these are all small/visual-
+## only per the brief (generosity floor: walk-through by default).
+func _add_dressing_prop(anchor_name: String, model_id: String, target_height: float, prop_position: Vector3, primitive_mesh: Mesh) -> void:
+	var anchor := Node3D.new()
+	anchor.name = anchor_name
+	anchor.position = prop_position
+	add_child(anchor)
+
+	var visual := MeshInstance3D.new()
+	visual.name = "Primitive"
+	visual.mesh = primitive_mesh
+	visual.position = Vector3(0.0, target_height * 0.5, 0.0)
+	anchor.add_child(visual)
+
+	var slot := ModelSlot.new()
+	slot.name = "ModelSlot"
+	slot.model_id = model_id
+	slot.target_height = target_height
+	anchor.add_child(slot)
 
 

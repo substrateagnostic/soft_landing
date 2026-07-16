@@ -1,0 +1,6 @@
+{
+  "_note": "AUTHORED, DORMANT. Bramble's world script (worlds/bramble/bramble.gd) is out of this pass's territory (owned by the set-piece agent) and does not read this file -- pillow_fort.gd/wisp.gd's `_build_dreamkeepers()` loaders are per-world, direct spawn calls, not a generic WorldBase hook, so nothing outside bramble.gd will ever pick this up either. Wiring the actual spawn call into bramble.gd (one `_build_dreamkeepers()` copy, matching the other two worlds byte-for-byte) is left to the director/next pass.",
+  "dreamkeepers": [
+    {"id": "moth_meadow_shepherd", "rig": "moth_shepherd", "pos": [-50.0, 0.0, 8.0], "face_yaw": 0.0}
+  ]
+}

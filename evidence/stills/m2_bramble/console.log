@@ -1,0 +1,44 @@
+Godot Engine v4.6.2.stable.official.71f334935 - https://godotengine.org
+Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 5070 Ti
+
+HARNESS_FLAGS {"outdir":"evidence/stills/m2_bramble","pads":"2","quitafter":"16","rollover":true,"shots":"350,750","skipmenu":true,"world":"bramble"}
+EVT {"mode":0,"mode_name":"COOP","t":1,"type":"mode_changed"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(2)
+MODEL_SWAP {"id":"pip_v2","rigged":true,"scaled":1.00000009271835}
+CHARACTER_ANIMATOR_READY {"body_inputs":["Locomotion","Jump","Fall"],"gestures":["wave","cheer","pickup","dance","sleep","skip"],"player":"Pip"}
+MODEL_SWAP {"id":"otto_v2","rigged":true,"scaled":1.00000013411047}
+CHARACTER_ANIMATOR_READY {"body_inputs":["Locomotion","Jump","Fall","Carry"],"gestures":["wave","cheer","pickup","dance","sleep"],"player":"Otto"}
+CAMERA_RIG_READY
+WORLD_READY {"id":"bramble","objectives":10}
+HUD_READY {"pips":10,"world":"bramble"}
+MOON_SAID {"key":"new_area","text":"Here we are. Quiet now — someone big is sleeping here.","voice_mode":"moonsong+tts"}
+EVT {"seat":1,"t":5,"type":"landed"}
+EVT {"seat":2,"t":7,"type":"landed"}
+ROLLOVER {"forced":true,"phase":"start"}
+AudioManager: sfx not found (no-op): res://assets/audio/sfx/bear_rollover_rumble.ogg
+MOON_SAID {"key":"world_complete","text":"This whole place is dreaming happily now, because of you.","voice_mode":"moonsong+tts"}
+EVT {"kind":"moth","t":224,"type":"critter_scatter","world":"bramble"}
+EVT {"kind":"moth","t":228,"type":"critter_scatter","world":"bramble"}
+EVT {"kind":"moth","t":238,"type":"critter_scatter","world":"bramble"}
+EVT {"kind":"moth","t":244,"type":"critter_scatter","world":"bramble"}
+EVT {"archetype":"race","id":"d02","t":269,"type":"mission_race_started","world":"bramble"}
+MOON_SAID {"key":"bramble_d02_race","text":"Another quick one — keep up if you can.","voice_mode":"moonsong+tts"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_bramble/shot_350.png
+AudioManager: sfx not found (no-op): res://assets/audio/sfx/breath_exhale.ogg
+BREATH {"phase":"exhale_start"}
+EVT {"seat":1,"t":459,"type":"landed"}
+EVT {"seat":2,"t":461,"type":"landed"}
+EVT {"id":"d01","t":480,"type":"dreamling_giggle","variant":"dreamling_giggle_2"}
+EVT {"id":"d06","t":551,"type":"dreamling_giggle","variant":"dreamling_giggle_3"}
+EVT {"id":"d10","t":557,"type":"dreamling_giggle","variant":"dreamling_giggle"}
+EVT {"id":"d04","t":561,"type":"dreamling_giggle","variant":"dreamling_giggle"}
+EVT {"id":"d02","t":660,"type":"dreamling_giggle","variant":"dreamling_giggle"}
+EVT {"id":"d03","t":661,"type":"dreamling_giggle","variant":"dreamling_giggle"}
+ROLLOVER {"forced":true,"phase":"end"}
+EVT {"id":"d09","t":714,"type":"dreamling_giggle","variant":"dreamling_giggle_3"}
+EVT {"id":"d05","t":736,"type":"dreamling_giggle","variant":"dreamling_giggle_3"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_bramble/shot_750.png
+EVT {"id":"d07","t":755,"type":"dreamling_giggle","variant":"dreamling_giggle_2"}
+EVT {"id":"d08","t":835,"type":"dreamling_giggle","variant":"dreamling_giggle_2"}
+BREATH {"phase":"exhale_end"}
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 16.0s)

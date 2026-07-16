@@ -1,0 +1,10 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/m2_dressing/marmalade","pads":"1","quitafter":"5","script":"evidence/_scratch/dressing_m2/shots_marmalade.json","shots":"20,150","skipmenu":true,"world":"marmalade"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(1)
+HARNESS_NOTE script loaded: res://evidence/_scratch/dressing_m2/shots_marmalade.json (1 events) - Dressing M2 still capture (marmalade, --pads=1, --world=marmalade): teleport Pip down the village lane so the mushroom-lamp streetlights and a berry bush read in frame.
+EVT {"seat":1,"t":5,"type":"landed"}
+EVT {"seat":2,"t":7,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_dressing/marmalade/shot_20.png
+HARNESS_TELEPORT {"pos":[-58.0,0.6,0.0],"seat":1}
+HARNESS_EVENT {"action":"teleport","frame":60,"pos":[-58.0,0.6,0.0],"seat":1}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m2_dressing/marmalade/shot_150.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 5.0s)

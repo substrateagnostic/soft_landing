@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://core/movement/player_body.gd" id="1"]
 [ext_resource type="Resource" path="res://data/tuning/pip_movement.tres" id="2"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://core/readability/landing_ring.tscn" id="4"]
 [ext_resource type="Script" path="res://core/art/rigged_model_slot.gd" id="5"]
 [ext_resource type="Script" path="res://core/art/character_animator.gd" id="6"]
+[ext_resource type="Script" path="res://core/audio/player_audio.gd" id="7"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pip"]
 radius = 0.28
@@ -51,3 +52,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
 [node name="LandingRing" parent="ReadabilityAnchor" instance=ExtResource("4")]
 
 [node name="CarrySocket" type="Node3D" parent="."]
+
+[node name="PlayerAudio" type="Node" parent="."]
+script = ExtResource("7")

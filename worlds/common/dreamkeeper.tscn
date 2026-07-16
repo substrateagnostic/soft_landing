@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://worlds/common/dreamkeeper.gd" id="1"]
+
+[node name="Dreamkeeper" type="Node3D"]
+script = ExtResource("1")

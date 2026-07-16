@@ -6,12 +6,25 @@ extends Node
 
 const SFX_DIR: String = "res://assets/audio/sfx/"
 const STEMS_DIR: String = "res://assets/audio/stems/"
+const AMBIENCE_DIR: String = "res://assets/audio/ambience/" # audio v2 -- per-world ambience beds
+const UI_DIR: String = "res://assets/audio/ui/" # audio v2 -- menu sounds (play_ui)
 const MUSIC_BUS: String = "Music"
 const SFX_BUS: String = "SFX"
 const VOICE_BUS: String = "Voice" # TheMoon's moonsong syllables (UI/writing pass, D20)
 
 var _sfx_player: AudioStreamPlayer
 var _stem_players: Array[AudioStreamPlayer] = []
+var _ambience_player: AudioStreamPlayer # audio v2
+var _ui_player: AudioStreamPlayer # audio v2 -- separate from _sfx_player so a menu tick never cuts off a world sfx mid-play
+
+## audio v2 world-ambience auto-adoption: GameState has no world-changed
+## signal (checked; set_current_world() just assigns the var) and editing
+## GameState/main.gd is outside this pass's territory, so this polls
+## GameState.current_world_id once per frame (a String compare -- cheap)
+## entirely from within this autoload. Every world switch — including the
+## very first one at boot — is picked up within one frame with zero
+## wiring required from any other script.
+var _polled_world_id: String = ""
 
 
 func _ready() -> void:
@@ -23,6 +36,16 @@ func _ready() -> void:
 	_sfx_player.name = "SfxPlayer"
 	_sfx_player.bus = SFX_BUS
 	add_child(_sfx_player)
+
+	_ambience_player = AudioStreamPlayer.new()
+	_ambience_player.name = "AmbiencePlayer"
+	_ambience_player.bus = MUSIC_BUS
+	add_child(_ambience_player)
+
+	_ui_player = AudioStreamPlayer.new()
+	_ui_player.name = "UiPlayer"
+	_ui_player.bus = SFX_BUS
+	add_child(_ui_player)
 
 	# Apply whatever volumes were last persisted (GameState/SaveManager both
 	# ready before AudioManager per project.godot's autoload order) so a
@@ -46,6 +69,68 @@ func play_sfx(sfx_name: String) -> void:
 		return
 	_sfx_player.stream = load(path) as AudioStream
 	_sfx_player.play()
+
+
+## load_sfx_stream — audio v2. Same lookup/fail-soft-print as play_sfx, but
+## returns the AudioStream instead of playing it on the shared _sfx_player.
+## For callers that own their OWN AudioStreamPlayer(s) so overlapping plays
+## never cut each other off — core/audio/player_audio.gd (two players' verb
+## sounds in co-op must never fight over one shared player) and
+## worlds/common/positional_audio.gd (every "AudioManager-registered"
+## stream in SFX_DIR is playable positionally for free, no second asset
+## directory or registry needed).
+func load_sfx_stream(sfx_name: String) -> AudioStream:
+	var path: String = SFX_DIR + sfx_name + ".ogg"
+	if not ResourceLoader.exists(path):
+		print("AudioManager: sfx not found (no-op): ", path)
+		return null
+	return load(path) as AudioStream
+
+
+## play_ui — audio v2 menu-sound API (assets/audio/ui/*.ogg): focus_tick,
+## confirm_bloom, pause_open, pause_close. Scene wiring (pause_menu.gd etc.)
+## belongs to whoever owns scenes/ui; this only guarantees the API loads
+## and plays a stream when called.
+func play_ui(ui_name: String) -> void:
+	var path: String = UI_DIR + ui_name + ".ogg"
+	if not ResourceLoader.exists(path):
+		print("AudioManager: ui sfx not found (no-op): ", path)
+		return
+	_ui_player.stream = load(path) as AudioStream
+	_ui_player.play()
+
+
+## play_ambience / stop_ambience — audio v2 per-world ambience beds
+## (assets/audio/ambience/<world_id>.ogg). Also called automatically by
+## _process() below on every GameState.current_world_id change, so no
+## other script needs to call this directly for the common case — it's
+## public because a future scene (e.g. a hub preview) may want to force a
+## specific bed regardless of GameState.
+func play_ambience(world_id: String) -> void:
+	var path: String = AMBIENCE_DIR + world_id + ".ogg"
+	if not ResourceLoader.exists(path):
+		print("AudioManager: ambience not found (no-op): ", path)
+		return
+	_ambience_player.stream = load(path) as AudioStream
+	_ambience_player.play()
+
+
+func stop_ambience() -> void:
+	_ambience_player.stop()
+
+
+## Polls GameState.current_world_id once a frame (see _polled_world_id's
+## doc comment) and swaps the ambience bed the instant it changes,
+## including the very first world load at boot.
+func _process(_delta: float) -> void:
+	var world_id: String = GameState.current_world_id
+	if world_id == _polled_world_id:
+		return
+	_polled_world_id = world_id
+	if world_id.is_empty():
+		stop_ambience()
+	else:
+		play_ambience(world_id)
 
 
 ## Maps a dreamling-count step (1-based) to the matching rung of the
