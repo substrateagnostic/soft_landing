@@ -1,59 +1,72 @@
 # NEEDS YOU — soft_landing / THE BIG NAP
-*Updated at the end of every session. What exists, where the evidence is, one
-cold demo command, what's unverified, and what only you can decide.*
+*Updated at the end of every session. What exists, where the evidence is,
+one cold demo command, what's unverified, and what only you can decide.*
 
-## Session 1, overnight shift (2026-07-16, you in Chicago)
+## Session 2 — FOUNDATION NIGHT (2026-07-16, the V2 mandate)
 
-### What happened while you slept (all pushed to github.com/substrateagnostic/soft_landing)
-- **Gate 2 closed** (your video approval, verbatim, in DoD).
-- **Gate 3 provisionally passed** by director-as-producer: Meshy pipeline
-  proven end-to-end — **Pip and Otto are real onesie kids now**, lantern/
-  jar/cushions live behind the swappable D10 seam. 150 credits total spent
-  across 6 assets. Stills: `evidence/stills/art/`. **Your veto stands.**
-- **Two new worlds** built parallel against the contract: **Wisp** (drifting
-  whale over a moonlit lake) and **Marmalade** (cat asleep on a village).
-  All four worlds boot; **30/30 dreamling placements pass** the checker.
-- **CALLIE** — yes, that Callie — naps on her cushion by the fort, perches
-  on either kid, **mews toward hidden dreams** (receipts show her pointing
-  at d01 across the meadow), purrs when you carry dreams, teleports home
-  like all good stuffies. Her calico GLB is in. `docs/design/world-cards/callie.md`.
-- **The game has sound**: rising chime ladder per carried dream, bubble
-  catch/pop, geyser sighs, and the Bramble lullaby stems that add a layer
-  at 1/5/10 dreams returned. Placeholder synths await your viola —
-  **spec at `docs/design/music-stems-spec.md`** (32 s loops, 60 BPM, D major).
-- **HUD** (pips + numeral), pause menu, breathing title screen.
-- **Opus code review**: 1 CRITICAL (world-switch rescue soft-lock) found and
-  fixed same-night with a regression property; 2 REAL fixed; NITs queued.
-- Properties P1-P6 swept; harness gained --poslog/--perflog/pads events.
+### What happened (all pushed to github.com/substrateagnostic/soft_landing)
+- **DIRECTION_V2 + ROADMAP (M1→M5)**: every locked decision re-litigated;
+  soul kept, age-3 floors superseded (D17–D24 in docs/DECISIONS.md). Six
+  research lanes in docs/research/v2/. Month-plus plan to Steam-ready.
+- **THE BOYS ARE IN THE GAME (D24)**: Pip = Ezra (blond fringe under the
+  duck hood, beak as cap brim), Otto = Caleb (sleepy round-faced toddler in
+  the grey critter-print bear onesie, now properly the LITTLE one — he
+  still carries and tosses his big brother, receipted). Both fully rigged
+  with 11 clips each (skip/carry included). First roll, both keepers, from
+  your one reference photo — likeness via prompt only, photo stayed local.
+- **Moveset v2 (D17)**: flutter double-jump, hold-to-glide, pound-bounce
+  (Otto's shockwave launches Pip 1.5× jump height — receipts in
+  tools/harness/scripts/{flutter_gap,glide_descent,pound_bounce}.json).
+  Floor intact: everything completable on stick+jump+interact.
+- **Camera (D18)**: right stick now gently nudges (auto-recenters);
+  manual mode + sensitivity in the pause options, persisted.
+- **The Moon is WRITTEN (D20)**: narration bible (~410 words, every line
+  authored), moonsong gibberish voice (deterministic synth syllables),
+  subtitle ribbon, voice modes incl. TTS accessibility default.
+- **Dreamlings are micro-missions (D21)**: race/ride/shy/duet archetypes
+  live (bramble d01/d02 race — receipts show them zipping and caught);
+  duet has a generous solo fallback. 30/30 placements stayed green.
+- **Graphics v1+v2 (D22)**: painted sky with THE MOON IN FRAME (fort +
+  bramble), AgX + grade, glow, fog, sage lawn grass (root-caused
+  FRONT_FACING bug), patchy ground tints, warm bramble, stylized lake
+  water, fireflies/motes, landing puffs. Before/after:
+  evidence/stills/v2_before vs v2_after2.
+- **Aliveness v1**: touch-react props, ambient moths/mice with
+  scatter-and-return, cheer gesture when a dream comes home.
+- **Producer orders executed**: lantern remeshed (PBR glow). Otto reroll
+  resolved by D24 (he's Caleb now).
 
 ### ⛔ Decisions pending (all vetoable, none blocking)
-1. **Gate 3 art sign-off** — review `evidence/stills/art/` + the finale video.
-   Known art notes: duck-bill reads weak on Pip's hood (re-roll candidate,
-   or Multi-Image-to-3D from photos — see pipeline.md addendum);
-   firefly jar lost its glow-dots (retexture endpoint can fix).
-2. **Feel re-tune pass** — every number is @export; tell me in feelings.
-3. **License** Apache-2.0 (standing).
-4. **Viola stems** whenever — placeholders ship fine.
+1. **D24 casting veto window** — if Ezra/Caleb likenesses miss, say so;
+   old models remain on disk. Stills: evidence/stills/art_v2/,
+   evidence/stills/v2_swap/.
+2. **Verb feel** — flutter/glide/pound numbers are all @export; tell me in
+   feelings after a couch session.
+3. **Credits** — balance ~2,330 of the shared pool; M2 (Bramble proof
+   world) budgets ~450. Top-up whenever convenient ($40/3000 noted).
+4. **Viola stems** whenever — placeholder synths still fine.
 
 ### Cold demo command (from D:\Projects\soft_landing)
 ```
 D:\Tools\godot\godot_console.exe --path . -- --skipmenu
 ```
-(Boots to the fort: Callie's on her cushion right of the fort; three tinted
-doors behind it — umber=Bramble, orange=Marmalade, silver=Wisp. 1-2 pads,
-or keyboard WASD+Space+E drives Otto.)
+(Or without --skipmenu for the new title screen. 1–2 pads or WASD+Space+E.
+In the air: tap jump again = flutter, hold jump = glide, tap E = pound.)
 
 ### UNVERIFIED / known-open (honest)
-- TTS audible voice quality (call-path receipted; TTS audio is OS-level so
-  it is NOT captured in movie receipts — needs live ears).
-- Save-corruption recovery: player-facing behavior proven; one engine-level
-  JSON parse ERROR line in stdout can't be suppressed (cosmetic, logged).
-- Sustained-fps receipt: instrument built; needs your interactive session
-  (remote-session numbers are presentation artifacts).
-- Polish queue: initial Visual yaw at spawn (kids face camera until they
-  move), Wisp reeds too dark/spiky, Wisp establishing framing, door/interact
-  same-frame overload (input-claim seam), Otto still capsule-in-scene-file
-  fallback only in old stills, review NITs (triple-save, receipt seat
-  fields, Jolt pin).
-- Ezra playtest checklist: drafted at `docs/design/playtest-checklist.md`,
-  moves here at Gate 4.
+- Right-stick camera FEEL (receipted mechanically; needs human hands).
+- Moonsong/TTS audible quality (needs ears; movies don't capture TTS).
+- Duet/shy/ride mission choreography live-verified only for race; others
+  reasoned from code (docs/verify/aliveness-v2-VERIFY.md).
+- Wisp/marmalade moon-in-frame placement; dreamling bloom is subtle.
+- Plush character shader kept OPT-IN (muddier than imported material at
+  distance — A/B in evidence/stills/v2_plush vs v2_swap).
+- "2 resources still in use at exit" engine warning, intermittent,
+  cosmetic, unattributed.
+- Real-hardware fps receipt still owed (remote-session numbers are
+  presentation artifacts).
+
+### M2 preview (next session, per ROADMAP)
+Bramble to shippable: bear's breath-becomes-weather + the roll-over set
+piece, 10 authored micro-missions, dreamkeeper NPCs, art batch 2 (~15
+assets, ~450 credits), audio v2, performance pass.

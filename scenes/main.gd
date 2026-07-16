@@ -20,15 +20,18 @@ const FALLBACK_RESCUE_FLOOR_Y: float = -10.0
 @onready var _seat_manager: SeatManager = $SeatManager
 @onready var _soft_landing: SoftLanding = $SoftLanding
 @onready var _game_ui: GameUI = $GameUI
+@onready var _world_environment: WorldEnvironment = $WorldEnvironment
 
 var _world: Node3D = null
 var _fallback_camera: Camera3D = null
+var _ambience: Ambience = null
 
 
 func _ready() -> void:
-	_ensure_moonlight()
+	_ensure_ambience()
 	var world_id: String = str(Harness.flags.get("world", FALLBACK_WORLD_ID))
 	_load_world(world_id)
+	_ambience.apply_world(GameState.current_world_id)
 	_place_players()
 	_setup_camera()
 	_setup_coop()
@@ -118,16 +121,19 @@ func _spawn_fallback_world() -> void:
 	_world_slot.add_child(floor_body)
 
 
-func _ensure_moonlight() -> void:
-	if has_node("Moonlight"):
-		return
-	var light := DirectionalLight3D.new()
-	light.name = "Moonlight"
-	light.light_color = Color(0.82, 0.84, 1.0)
-	light.light_energy = 0.85
-	light.shadow_enabled = true
-	light.rotation_degrees = Vector3(-50.0, -30.0, 0.0)
-	add_child(light)
+## Replaces the old single flat DirectionalLight3D with the D22 per-world
+## rig (core/env/ambience.gd): moon key light + sky/fog post stack + shared
+## ambient particles, built once against the WorldEnvironment node scenes/
+## main.tscn already declares, then reconfigured per world in apply_world().
+func _ensure_ambience() -> void:
+	var existing: Ambience = get_node_or_null("Ambience") as Ambience
+	if existing != null:
+		_ambience = existing
+	else:
+		_ambience = Ambience.new()
+		_ambience.name = "Ambience"
+		add_child(_ambience)
+	_ambience.setup(_world_environment)
 
 
 func _place_players() -> void:
@@ -219,6 +225,7 @@ func _switch_world(world_id: String) -> void:
 		_world.queue_free()
 		_world = null
 	_load_world(world_id)
+	_ambience.apply_world(GameState.current_world_id)
 	_place_players()
 	# Re-wire the pieces that cache per-world state; players/camera/coop
 	# survive the swap untouched.

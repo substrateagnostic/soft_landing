@@ -101,11 +101,45 @@ func _swap_in(rig_path: String) -> void:
 	instance.position.y = ground_offset_y - scaled_bottom_y
 
 	add_child(instance)
+	if use_plush_material:
+		_apply_plush_material(instance)
 	print("MODEL_SWAP %s" % JSON.stringify({"id": model_id, "scaled": scale_factor, "rigged": true}))
 
 	rig_root = instance
 	anim_player = player
 	rig_ready.emit(rig_root, anim_player)
+
+
+const PLUSH_SHADER: Shader = preload("res://assets/shaders/plush_character.gdshader")
+
+## Director's A/B (evidence/stills/v2_plush vs v2_swap): the plush shader
+## currently reads MUDDIER than the imported StandardMaterial at gameplay
+## distance — kept opt-in (off) until the shader earns the swap. Texture
+## plumbing below already works, so re-testing later is a one-flag flip.
+@export var use_plush_material: bool = false
+
+
+## D22 plush pass (director integration): every skinned mesh gets the
+## fresnel-rim + wrap-SSS shader, carrying its own painted texture through
+## the shader's albedo_texture slot so faces survive the material swap.
+func _apply_plush_material(root: Node) -> void:
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node is MeshInstance3D:
+			var mi: MeshInstance3D = node
+			if mi.mesh != null:
+				for surface: int in range(mi.mesh.get_surface_count()):
+					var std: StandardMaterial3D = mi.mesh.surface_get_material(surface) as StandardMaterial3D
+					var plush := ShaderMaterial.new()
+					plush.shader = PLUSH_SHADER
+					if std != null and std.albedo_texture != null:
+						plush.set_shader_parameter("albedo_texture", std.albedo_texture)
+					if std != null:
+						plush.set_shader_parameter("albedo_color", std.albedo_color)
+					mi.set_surface_override_material(surface, plush)
+		for child: Node in node.get_children():
+			stack.append(child)
 
 
 func _find_animation_player(node: Node) -> AnimationPlayer:

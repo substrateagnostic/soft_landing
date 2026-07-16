@@ -10,6 +10,9 @@ extends WorldBase
 
 const CLEARING_SIZE: Vector2 = Vector2(25.0, 25.0)
 const CLEARING_COLOR: Color = Color("7C9082") # sage in moonlight
+# ROUND 2 (director's note 2): near-neighbor tint pair for the ground-
+# patches shader -- sage <-> a lighter, blanket-soft variant.
+const CLEARING_GROUND_TINT_B: Color = Color("96A698")
 
 const FORT_CENTER: Vector3 = Vector3(0.0, 0.0, -6.0)
 const FORT_WIDTH: float = 4.5
@@ -197,6 +200,12 @@ func _build_clearing() -> void:
 	visual.name = "ClearingGround"
 	visual.mesh = mesh
 	add_child(visual)
+	# ROUND 2 (director's note 2, "flat single-color ground kills the
+	# diorama"): patchy sage <-> lighter-sage blend on the clearing's main
+	# ground (assets/shaders/ground_patches.gdshader). Override on the
+	# MeshInstance3D, not the PlaneMesh resource, so it doesn't disturb the
+	# `mat`/`mesh.material` StandardMaterial3D wiring above.
+	visual.set_surface_override_material(0, _ground_patch_material(CLEARING_COLOR, CLEARING_GROUND_TINT_B))
 
 	var body := StaticBody3D.new()
 	body.name = "ClearingGroundBody"
@@ -292,6 +301,17 @@ func _build_fort() -> void:
 	fort.add_child(lantern_light)
 
 
+## D22 graphics-v2 ROUND 2, assets/shaders/ground_patches.gdshader (director's
+## note 2): builds a ShaderMaterial pre-loaded with a world's near-neighbor
+## tint pair.
+func _ground_patch_material(tint_a: Color, tint_b: Color) -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://assets/shaders/ground_patches.gdshader") as Shader
+	mat.set_shader_parameter("tint_a", tint_a)
+	mat.set_shader_parameter("tint_b", tint_b)
+	return mat
+
+
 func _add_fort_box(parent: Node3D, size: Vector3, box_position: Vector3, mat: StandardMaterial3D) -> void:
 	var mesh := BoxMesh.new()
 	mesh.size = size
@@ -322,12 +342,18 @@ func _build_cushions() -> void:
 	_add_cushion(Vector3(-3.2, 0.0, -3.5), 0.9, CUSHION_DUSK_BLUE, 0.93)
 
 
+## D22 / recipes "Character rendering": the cushions are the fort's own
+## soft-toy plush objects (flat-color spheres before this pass), so they're
+## the in-territory demo for assets/shaders/plush_character.gdshader --
+## see graphics-v2-VERIFY.md for the one-line instructions to apply the
+## same shader to Callie/players (out of this agent's territory to wire
+## directly).
 func _add_cushion(cushion_position: Vector3, radius: float, color: Color, scale_jitter: float = 1.0) -> void:
 	var mesh := SphereMesh.new()
 	mesh.radius = radius
 	mesh.height = radius * 1.2 # squashed
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = color
+	var mat := load("res://core/env/plush_material.tres").duplicate() as ShaderMaterial
+	mat.set_shader_parameter("albedo_color", color)
 	mesh.material = mat
 
 	# CushionAnchor is the ground-anchored container ModelSlot needs (D10):
@@ -385,6 +411,10 @@ func _add_fence_post(post_position: Vector3, mat: StandardMaterial3D) -> void:
 	add_child(visual)
 
 
+## D22 graphics-v2: cast_shadow OFF, same fix/reasoning as marmalade.gd's
+## CatSilhouette — a distant "just shape, unreachable" backdrop prop
+## shouldn't be able to shadow the gameplay clearing now that the moon key
+## light (core/env/ambience.gd) actually casts shadows.
 func _build_bear_silhouette() -> void:
 	var mesh := SphereMesh.new()
 	mesh.radius = BEAR_SILHOUETTE_RADIUS
@@ -397,6 +427,7 @@ func _build_bear_silhouette() -> void:
 	visual.name = "BrambleSkylineSilhouette"
 	visual.mesh = mesh
 	visual.position = BEAR_SILHOUETTE_POSITION
+	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(visual) # visual only — unreachable, just shape (per brief)
 
 

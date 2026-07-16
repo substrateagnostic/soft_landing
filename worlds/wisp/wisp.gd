@@ -143,9 +143,27 @@ const REED_PATCH_1_X: float = -68.0
 const REED_PATCH_1_Z: float = 8.0
 const REED_PATCH_2_X: float = -78.0
 const REED_PATCH_2_Z: float = -10.0
-const REED_BLADE_COUNT: int = 9
 const REED_PATCH_SPREAD: float = 1.8
 const REED_BLADE_HEIGHT: float = 1.5
+
+# --- Ambient warm fill + softer wind-swayed reeds (D22 graphics-v2,
+# visual-only): the polish note on the original box-blade reeds was
+# "too dark/spiky" (COLOR_SHORE, a grey-brown wet-stone tone, on stiff
+# unlit boxes) -- swapped for wind_sway.gdshader blades in a lighter,
+# softer tint, same two patch locations/footprint. ------------------------
+const REED_TINT_BASE: Color = Color("8FA0AE") # lighter than COLOR_SHORE, still cool
+const REED_TINT_TIP: Color = Color("D8E4EC") # near-white tip catches the moon key
+const REED_DENSITY: int = 26
+const SHORE_FILL_POSITION: Vector3 = Vector3(-70.0, 1.4, 4.0) # recipe: "warm fill lights at practicals ... wisp shore"
+const SHORE_FILL_COLOR: Color = Color("F2C879")
+# ROUND 2 (director's note 1, "Same fix wherever grass_field is used (wisp
+# reeds included)"): wider than the original 0.05 needle-thin override,
+# matching GrassField's own wider ROUND 2 default -- plus the class-wide
+# backface-normal fix (assets/shaders/wind_sway.gdshader) and tapered-quad
+# blade shape (core/env/grass_field.gd) apply here automatically.
+const REED_BLADE_WIDTH: float = 0.09
+# Note 2 ("flat single-color ground"): cool shore <-> a warm sand hint.
+const GROUND_TINT_B: Color = Color("8C8570")
 
 var _whale: WhaleDrift = null
 var _water_spout: WaterSpout = null
@@ -165,7 +183,22 @@ func _ready() -> void:
 	_build_dreamlings()
 	_build_camera_hints()
 	_build_home_door()
+	_build_ambient_lighting()
 	super._ready()
+
+
+## Warm practical fill at the shore (recipe: "warm fill lights at
+## practicals ... wisp shore") -- wisp had only the cool cyan LakeUnderglow
+## before this, no warm source, unlike pillow_fort/marmalade whose porch/
+## window lights already existed.
+func _build_ambient_lighting() -> void:
+	var light := OmniLight3D.new()
+	light.name = "ShoreLanternGlow"
+	light.light_color = SHORE_FILL_COLOR
+	light.light_energy = 0.45
+	light.omni_range = 8.0
+	light.position = SHORE_FILL_POSITION
+	add_child(light)
 
 
 func world_id() -> String:
@@ -257,8 +290,20 @@ func _add_ground_slab(slab_name: String, size: Vector2, top_y: float, thickness:
 	add_child(body)
 
 
+## D22 graphics-v2 ROUND 2, assets/shaders/ground_patches.gdshader (director's
+## note 2): builds a ShaderMaterial pre-loaded with a world's near-neighbor
+## tint pair.
+func _ground_patch_material(tint_a: Color, tint_b: Color) -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://assets/shaders/ground_patches.gdshader") as Shader
+	mat.set_shader_parameter("tint_a", tint_a)
+	mat.set_shader_parameter("tint_b", tint_b)
+	return mat
+
+
 func _build_shore() -> void:
 	_add_ground_slab("Shore", SHORE_SIZE, SHORE_TOP_Y, SHORE_THICKNESS, COLOR_SHORE, SHORE_CENTER)
+	(get_node("Shore") as MeshInstance3D).set_surface_override_material(0, _ground_patch_material(COLOR_SHORE, GROUND_TINT_B))
 
 
 ## Below RESCUE_FLOOR_Y on purpose (bramble's moat lesson): stepping off the
@@ -270,17 +315,28 @@ func _build_moat() -> void:
 
 func _build_lake() -> void:
 	_add_ground_slab("LakeBed", LAKE_SIZE, LAKE_BED_TOP_Y, LAKE_BED_THICKNESS, COLOR_SHORE, LAKE_CENTER)
+	(get_node("LakeBed") as MeshInstance3D).set_surface_override_material(0, _ground_patch_material(COLOR_SHORE, GROUND_TINT_B))
 	_add_lake_plane()
 	_add_lake_underglow()
 
 
 ## Visual only, no collision -- the walkable bed is LakeBed above it.
+## D22 / recipes "Water (Wisp's lake)": stylized absorption-based water
+## (assets/shaders/stylized_water.gdshader) instead of a flat translucent
+## plane -- depth-based color, a foam edge that appears for free wherever
+## the whale mounds break the surface (foam is a function of the plane-to-
+## scene depth difference, not hardcoded per-object), gentle vertex waves.
 func _add_lake_plane() -> void:
 	var mesh := PlaneMesh.new()
 	mesh.size = LAKE_SIZE
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(COLOR_LAKE.r, COLOR_LAKE.g, COLOR_LAKE.b, 0.6)
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mesh.subdivide_width = 32 # enough vertex density for the wave displacement to read
+	mesh.subdivide_depth = 32
+
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://assets/shaders/stylized_water.gdshader") as Shader
+	mat.set_shader_parameter("shallow_color", Color(0.20, 0.30, 0.42))
+	mat.set_shader_parameter("deep_color", COLOR_LAKE)
+	mat.set_shader_parameter("foam_color", COLOR_HIDE)
 	mesh.material = mat
 
 	var visual := MeshInstance3D.new()
@@ -304,25 +360,29 @@ func _add_lake_underglow() -> void:
 
 
 func _build_reeds() -> void:
-	_add_reed_patch(REED_PATCH_1_X, REED_PATCH_1_Z)
-	_add_reed_patch(REED_PATCH_2_X, REED_PATCH_2_Z)
+	_add_reed_patch("ReedPatch1", REED_PATCH_1_X, REED_PATCH_1_Z, 3)
+	_add_reed_patch("ReedPatch2", REED_PATCH_2_X, REED_PATCH_2_Z, 4)
 
 
-func _add_reed_patch(center_x: float, center_z: float) -> void:
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = COLOR_SHORE
-	for i: int in range(REED_BLADE_COUNT):
-		var offset: Vector2 = Vector2(randf_range(-REED_PATCH_SPREAD, REED_PATCH_SPREAD), randf_range(-REED_PATCH_SPREAD, REED_PATCH_SPREAD))
-		var mesh := BoxMesh.new()
-		mesh.size = Vector3(0.1, REED_BLADE_HEIGHT, 0.1)
-		mesh.material = mat
-
-		var blade := MeshInstance3D.new()
-		blade.name = "ReedBlade"
-		blade.mesh = mesh
-		blade.position = Vector3(center_x + offset.x, REED_BLADE_HEIGHT * 0.5 - 0.05, center_z + offset.y)
-		blade.rotation.y = randf_range(0.0, TAU)
-		add_child(blade)
+## Wind-swayed reed patch (assets/shaders/wind_sway.gdshader via
+## core/env/grass_field.gd), lighter/softer than the original dark stiff
+## boxes (see the const block's polish-note comment above). Same footprint
+## (REED_PATCH_SPREAD) and reed height as before so d09's "hides in the
+## first patch" placement still reads correctly.
+func _add_reed_patch(patch_name: String, center_x: float, center_z: float, rng_seed: int) -> void:
+	var field := GrassField.new()
+	field.name = patch_name
+	field.base_color = REED_TINT_BASE
+	field.tip_color = REED_TINT_TIP
+	field.blade_height = REED_BLADE_HEIGHT
+	field.blade_width = REED_BLADE_WIDTH
+	field.sway_strength = 0.08 # reeds sway less than open grass -- taller, stiffer stems
+	add_child(field)
+	field.scatter(
+		Vector3(center_x, 0.0, center_z),
+		Vector2(REED_PATCH_SPREAD * 2.0, REED_PATCH_SPREAD * 2.0),
+		REED_DENSITY, rng_seed
+	)
 
 
 ## Places LILY_COUNT pads, each exactly LILY_STEP apart (center-to-center),

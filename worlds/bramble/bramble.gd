@@ -89,6 +89,30 @@ const FUR_BLADE_COUNT: int = 7
 const FUR_PATCH_SPREAD: float = 1.6
 const FUR_BLADE_HEIGHT: float = 0.9
 
+# --- Ambient warm fill + wind grass (D22 graphics-v2, visual-only) ---------
+const FIREFLY_FILL_POSITION: Vector3 = Vector3(-22.0, 3.6, -2.0) # matches core/env/ambience.gd's firefly_center
+const FIREFLY_FILL_COLOR: Color = Color("F2C879")
+# Both clear of the haunch mound's footprint (r16 from x=-30,z=0 — the same
+# hazard bramble.gd's own d02 comment already flags for prop placement).
+const GRASS_PATCH_A_CENTER: Vector3 = Vector3(-52.0, 0.0, -8.0) # meadow approach, near spawn
+const GRASS_PATCH_B_CENTER: Vector3 = Vector3(-2.0, 0.0, 25.0) # open meadow flank, past the geysers/paw ramps
+const GRASS_PATCH_SIZE: Vector2 = Vector2(14.0, 10.0)
+const GRASS_DENSITY: int = 220
+
+# --- ROUND 2 additions: bear-direction warm fill + patchy meadow ground ----
+# Note 5 ("warm bramble up"): a sleeping animal is warm -- a broad, low-
+# energy warm wash centered over the chest/back, distinct from the small
+# tight FireflyAreaGlow above (that one lights the fireflies cloud; this one
+# is meant to read as ambient warmth radiating off the bear's whole body).
+const BEAR_WARM_FILL_POSITION: Vector3 = Vector3(CHEST_POSITION.x, CHEST_POSITION.y + 3.0, CHEST_POSITION.z)
+const BEAR_WARM_FILL_COLOR: Color = Color("D9A468") # between umber fur and honey firefly glow
+const BEAR_WARM_FILL_ENERGY: float = 0.4
+const BEAR_WARM_FILL_RANGE: float = 42.0
+# Note 2 ("flat single-color ground"): sage <-> warm moss, a near-neighbor
+# pair per the recipe (assets/shaders/ground_patches.gdshader).
+const GROUND_TINT_A: Color = COLOR_MEADOW
+const GROUND_TINT_B: Color = Color("8C9463")
+
 var _chest: BreathingChest = null
 var _geyser_a: SnoreGeyser = null # d07 rides this column (placement exemption)
 
@@ -106,7 +130,56 @@ func _ready() -> void:
 	_build_dreamlings()
 	_build_camera_hints()
 	_build_home_door()
+	_build_ambient_lighting()
+	_build_grass_fields()
 	super._ready()
+
+
+## Warm practical fill at the fireflies area (recipe: "warm fill lights at
+## practicals ... bramble fireflies area") — bramble had no warm light
+## source before this (only the cool moon key from core/env/ambience.gd),
+## so this is the one this world's own script needed to add, unlike
+## pillow_fort/marmalade whose porch/window lights already existed.
+func _build_ambient_lighting() -> void:
+	var light := OmniLight3D.new()
+	light.name = "FireflyAreaGlow"
+	light.light_color = FIREFLY_FILL_COLOR
+	light.light_energy = 0.5
+	light.omni_range = 7.0
+	light.position = FIREFLY_FILL_POSITION
+	add_child(light)
+
+	# ROUND 2 (director's note 5): broad warm wash from the bear's own body,
+	# distinct from the point-source firefly glow above.
+	var bear_fill := OmniLight3D.new()
+	bear_fill.name = "BearWarmFill"
+	bear_fill.light_color = BEAR_WARM_FILL_COLOR
+	bear_fill.light_energy = BEAR_WARM_FILL_ENERGY
+	bear_fill.omni_range = BEAR_WARM_FILL_RANGE
+	bear_fill.position = BEAR_WARM_FILL_POSITION
+	add_child(bear_fill)
+
+
+## Wind-swayed grass patches (assets/shaders/wind_sway.gdshader via
+## core/env/grass_field.gd) — visual only, no collision, planted in the
+## meadow the way the recipe asks ("plant fields in bramble's meadow
+## areas"). Deterministic seeds so screenshot/harness receipts stay stable.
+func _build_grass_fields() -> void:
+	_add_grass_patch("GrassPatchA", GRASS_PATCH_A_CENTER, 1)
+	_add_grass_patch("GrassPatchB", GRASS_PATCH_B_CENTER, 2)
+
+
+## ROUND 2 (director's note 1, "grass reads as cold dark spikes"): dropped
+## the fur-lerp tint (it muddied toward COLOR_FUR_DARK, a big part of why
+## this read cold/brown instead of like sage lawn) and the taller 0.4 m
+## override -- GrassField's own class defaults are now exactly the spec's
+## "#7C9082 base toward #9DB39A tips", short/wide/clumped, so this patch
+## just uses them.
+func _add_grass_patch(patch_name: String, center: Vector3, rng_seed: int) -> void:
+	var field := GrassField.new()
+	field.name = patch_name
+	add_child(field)
+	field.scatter(center, GRASS_PATCH_SIZE, GRASS_DENSITY, rng_seed)
 
 
 func world_id() -> String:
@@ -161,6 +234,23 @@ func _sphere_surface_y(center: Vector3, radius: float, x: float, z: float) -> fl
 func _build_meadow() -> void:
 	_add_ground_slab("Moat", MOAT_SIZE, MOAT_TOP_Y, MOAT_THICKNESS, COLOR_MOAT)
 	_add_ground_slab("Meadow", MEADOW_SIZE, 0.0, 1.0, COLOR_MEADOW)
+	# ROUND 2 (director's note 2): the meadow is the world's main walkable
+	# ground -- give it the patchy sage/warm-moss shader (the moat stays
+	# flat: it's a boundary void ring, not gameplay ground). Override on the
+	# MeshInstance3D (not the BoxMesh resource): PrimitiveMesh only exposes a
+	# single `.material` property, not ArrayMesh's per-surface setter.
+	(get_node("Meadow") as MeshInstance3D).set_surface_override_material(0, _ground_patch_material(GROUND_TINT_A, GROUND_TINT_B))
+
+
+## D22 graphics-v2 ROUND 2, assets/shaders/ground_patches.gdshader (director's
+## note 2): builds a ShaderMaterial pre-loaded with a world's near-neighbor
+## tint pair.
+func _ground_patch_material(tint_a: Color, tint_b: Color) -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://assets/shaders/ground_patches.gdshader") as Shader
+	mat.set_shader_parameter("tint_a", tint_a)
+	mat.set_shader_parameter("tint_b", tint_b)
+	return mat
 
 
 func _add_ground_slab(slab_name: String, size: Vector2, top_y: float, thickness: float, color: Color, xz_center: Vector2 = Vector2.ZERO) -> void:

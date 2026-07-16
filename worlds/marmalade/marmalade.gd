@@ -24,6 +24,9 @@ const COLOR_WALL: Color = Color("EFE6D8") # cream plaster
 const COLOR_WINDOW: Color = Color("F2C879") # honey (windows, lanterns — emissive)
 const COLOR_HILL: Color = Color("7C9082") # dusk sage (the hill)
 const COLOR_MOAT: Color = Color(0.404, 0.463, 0.420) # darker sage, the boundary dip (bramble-moat pattern)
+# ROUND 2 (director's note 2, "flat single-color ground"): sage <-> warm
+# grey, echoing the terracotta roofs without competing with them.
+const GROUND_TINT_B: Color = Color("8C8478")
 
 # --- Ground / moat (bramble-moat pattern: void ring sits below rescue line) -
 const GROUND_SIZE: Vector2 = Vector2(170.0, 90.0) # X: -85..85, Z: -45..45
@@ -309,9 +312,33 @@ func _add_box_platform(platform_name: String, center: Vector3, size: Vector3, co
 func _build_ground() -> void:
 	_add_ground_slab("Moat", MOAT_SIZE, MOAT_TOP_Y, MOAT_THICKNESS, COLOR_MOAT)
 	_add_ground_slab("VillageGround", GROUND_SIZE, 0.0, GROUND_THICKNESS, COLOR_HILL)
+	# ROUND 2 (director's note 2): patchy sage/warm-grey shader on the main
+	# walkable ground (the moat stays flat -- boundary void ring, not
+	# gameplay ground).
+	(get_node("VillageGround") as MeshInstance3D).set_surface_override_material(0, _ground_patch_material(COLOR_HILL, GROUND_TINT_B))
+
+
+## D22 graphics-v2 ROUND 2, assets/shaders/ground_patches.gdshader (director's
+## note 2): builds a ShaderMaterial pre-loaded with a world's near-neighbor
+## tint pair.
+func _ground_patch_material(tint_a: Color, tint_b: Color) -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://assets/shaders/ground_patches.gdshader") as Shader
+	mat.set_shader_parameter("tint_a", tint_a)
+	mat.set_shader_parameter("tint_b", tint_b)
+	return mat
 
 
 ## Visual-only bulk (no StaticBody3D) — see the constant's doc comment.
+## D22 graphics-v2: cast_shadow OFF. It's a huge (18 m) sphere sitting only
+## ~9-15 m from the village, and the old single flat DirectionalLight3D
+## never had real shadow casting turned on for it, so this never mattered
+## until core/env/ambience.gd's moon key light (shadow_enabled = true)
+## landed — with shadows on, this "just a distant shape, unreachable" prop
+## was blanketing the entire nearby village ground in real shadow,
+## reading as a broken near-black scene in the after-stills. A backdrop
+## silhouette shouldn't be able to shadow the gameplay area it's a
+## backdrop FOR.
 func _build_cat_silhouette() -> void:
 	var mesh := SphereMesh.new()
 	mesh.radius = SILHOUETTE_RADIUS
@@ -324,6 +351,7 @@ func _build_cat_silhouette() -> void:
 	visual.name = "CatSilhouette"
 	visual.mesh = mesh
 	visual.position = SILHOUETTE_CENTER
+	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(visual)
 
 

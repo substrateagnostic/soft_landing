@@ -1,0 +1,6 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/v2_after2/pillow_fort","quitafter":"5","shots":"90,180","skipmenu":true,"world":"pillow_fort"}
+EVT {"seat":1,"t":5,"type":"landed"}
+EVT {"seat":2,"t":5,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/v2_after2/pillow_fort/shot_90.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/v2_after2/pillow_fort/shot_180.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 5.0s)
