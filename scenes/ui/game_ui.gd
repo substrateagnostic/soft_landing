@@ -22,6 +22,18 @@ func _ready() -> void:
 	# GDScript's bool() has no String constructor).
 	if Harness.flag("debug_pause", false):
 		_pause_menu.open()
+	# --debug_options: same seam, one step further in — opens pause AND
+	# switches straight to the options subpanel, so a windowed --shots run
+	# can capture it without scripting focus-navigation + a button press
+	# (the harness's --script format has no raw ui_* input, only p1/p2
+	# actions, so there is no other way to reach this panel headlessly).
+	if Harness.flag("debug_options", false):
+		_pause_menu.open_to_options()
+	# --debug_pause_sleep: same seam, focuses Sleep directly, so a
+	# harness --script can prove the hold-to-quit gesture (see
+	# pause_menu.gd's open_focus_sleep doc comment for why this exists).
+	if Harness.flag("debug_pause_sleep", false):
+		_pause_menu.open_focus_sleep()
 
 
 func setup_hud(world_id: String, objective_ids: Array[String]) -> void:

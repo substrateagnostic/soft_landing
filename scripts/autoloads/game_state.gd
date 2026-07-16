@@ -7,12 +7,44 @@ extends Node
 signal dreamling_collected(world_id: String, id: String)
 signal dream_returned(world_id: String, id: String)
 signal world_completed(world_id: String)
+signal setting_changed(key: String, value: Variant)
 
 var current_world_id: String = ""
 var fort_stage: int = 0
 
 ## world_id -> { "collected": Array[String], "returned": Array[String], "completed": bool }
 var dreamlings: Dictionary = {}
+
+## Persisted player-facing options (UI/audio/camera seam, D20/D18). Read by
+## SaveManager on load/save (its _default_state()/_apply_to_game_state()/
+## save_game() mirror this dict verbatim) and by whichever system owns each
+## knob — AudioManager bus volumes, TheMoon's voice_mode, and the camera
+## agent's manual-look toggle all read through get_setting() rather than
+## duplicating storage. voice_mode is one of "moonsong+text" |
+## "moonsong+tts" | "tts_only" | "text_only" (D20).
+var settings: Dictionary = {
+	"music_volume": 1.0,
+	"sfx_volume": 1.0,
+	"voice_mode": "moonsong+tts",
+	"camera_manual": false,
+	"camera_sensitivity": 1.0,
+}
+
+
+func get_setting(key: String) -> Variant:
+	return settings.get(key)
+
+
+## set_setting — the only mutator. No-ops (and does not save) on a
+## no-change write so slider drag events don't spam SaveManager every frame
+## with an identical value; a real value change always saves immediately
+## (D14: the world never forgets), matching every other GameState mutator.
+func set_setting(key: String, value: Variant) -> void:
+	if settings.get(key) == value:
+		return
+	settings[key] = value
+	setting_changed.emit(key, value)
+	SaveManager.save_game()
 
 
 func _ensure_world(world_id: String) -> void:

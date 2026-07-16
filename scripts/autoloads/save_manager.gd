@@ -27,11 +27,7 @@ func _default_state() -> Dictionary:
 		"total_dreams": 0,
 		"worlds": {},
 		"fort_stage": 0,
-		"settings": {
-			"tts_enabled": true,
-			"music_volume": 1.0,
-			"sfx_volume": 1.0,
-		},
+		"settings": GameState.settings.duplicate(),
 	}
 
 
@@ -71,6 +67,14 @@ func _merge_defaults(parsed: Dictionary) -> Dictionary:
 	var merged: Dictionary = _default_state()
 	for key: String in parsed.keys():
 		merged[key] = parsed[key] # unknown keys preserved (forward-compat)
+	# settings is merged per-key (not replaced wholesale) so a save written
+	# before a new setting existed (e.g. voice_mode, D20) still picks up
+	# that key's default instead of silently losing it.
+	if typeof(parsed.get("settings")) == TYPE_DICTIONARY:
+		var merged_settings: Dictionary = GameState.settings.duplicate()
+		for key: String in (parsed["settings"] as Dictionary).keys():
+			merged_settings[key] = parsed["settings"][key]
+		merged["settings"] = merged_settings
 	return merged
 
 
@@ -84,6 +88,16 @@ func _apply_to_game_state() -> void:
 			"returned": (w.get("returned", []) as Array),
 			"completed": bool(w.get("completed", false)),
 		}
+	var settings: Dictionary = _data.get("settings", {})
+	for key: String in settings.keys():
+		GameState.settings[key] = settings[key]
+
+	# AudioManager (autoload #3) applies its own defensive default-volume
+	# read at _ready(), but it runs BEFORE SaveManager (#4) in project.godot's
+	# autoload order, so any *persisted* volume can only take effect once it
+	# lands here, after the real save data is in GameState.settings.
+	AudioManager.set_music_volume(float(GameState.get_setting("music_volume")))
+	AudioManager.set_sfx_volume(float(GameState.get_setting("sfx_volume")))
 
 
 func save_game() -> void:
@@ -91,8 +105,7 @@ func save_game() -> void:
 	_data["fort_stage"] = GameState.fort_stage
 	_data["worlds"] = GameState.dreamlings
 	_data["total_dreams"] = GameState.total_returned()
-	if not _data.has("settings"):
-		_data["settings"] = _default_state()["settings"]
+	_data["settings"] = GameState.settings.duplicate()
 
 	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file == null:
