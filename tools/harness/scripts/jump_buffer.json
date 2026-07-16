@@ -1,0 +1,11 @@
+{
+  "description": "JUMP BUFFER positive-case property (tuning.jump_buffer=0.22s, core/movement/movement_tuning.gd). Landing frame measured empirically by jump_buffer_measure.json: teleporting Pip to y=4 on pillow_fort's flat ground at frame 60 lands (EVT landed) at frame 96 (36-frame fall). EPISODE A (positive case, pads=1): same teleport at frame 60; jump pressed at frame 86 -- 10 frames (166.7ms) before the measured landing, inside the 0.1s-0.22s window (6 < N < 13.2 frames) -- expect the press to be buffered and EVT jumped to fire within a few frames AFTER EVT landed (t=96), not at the press frame. EPISODE B (control, buffer-expired): a second teleport to y=4 at frame 250 lands 36 frames later at frame 286 (same fall geometry); jump pressed at frame 268 -- 18 frames (300ms) before that landing, outside the buffer window -- expect NO jumped EVT anywhere near this landing (buffer must have decayed to 0 before touchdown).",
+  "events": [
+    {"frame": 60, "seat": 1, "action": "teleport", "pos": [0.0, 4.0, 0.0]},
+    {"frame": 86, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 92, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 250, "seat": 1, "action": "teleport", "pos": [0.0, 4.0, 0.0]},
+    {"frame": 268, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 274, "seat": 1, "action": "jump", "type": "release"}
+  ]
+}

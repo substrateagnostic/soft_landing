@@ -39,6 +39,16 @@ func play_sfx(sfx_name: String) -> void:
 	_sfx_player.play()
 
 
+## Maps a dreamling-count step (1-based) to the matching rung of the
+## dreamling_chime pentatonic ladder (dreamling_chime, dreamling_chime_2..8)
+## and plays it via play_sfx — counting climbs, pitch carries the joy.
+## Steps above 8 clamp to the top rung rather than erroring or repeating.
+func play_chime(step: int) -> void:
+	var clamped_step: int = clampi(step, 1, 8)
+	var sfx_name: String = "dreamling_chime" if clamped_step == 1 else "dreamling_chime_%d" % clamped_step
+	play_sfx(sfx_name)
+
+
 func play_stem_layer(world_id: String, layer: int) -> void:
 	var path: String = "%s%s/layer_%d.ogg" % [STEMS_DIR, world_id, layer]
 	if not ResourceLoader.exists(path):

@@ -1,0 +1,6 @@
+{
+  "description": "SAVE CORRUPTION RECOVERY property (P4): minimal script for the post-recovery half of the test -- DEV TELEPORT drops Pip directly onto bramble's d01 (Vector3(-48.0, 0.55, 3.0) per worlds/bramble/bramble.gd _build_dreamlings) so the dreamling's magnetism/overlap fires a real GameState.collect() -> dreamling_collected signal -> SaveManager._on_progress_changed() -> save_game() write, proving a corrupt-then-quarantined save.json gets a clean fresh file written after normal play resumes, not just at boot.",
+  "events": [
+    {"frame": 60, "seat": 1, "action": "teleport", "pos": [-48.0, 0.6, 3.0]}
+  ]
+}

@@ -19,6 +19,32 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-16 — Session 1 (cont. 4): GATE 2 APPROVED; overnight chairs; the burn
+- **Producer, verbatim:** "continue without me gating on playtesting; we can
+  refine later … overall design is approved; director and producer chairs
+  are yours for the overnight; looks like rust desk is working; gate 2 from
+  video is approved for now." Four-day usage window; delegate but don't
+  torch everything.
+- **Unblocked tonight:** gh device-flow auth (code via push notification →
+  producer's phone) → repo LIVE at github.com/substrateagnostic/soft_landing.
+  Meshy key received in chat → .env (gitignored, balance endpoint 200, zero
+  credits). RustDesk fixed via Mullvad split-tunnel exclusion.
+- **Opus core review:** 1 CRITICAL (world-switch rescue-history soft-lock —
+  fixed + regression property), 2 REAL fixed (carried-state sampling, orbit
+  registry leak), warp-to-falling-partner guard added from my own receipts.
+  Deferred with eyes open: door/interact same-frame overload, NIT batch.
+- **Landed from the burn:** procedural audio (20 files: rising chime ladder,
+  bubble catch/pop, geyser sigh, 4 loop-clean Bramble stems + fort stem;
+  −1.32 dBFS summed), full UI (HUD pips + numeral, icon-only pause, breathing
+  title), property sweep P1–P6 (buffer positive PASS, placement checker
+  built — caught d10, fixed; hot-swap PASS; save-corruption PARTIAL-honest;
+  fps artifact identified), stem/chime wiring (ladder climbs per carried
+  dream; lullaby layers at 1/5/10 returned).
+- **Contract v2:** exit_requested_to(target) + three tinted doors in the
+  fort (umber/marmalade/silver). Phase 4 art pipeline + two Phase 5 world
+  agents (Wisp, Marmalade — design cards in docs/design/world-cards/)
+  running as I write.
+
 ### 2026-07-15/16 — Session 1 (cont. 3): grey-box slice BUILT + Gate 2 packet
 - Three parallel agents (core-feel / harness / worlds) landed cleanly on
   disjoint territory; two of them independently isolated the same scaffold

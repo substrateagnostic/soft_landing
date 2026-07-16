@@ -136,7 +136,10 @@ func _build_home_door() -> void:
 	door.target_world = "pillow_fort"
 	door.position = Vector3(SPAWN_PIP.x - 6.0, 0.0, 1.0)
 	door.rotation_degrees = Vector3(0.0, 90.0, 0.0) # opening faces the bear (+X)
-	door.exit_requested.connect(func() -> void: exit_requested.emit())
+	door.exit_requested.connect(func() -> void:
+		exit_requested_to.emit("pillow_fort")
+		exit_requested.emit()
+	)
 	add_child(door)
 
 
@@ -397,7 +400,13 @@ func _build_dreamlings() -> void:
 		"d07": Vector3(GEYSER_ANCHOR_X, 0.0, GEYSER_ANCHOR_Z), # y filled in below, atop the geyser column
 		"d08": Vector3(SHELF_ANCHOR_X, 0.0, SHELF_ANCHOR_Z), # y filled in below, on the shoulder shelf
 		"d09": Vector3(FUR_PATCH_HAUNCH_X, 0.0, FUR_PATCH_HAUNCH_Z), # y filled in below, hidden in fur
-		"d10": Vector3(EAR_ANCHOR_X, 0.0, EAR_ANCHOR_Z - 1.5), # y filled in below, inside the ear hollow
+		# P3 fix (docs/verify/properties-VERIFY.md): was EAR_ANCHOR_Z - 1.5,
+		# which sat 1.50 m from the ear-bump sphere's center -- inside its
+		# 1.8 m radius, i.e. embedded. -2.3 clears the bump (radius 1.8 +
+		# dreamling clearance 0.35 = 2.15 m required, 2.30 m actual) while
+		# staying close enough to read as "in the ear hollow" beside the
+		# DreamDoor, y still anchored on the bump surface below.
+		"d10": Vector3(EAR_ANCHOR_X, 0.0, EAR_ANCHOR_Z - 2.3),
 	}
 	positions["d07"].y = _sphere_surface_y(HEAD_CENTER, HEAD_RADIUS, GEYSER_ANCHOR_X, GEYSER_ANCHOR_Z) + GEYSER_HEIGHT - 0.3
 	positions["d08"].y = _sphere_surface_y(SHOULDER_CENTER, SHOULDER_RADIUS, SHELF_ANCHOR_X, SHELF_ANCHOR_Z) + SHELF_HEIGHT_ABOVE_ANCHOR + 0.6

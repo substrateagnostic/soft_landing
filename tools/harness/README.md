@@ -26,6 +26,7 @@ D:\Tools\godot\godot_console.exe
 | `--shots=N,M,…` | physics-frame numbers (offset from Harness's own `_ready()`, i.e. from very early in boot) at which to save a PNG screenshot to `--outdir` |
 | `--outdir=<dir>` | relative to the project root; screenshots and `events.jsonl` land here |
 | `--quitafter=SECONDS` | `scenes/main.gd` already honors this from its own `_ready()`; Harness *also* starts an independent `SceneTreeTimer` from its own `_ready()` so the process quits after N seconds from **any** scene (title, a future test scene, etc.), not just `main.tscn`. Both timers firing is harmless (redundant `get_tree().quit()`). |
+| `--perflog` | samples `Engine.get_frames_per_second()` every 60 physics frames; at quit (from Harness's own `--quitafter` timer, before it calls `get_tree().quit()`) prints one `PERF_SUMMARY {"avg":…,"min":…,"p5":…,"samples":n}` line. Requires `--quitafter` to actually get a summary — see `docs/verify/properties-VERIFY.md` §P6 for a run recipe (windowed, no `--fixed-fps`, real vsync). |
 
 `Harness.flags: Dictionary` and `Harness.flag(name, default)` are the
 stable public API other scripts (`boot.gd`, `scenes/main.gd`) already read.
@@ -50,6 +51,12 @@ stable public API other scripts (`boot.gd`, `scenes/main.gd`) already read.
   regardless of wall-clock speed (pipeline.md §2.1).
 - `press`/`release` actions call `Input.action_press("p<seat>_<action>")` /
   `action_release`.
+- `"action": "pads"` with `"count": N` is the mid-run equivalent of
+  `--pads=N`: calls `InputRouter.force_mode(N)` (the same seam), so a
+  script can flip COOP↔SOLO at a chosen frame — physical pad connect/
+  disconnect can't be faked headless, so this is the sanctioned property
+  test seam (see `docs/verify/properties-VERIFY.md` §P5, `mode_changed`
+  is mirrored into the event log as `EVT mode_changed`).
 - `"action": "move"` decomposes `vec` onto the four directional actions:
   negative `y` = up/forward (`-Z`), positive `y` = down/back; negative `x`
   = left, positive `x` = right. The opposite action on each axis is
@@ -62,7 +69,13 @@ Samples: `scripts/first_steps.json` (baseline walk/jump/walk-back smoke
 test), `scripts/jump_props.json` (coyote-time / jump-buffer property demo —
 commented expected outcomes in its `description`; needs a world with an
 actual ledge/platform to observe the forgiveness-window behavior, so it's a
-documented no-op against the scaffold's flat grey-box fallback floor).
+documented no-op against the scaffold's flat grey-box fallback floor),
+`scripts/jump_buffer_measure.json` + `scripts/jump_buffer.json` (jump
+buffer positive-case property, measure-then-lock pair, see
+`docs/verify/properties-VERIFY.md` §P1), `scripts/hotswap.json`
+(COOP↔SOLO hot-swap property via the `pads` script event, §P5),
+`scripts/save_corruption_collect.json` (teleport onto bramble's d01 for
+the save-corruption-recovery property, §P4).
 
 ## Event log
 

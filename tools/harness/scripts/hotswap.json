@@ -1,0 +1,10 @@
+{
+  "description": "HOT-SWAP MODE property (P5, bramble, boots --pads=2/COOP): Pip and Otto sit at spawn (~2.8 m apart) until frame 300, then {\"action\":\"pads\",\"count\":1} drops to SOLO via InputRouter.force_mode (the sanctioned no-physical-pad seam) at the same frame Pip starts walking toward the haunch mound (vec [0,-1] held). Expected: EVT mode_changed to SOLO fires at f300; BuddyAI (active flips true on the mode_changed SeatManager already listens to) closes the widening gap to Pip to ~follow_distance (2.5 m) within 3 s (by f480, confirmed empirically) -- read from PLAYER_POS since BuddyAI itself prints nothing today. Pip reaches the mound's slope and stalls out around f460 (expected -- not a bug in this script, just geometry) so at frame 600, {\"action\":\"pads\",\"count\":2} restores COOP (EVT mode_changed to COOP) and Pip immediately reverses (vec [0,1]) back toward open meadow -- a new, unambiguous movement Otto has no excuse to mirror if buddy AI is truly off. Otto should decelerate and then sit still while the Pip/Otto gap grows again, proving disengage rather than a pause. Pip stops at frame 900 for a clean settle before quit.",
+  "events": [
+    {"frame": 300, "seat": 1, "action": "pads", "count": 1},
+    {"frame": 302, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 600, "seat": 1, "action": "pads", "count": 2},
+    {"frame": 602, "seat": 1, "action": "move", "vec": [0.0, 1.0]},
+    {"frame": 900, "seat": 1, "action": "move", "vec": [0.0, 0.0]}
+  ]
+}

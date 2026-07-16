@@ -1,0 +1,6 @@
+{
+  "description": "MEASUREMENT-ONLY pass for the jump-buffer positive-case property (see jump_buffer.json). No jump presses here on purpose: teleports Pip to y=4 on pillow_fort's flat ClearingGround (top at y=0.0) at frame 60 and lets him free-fall, so the EVT landed line's frame gives the empirically measured landing time to lock the real property script's press frames against (per the verify brief: measure first, then lock).",
+  "events": [
+    {"frame": 60, "seat": 1, "action": "teleport", "pos": [0.0, 4.0, 0.0]}
+  ]
+}

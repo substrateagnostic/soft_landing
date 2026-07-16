@@ -3,5 +3,8 @@
 	"find_dreamling": "A dream is glowing nearby. Can you go touch it?",
 	"dream_home": "Carry the dream home so the giant can keep sleeping softly.",
 	"well_done": "You found it! The giant smiles in their sleep.",
-	"new_area": "A new place to explore. Let's see what's waiting."
+	"new_area": "A new place to explore. Let's see what's waiting.",
+	"paused": "Taking a little rest. I'll wait right here.",
+	"keep_playing": "Let's keep exploring together.",
+	"goodnight": "Goodnight, little duck. Sweet dreams until next time."
 }

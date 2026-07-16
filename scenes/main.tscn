@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/players/pip.tscn" id="2"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://core/camera/camera_rig.tscn" id="4"]
 [ext_resource type="Script" path="res://core/coop/seat_manager.gd" id="5"]
 [ext_resource type="Script" path="res://core/rescue/soft_landing.gd" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/ui/game_ui.tscn" id="7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dusk"]
 sky_top_color = Color(0.180392, 0.231373, 0.368627, 1)
@@ -51,3 +52,5 @@ script = ExtResource("5")
 
 [node name="SoftLanding" type="Node" parent="."]
 script = ExtResource("6")
+
+[node name="GameUI" parent="." instance=ExtResource("7")]

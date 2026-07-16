@@ -9,6 +9,9 @@ extends Node3D
 signal objective_collected(id: String)
 signal objective_returned(id: String)
 signal exit_requested()
+## Preferred since the hub grew multiple doors: carries the destination.
+## Emit BOTH (this and legacy exit_requested) so old and new wiring coexist.
+signal exit_requested_to(target_world: String)
 
 
 func world_id() -> String:

@@ -54,6 +54,14 @@ func _on_leash_broken(player: PlayerBody) -> void:
 	var partner: PlayerBody = _otto if player == _pip else _pip
 	if partner == null:
 		return
+	# Never warp TO a partner who is mid-rescue or falling hard (they're in
+	# the void — warping beside them just feeds the second player to the
+	# same fall), and never yank a player who is themselves being rescued.
+	# The leash re-fires once everyone is settled.
+	if partner.state == PlayerBody.State.BUBBLED or player.state == PlayerBody.State.BUBBLED:
+		return
+	if partner.velocity.y < -8.0:
+		return
 	warp_player_to(player, partner.global_position + _side_offset(partner))
 
 

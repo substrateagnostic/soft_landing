@@ -328,14 +328,29 @@ func _build_camera_hint() -> void:
 
 
 func _build_bramble_door() -> void:
-	var door := WorldDoor.new()
-	door.name = "BrambleDoor"
-	door.target_world = "bramble"
+	# One door per giant, each tinted to its world's palette so a pre-reader
+	# can tell them apart at a glance. Bramble: umber, straight out the back
+	# (toward the silhouette on the skyline). Marmalade: east. Wisp: west.
 	var half_d: float = FORT_DEPTH * 0.5
-	door.position = FORT_CENTER + Vector3(0.0, 0.0, -half_d - 1.2)
+	_add_world_door("BrambleDoor", "bramble",
+		FORT_CENTER + Vector3(0.0, 0.0, -half_d - 1.2), 0.0, Color("8A6552"))
+	_add_world_door("MarmaladeDoor", "marmalade",
+		Vector3(9.5, 0.0, -2.0), 90.0, Color("D98E4A"))
+	_add_world_door("WispDoor", "wisp",
+		Vector3(-9.5, 0.0, -2.0), -90.0, Color("C9D4E4"))
+
+
+func _add_world_door(door_name: String, target: String, door_position: Vector3, yaw_degrees: float, tint: Color) -> void:
+	var door := WorldDoor.new()
+	door.name = door_name
+	door.target_world = target
+	door.frame_color = tint
+	door.position = door_position
+	door.rotation_degrees = Vector3(0.0, yaw_degrees, 0.0)
 	add_child(door)
-	door.exit_requested.connect(_on_bramble_door_exit_requested)
+	door.exit_requested.connect(func() -> void:
+		exit_requested_to.emit(target)
+		exit_requested.emit()
+	)
 
 
-func _on_bramble_door_exit_requested() -> void:
-	exit_requested.emit()

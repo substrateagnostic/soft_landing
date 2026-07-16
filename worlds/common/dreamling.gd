@@ -58,6 +58,14 @@ func _ready() -> void:
 	_home_local_position = position
 
 
+## Carriers (the players) outlive worlds. Without this, every world switch
+## leaves freed dreamlings in the static registry under the surviving
+## carrier's id — corrupting orbit spacing and handing freed instances to
+## the DreamDoor. (Opus review 2026-07-16, finding #3.)
+func _exit_tree() -> void:
+	_leave_orbit_group()
+
+
 func _physics_process(delta: float) -> void:
 	match _state:
 		State.IDLE:
@@ -133,7 +141,10 @@ func _start_following(carrier: Node3D) -> void:
 	_state = State.FOLLOWING
 	_carrier = carrier
 	set_deferred("monitoring", false) # direct set is blocked inside body_entered
-	AudioManager.play_sfx("dreamling_chime")
+	# The ladder climbs with each dream you're carrying (counting IS the joy,
+	# D12): first catch low, each next one a step higher, resetting when you
+	# bring them home and the orbit empties.
+	AudioManager.play_chime(Dreamling.carried_by(carrier).size() + 1)
 	collected.emit(id)
 	_join_orbit_group(carrier)
 

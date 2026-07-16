@@ -19,6 +19,7 @@ const FALLBACK_RESCUE_FLOOR_Y: float = -10.0
 @onready var _camera_rig_slot: Node3D = $CameraRigSlot
 @onready var _seat_manager: SeatManager = $SeatManager
 @onready var _soft_landing: SoftLanding = $SoftLanding
+@onready var _game_ui: GameUI = $GameUI
 
 var _world: Node3D = null
 var _fallback_camera: Camera3D = null
@@ -45,7 +46,9 @@ func _load_world(world_id: String) -> void:
 			_world.objective_collected.connect(_on_objective_collected)
 		if _world.has_signal("objective_returned"):
 			_world.objective_returned.connect(_on_objective_returned)
-		if _world.has_signal("exit_requested"):
+		if _world.has_signal("exit_requested_to"):
+			_world.exit_requested_to.connect(_switch_world)
+		elif _world.has_signal("exit_requested"):
 			_world.exit_requested.connect(_on_exit_requested)
 		if _world.has_method("world_id"):
 			GameState.set_current_world(_world.world_id())
@@ -53,6 +56,37 @@ func _load_world(world_id: String) -> void:
 		print("Main: world scene not found (%s), spawning grey-box fallback" % scene_path)
 		_spawn_fallback_world()
 		GameState.set_current_world(world_id)
+
+	_update_hud()
+
+
+## _update_hud — HUD's per-world objective list (D12 pips + numeral). A
+## grey-box fallback world (or any world with no objectives, e.g. the
+## fort) has none, so the HUD hides itself (hud.gd's own contract).
+func _update_hud() -> void:
+	var objective_ids: Array[String] = []
+	if _world != null and _world.has_method("objective_ids"):
+		objective_ids = _world.objective_ids()
+	_game_ui.setup_hud(GameState.current_world_id, objective_ids)
+
+
+## The lullaby grows as dreams come home (PITCH §Audio): layer 1 from the
+## first visit, 2 at ≥1 returned, 3 at ≥5, 4 when the world is complete —
+## same thresholds as fort growth. Worlds without stem files no-op inside
+## AudioManager, so unbuilt stem sets cost nothing.
+func _update_stems() -> void:
+	AudioManager.stop_stems()
+	var world_id: String = GameState.current_world_id
+	var returned: int = GameState.returned_count(world_id)
+	var layers: int = 1
+	if returned >= 1:
+		layers = 2
+	if returned >= 5:
+		layers = 3
+	if returned >= 10:
+		layers = 4
+	for layer: int in range(1, layers + 1):
+		AudioManager.play_stem_layer(world_id, layer)
 
 
 func _spawn_fallback_world() -> void:
@@ -138,6 +172,7 @@ func _setup_coop() -> void:
 
 	if _soft_landing != null:
 		_soft_landing.setup(_pip, _otto)
+		_soft_landing.reset_history(_pip.global_position, _otto.global_position)
 		if _world != null and _world.has_method("rescue_floor_y"):
 			_soft_landing.rescue_floor_y = _world.rescue_floor_y()
 		else:
@@ -185,6 +220,9 @@ func _switch_world(world_id: String) -> void:
 	# Re-wire the pieces that cache per-world state; players/camera/coop
 	# survive the swap untouched.
 	if _soft_landing != null:
+		# Stale safe-ground history from the previous world = bubble-loop
+		# soft-lock over the new world's void (Opus review, finding #1).
+		_soft_landing.reset_history(_pip.global_position, _otto.global_position)
 		if _world != null and _world.has_method("rescue_floor_y"):
 			_soft_landing.rescue_floor_y = _world.rescue_floor_y()
 		else:

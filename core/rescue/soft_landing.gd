@@ -39,6 +39,20 @@ func setup(pip: PlayerBody, otto: PlayerBody) -> void:
 	_otto = otto
 
 
+## Must be called on EVERY world load/switch (main.gd), seeded with the new
+## spawn points. Stale history from the previous world is how you get an
+## unrecoverable bubble-loop: rescued to old-world coordinates over the new
+## world's void, falling again, rescued to the same point, forever.
+## (Opus review 2026-07-16, finding #1.)
+func reset_history(pip_spawn: Vector3, otto_spawn: Vector3) -> void:
+	_pip_history.clear()
+	_otto_history.clear()
+	_pip_history.append(pip_spawn)
+	_otto_history.append(otto_spawn)
+	_pip_sample_timer = 0.0
+	_otto_sample_timer = 0.0
+
+
 func _ready() -> void:
 	if Harness.flag("testfall", false):
 		var timer: SceneTreeTimer = get_tree().create_timer(TEST_FALL_DELAY)
@@ -73,6 +87,13 @@ func _physics_process(delta: float) -> void:
 
 func _track_and_check(player: PlayerBody, delta: float, is_pip: bool) -> void:
 	var history: Array[Vector3] = _pip_history if is_pip else _otto_history
+
+	# CARRIED rides the carrier: its is_on_floor() is stale-true, so carried
+	# positions must never be recorded as "safe", and a carried player is
+	# never rescued on their own — the carrier's rescue carries them both.
+	# (Opus review 2026-07-16, finding #2.)
+	if player.state == PlayerBody.State.CARRIED:
+		return
 
 	if player.is_on_floor() and player.state != PlayerBody.State.BUBBLED:
 		var timer: float = _pip_sample_timer if is_pip else _otto_sample_timer

@@ -69,6 +69,7 @@ func _ready() -> void:
 	# Deferred: touches other autoloads / the live tree, so it runs after
 	# this frame's setup has fully settled rather than mid-boot.
 	call_deferred("_connect_gamestate_signals")
+	call_deferred("_connect_input_router_signals")
 	call_deferred("_watch_players")
 	call_deferred("_apply_pads_override")
 	call_deferred("_load_script_if_flagged")
@@ -125,15 +126,34 @@ func _parse_shots() -> void:
 func _apply_pads_override() -> void:
 	if not flags.has("pads"):
 		return
-	var pads_value: int = int(flags["pads"])
+	_force_pad_count(int(flags["pads"]), "HARNESS_NOTE pads override applied via InputRouter.force_mode(%d)")
+
+
+## Shared by the boot-time --pads flag and the mid-run {"action":"pads"}
+## script event (P5, hot-swap property) — one call path, one log format.
+func _force_pad_count(pads_value: int, ok_note_format: String) -> void:
 	if InputRouter.has_method("force_mode"):
 		InputRouter.call("force_mode", pads_value)
-		_emit("HARNESS_NOTE pads override applied via InputRouter.force_mode(%d)" % pads_value)
+		_emit(ok_note_format % pads_value)
 	else:
 		_emit(
-			"HARNESS_NOTE pads flag pending integration (InputRouter.force_mode not found) — requested pads=%d"
+			"HARNESS_NOTE pads request pending integration (InputRouter.force_mode not found) — requested pads=%d"
 			% pads_value
 		)
+
+
+## Mirrors InputRouter.mode_changed into the event log as EVT mode_changed
+## (P5, hot-swap property — the harness has no other window into COOP/SOLO
+## transitions since InputRouter is core/**, out of this file's remit to
+## edit beyond reading its public signal).
+func _connect_input_router_signals() -> void:
+	if not InputRouter.mode_changed.is_connected(_on_input_router_mode_changed):
+		InputRouter.mode_changed.connect(_on_input_router_mode_changed)
+
+
+func _on_input_router_mode_changed(mode: int) -> void:
+	var mode_name: String = "COOP" if mode == InputRouter.Mode.COOP else "SOLO"
+	_emit_evt("mode_changed", {"mode": mode, "mode_name": mode_name})
 
 
 # ---------------------------------------------------------------------------
@@ -181,6 +201,7 @@ func _on_physics_frame() -> void:
 	_execute_due_events(elapsed)
 	_maybe_capture_shot(elapsed)
 	_maybe_log_positions(elapsed)
+	_maybe_sample_perf(elapsed)
 
 
 ## --poslog=N: every N physics frames, one PLAYER_POS line per tracked
@@ -198,6 +219,45 @@ func _maybe_log_positions(elapsed: int) -> void:
 			"t": elapsed, "seat": player.seat,
 			"x": snappedf(p.x, 0.01), "y": snappedf(p.y, 0.01), "z": snappedf(p.z, 0.01),
 		}))
+
+
+## --perflog: samples Engine.get_frames_per_second() every 60 physics frames
+## (P6, perf receipt). Printed as one PERF_SUMMARY line from the harness's
+## own --quitafter timer, before it calls get_tree().quit() — this is the
+## reason --perflog requires --quitafter to actually get a summary line;
+## documented in tools/harness/README.md.
+var _perf_samples: Array[float] = []
+
+
+func _maybe_sample_perf(elapsed: int) -> void:
+	if not flags.has("perflog"):
+		return
+	if elapsed <= 0 or elapsed % 60 != 0:
+		return
+	_perf_samples.append(Engine.get_frames_per_second())
+
+
+func _print_perf_summary() -> void:
+	if not flags.has("perflog"):
+		return
+	if _perf_samples.is_empty():
+		_emit("HARNESS_NOTE perflog: no samples collected (run shorter than 60 physics frames?)")
+		return
+	var sorted_samples: Array[float] = _perf_samples.duplicate()
+	sorted_samples.sort()
+	var total: float = 0.0
+	for sample: float in sorted_samples:
+		total += sample
+	var avg: float = total / sorted_samples.size()
+	var min_fps: float = sorted_samples[0]
+	var p5_index: int = int(floor(0.05 * (sorted_samples.size() - 1)))
+	var p5_fps: float = sorted_samples[p5_index]
+	_emit("PERF_SUMMARY %s" % JSON.stringify({
+		"avg": snappedf(avg, 0.1),
+		"min": snappedf(min_fps, 0.1),
+		"p5": snappedf(p5_fps, 0.1),
+		"samples": sorted_samples.size(),
+	}))
 
 
 func _tracked_players() -> Array[PlayerBody]:
@@ -249,6 +309,14 @@ func _execute_event(event: Dictionary) -> void:
 				player.global_position = Vector3(float(pos[0]), float(pos[1]), float(pos[2]))
 				player.velocity = Vector3.ZERO
 				_emit("HARNESS_TELEPORT %s" % JSON.stringify({"seat": seat, "pos": pos}))
+	elif action_name == "pads":
+		# DEV INSTRUMENT ONLY (P5, hot-swap property): mid-run equivalent of
+		# --pads=N — physical controllers can't be plugged/unplugged inside a
+		# headless script, so InputRouter.force_mode() is the sanctioned seam
+		# (SPEC.md D8 / InputRouter contract) for proving COOP<->SOLO
+		# transitions without a real pad.
+		var pad_count: int = int(event.get("count", 2))
+		_force_pad_count(pad_count, "HARNESS_NOTE pads script event applied via InputRouter.force_mode(%d)")
 	elif action_name.is_empty():
 		push_error("Harness: script event missing 'action': %s" % JSON.stringify(event))
 	else:
@@ -397,6 +465,7 @@ func _on_quitafter_fallback() -> void:
 		return
 	_quit_requested = true
 	_emit("HARNESS_NOTE quitafter fallback fired (harness-level timer, %.1fs)" % float(flags["quitafter"]))
+	_print_perf_summary()
 	get_tree().quit()
 
 
