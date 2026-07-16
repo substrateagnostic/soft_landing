@@ -19,3 +19,10 @@ extends Resource
 @export var air_control: float = 0.5
 @export var terminal_velocity: float = 20.0
 @export var turn_speed: float = 10.0
+
+## Squash-stretch (core-feel agent): stretch while rising fast, squash on
+## landing for squash_duration seconds, spring back at squash_spring_decay.
+@export var stretch_scale: Vector3 = Vector3(1.0, 1.15, 0.9)
+@export var squash_scale: Vector3 = Vector3(1.25, 0.8, 1.25)
+@export var squash_duration: float = 0.12
+@export var squash_spring_decay: float = 12.0

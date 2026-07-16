@@ -1,0 +1,13 @@
+{
+  "description": "P1 walks forward ~3s (frames 0-180 @60fps physics), jumps twice while grounded (press+release near frame 190 and frame 230, each held 6 frames), then walks backward ~2s (frames 260-380) before stopping. Baseline smoke test: exercises move+jump input playback end to end with no forgiveness-window edge cases (both jumps land comfortably inside the grounded window) - used by docs/verify/harness-VERIFY.md.",
+  "events": [
+    {"frame": 0, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 180, "seat": 1, "action": "move", "vec": [0, 0]},
+    {"frame": 190, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 196, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 230, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 236, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 260, "seat": 1, "action": "move", "vec": [0.0, 1.0]},
+    {"frame": 380, "seat": 1, "action": "move", "vec": [0, 0]}
+  ]
+}

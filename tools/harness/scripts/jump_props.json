@@ -1,0 +1,11 @@
+{
+  "description": "Movement-forgiveness property test (SPEC.md D2 / core/movement/movement_tuning.gd starter values: coyote_time=0.20s=12 physics frames @60fps, jump_buffer=0.22s=~13 frames @60fps). Frames assume a world with a ledge the player walks off around frame 60 and a lower platform they land on around frame 412 - the scaffold's grey-box fallback floor is flat with no ledge, so against it this script is a no-op edge-case demo (is_on_floor() never goes false) until a real world with a ledge/drop lands; do not expect jumped/EVT deltas against the flat fallback. EVENT A (coyote): P1 walks forward off a ledge at ~frame 60, then jump is pressed+released at frame 70 - exactly 10 frames after leaving the ledge, inside the 12-frame coyote window. Expected outcome once a real ledge exists: the jump STILL fires (HARNESS_EVENT jump press followed by an EVT jumped) even though the player was airborne when jump was pressed. EVENT B (buffer): P1 is falling toward a lower platform and jump is pressed at frame 400, 12 frames before the expected landing at frame 412 - inside the ~13-frame jump_buffer window. Expected outcome once a real platform exists: the press is buffered (no immediate jump, player still mid-air) and a jumped EVT fires within a frame or two of the landed EVT, instead of the press being silently dropped.",
+  "events": [
+    {"frame": 0, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 68, "seat": 1, "action": "move", "vec": [0, 0]},
+    {"frame": 70, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 76, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 400, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 406, "seat": 1, "action": "jump", "type": "release"}
+  ]
+}

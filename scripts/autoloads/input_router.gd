@@ -20,6 +20,7 @@ const SEAT_ACTIONS: Dictionary = {
 
 var mode: Mode = Mode.SOLO
 var seat_devices: Dictionary = {1: -1, 2: -1} # seat -> joypad device index, -1 = unassigned
+var _mode_forced: bool = false # harness --pads override; pad hot-swap won't fight it
 
 
 func _ready() -> void:
@@ -48,9 +49,23 @@ func _reassign_seats() -> void:
 			_rebind_seat(seat, device)
 			seat_assigned.emit(seat, device)
 
+	if _mode_forced:
+		return
 	var new_mode: Mode = Mode.COOP if pads.size() >= 2 else Mode.SOLO
 	if new_mode != mode:
 		mode = new_mode
+		mode_changed.emit(mode)
+
+
+## Harness override (--pads=N): pins the mode regardless of physical pads,
+## so scripted co-op runs work on a machine with zero controllers plugged in.
+## The argument is a SIMULATED PAD COUNT (harness contract), not a Mode:
+## 2+ pads -> COOP, 0 or 1 -> SOLO.
+func force_mode(pad_count: int) -> void:
+	_mode_forced = true
+	var forced_mode: Mode = Mode.COOP if pad_count >= 2 else Mode.SOLO
+	if forced_mode != mode:
+		mode = forced_mode
 		mode_changed.emit(mode)
 
 

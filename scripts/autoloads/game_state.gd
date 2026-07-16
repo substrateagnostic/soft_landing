@@ -58,6 +58,14 @@ func set_fort_stage(stage: int) -> void:
 	SaveManager.save_game()
 
 
+func returned_ids(world_id: String) -> Array[String]:
+	_ensure_world(world_id)
+	var out: Array[String] = []
+	for id: String in dreamlings[world_id]["returned"]:
+		out.append(id)
+	return out
+
+
 func collected_count(world_id: String) -> int:
 	_ensure_world(world_id)
 	return (dreamlings[world_id]["collected"] as Array).size()

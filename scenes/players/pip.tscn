@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://core/movement/player_body.gd" id="1"]
 [ext_resource type="Resource" path="res://data/tuning/pip_movement.tres" id="2"]
+[ext_resource type="PackedScene" path="res://core/readability/blob_shadow.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://core/readability/landing_ring.tscn" id="4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pip"]
 radius = 0.28
@@ -31,5 +33,10 @@ mesh = SubResource("CapsuleMesh_pip")
 surface_material_override/0 = SubResource("StandardMaterial3D_pip")
 
 [node name="ReadabilityAnchor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
+
+[node name="BlobShadow" parent="ReadabilityAnchor" instance=ExtResource("3")]
+
+[node name="LandingRing" parent="ReadabilityAnchor" instance=ExtResource("4")]
 
 [node name="CarrySocket" type="Node3D" parent="."]
