@@ -15,6 +15,8 @@ extends WorldContract
 @export var world_display_name: String = ""
 
 const DREAMLING_GROUP: String = "dreamling"
+const POKE_GROUP: String = "poke"
+const CRITTER_DATA_PATH_FORMAT: String = "res://data/critters/%s.json"
 const _WORLD_CONTRACT_SCRIPT_PATH: String = "res://core/world_contract.gd"
 const _REQUIRED_OVERRIDES: PackedStringArray = [
 	"world_id", "spawn_points", "objective_ids", "rescue_floor_y",
@@ -31,6 +33,8 @@ func _ready() -> void:
 	_total_objectives = objective_ids().size()
 	_wire_dreamlings()
 	_wire_dream_door()
+	_wire_touch_react()
+	_wire_critters()
 	print("WORLD_READY %s" % JSON.stringify({"id": world_id(), "objectives": _total_objectives}))
 
 
@@ -64,15 +68,31 @@ func _wire_dreamlings() -> void:
 	# honest for partially-finished worlds re-entered mid-session or after
 	# a save/load.
 	var already_home: Array[String] = GameState.returned_ids(world_id())
+	var missions: Dictionary = MissionRegistry.load_for_world(world_id())
 	for dreamling: Dreamling in _find_dreamlings(self):
 		if already_home.has(dreamling.id):
 			dreamling.queue_free()
 			continue
 		dreamling.add_to_group(DREAMLING_GROUP)
 		dreamling.collected.connect(_on_dreamling_collected)
+		_attach_mission(dreamling, missions)
 	for id: String in already_home:
 		if not _returned_ids.has(id):
 			_returned_ids.append(id)
+
+
+## D21: attaches a MissionDriver only for a NON-open archetype. An id with
+## no entry in data/missions/<world_id>.json, or an entry whose archetype is
+## "open", gets no driver at all — that omission (not a no-op driver) is
+## what guarantees the zero-behavior-change floor for every classic dreamling.
+func _attach_mission(dreamling: Dreamling, missions: Dictionary) -> void:
+	var mission: Mission = missions.get(dreamling.id) as Mission
+	if mission == null or mission.archetype == Mission.ARCHETYPE_OPEN:
+		return
+	var driver := MissionDriver.new()
+	driver.name = "MissionDriver"
+	dreamling.add_child(driver)
+	driver.setup(dreamling, mission, world_id())
 
 
 func _find_dreamlings(node: Node) -> Array[Dreamling]:
@@ -131,3 +151,70 @@ func _check_completion() -> void:
 ## convenience for future HUD/fort-growth work.
 func remaining() -> int:
 	return max(_total_objectives - _returned_ids.size(), 0)
+
+
+## Aliveness Top 12 #6 ("poke-everything pass"): auto-attaches a TouchReact
+## to every Node3D under this world already in the "poke" group. A prop
+## opts in by calling `add_to_group("poke")` on itself (worlds/common/
+## dream_door.gd does this for its own return-disk Visual — see that file);
+## nothing else needs to change for a future prop to gain the same wobble +
+## boop for free. Idempotent (skips a node that already has a TouchReact
+## child) and scoped to THIS world instance only (get_tree() sees the whole
+## live tree, but only one world is ever loaded at a time in normal play —
+## the ancestry check keeps it correct under tools/props/check_placements.gd
+## too, which can have a previous world mid-queue_free() when this runs).
+func _wire_touch_react() -> void:
+	for node: Node in get_tree().get_nodes_in_group(POKE_GROUP):
+		if not is_ancestor_of(node):
+			continue
+		if node.get_node_or_null("TouchReact") != null:
+			continue
+		var reactor := TouchReact.new()
+		reactor.name = "TouchReact"
+		if node.has_meta("touch_react_radius"):
+			reactor.trigger_radius = float(node.get_meta("touch_react_radius"))
+		if node.has_meta("touch_react_sfx"):
+			reactor.sfx_name = String(node.get_meta("touch_react_sfx"))
+		(node as Node3D).add_child(reactor)
+
+
+## Aliveness Top 12 #5 ("one AmbientCritter system, four skins"): spawns
+## Critter instances from data/critters/<world_id>.json. Missing file =
+## no critters for that world (same generosity-by-default convention as
+## MissionRegistry) — a world with no file needs no code change here.
+func _wire_critters() -> void:
+	var path: String = CRITTER_DATA_PATH_FORMAT % world_id()
+	if not FileAccess.file_exists(path):
+		return
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if not (parsed is Dictionary):
+		push_warning("WorldBase: %s did not parse to a Dictionary" % path)
+		return
+	var list: Variant = (parsed as Dictionary).get("critters", [])
+	if not (list is Array):
+		return
+	for entry: Variant in (list as Array):
+		if entry is Dictionary:
+			_spawn_critter_group(entry as Dictionary)
+
+
+func _spawn_critter_group(entry: Dictionary) -> void:
+	var kind: String = String(entry.get("kind", "moth"))
+	var count: int = int(entry.get("count", 0))
+	var center_raw: Variant = entry.get("center", [])
+	if not (center_raw is Array) or (center_raw as Array).size() < 3:
+		push_warning("WorldBase: critter group '%s' has no valid 'center' — skipped" % kind)
+		return
+	var center_arr: Array = center_raw as Array
+	var center: Vector3 = Vector3(float(center_arr[0]), float(center_arr[1]), float(center_arr[2]))
+	var spread: float = float(entry.get("spread", 2.0))
+	for i: int in range(count):
+		var critter := Critter.new()
+		critter.name = "Critter_%s_%d" % [kind, i]
+		critter.kind = kind
+		critter.world_id = world_id()
+		var offset: Vector2 = Vector2(randf_range(-spread, spread), randf_range(-spread, spread))
+		critter.position = center + Vector3(offset.x, 0.0, offset.y)
+		add_child(critter)

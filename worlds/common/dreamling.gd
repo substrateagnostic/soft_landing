@@ -47,6 +47,16 @@ var _release_start: Vector3 = Vector3.ZERO
 var _release_target: Vector3 = Vector3.ZERO
 var _release_then_free: bool = false
 
+## D21 micro-mission hook (worlds/common/mission_driver.gd). ADDITIVE on top
+## of the idle bob/magnetism anchor, never a replacement for it -- a
+## dreamling with no attached MissionDriver never has this set away from
+## ZERO, so "open" archetype / no-mission-data worlds are byte-for-byte
+## unchanged (D21: "zero behavior change"). Public so a MissionDriver
+## (a plain sibling component, not a subclass) can drive it without this
+## script needing to know any archetype exists.
+var mission_suppress_magnetism: bool = false
+var _mission_offset: Vector3 = Vector3.ZERO
+
 
 func _ready() -> void:
 	monitoring = true
@@ -81,9 +91,24 @@ func _physics_process(delta: float) -> void:
 ## relative to that platform instead of fighting its motion every frame.
 func _process_idle(delta: float) -> void:
 	_bob_phase = fmod(_bob_phase + delta * BOB_HZ * TAU, TAU)
-	_apply_magnetism(delta)
-	position = _idle_base_local_position + Vector3(0.0, sin(_bob_phase) * BOB_AMPLITUDE, 0.0)
+	if not mission_suppress_magnetism:
+		_apply_magnetism(delta)
+	position = _idle_base_local_position + _mission_offset + Vector3(0.0, sin(_bob_phase) * BOB_AMPLITUDE, 0.0)
 	_spin(delta)
+
+
+## Nudges the dreamling away from its idle anchor without touching the
+## anchor itself (_idle_base_local_position keeps homing toward
+## _home_local_position exactly as before) -- so a mission driver can be
+## deleted or bugged out entirely and the dreamling still settles back to
+## its exact placement, never a drifted one. Called every physics frame by
+## an attached MissionDriver for the `race`/`ride` archetypes only.
+func mission_set_local_offset(offset: Vector3) -> void:
+	_mission_offset = offset
+
+
+func mission_current_offset() -> Vector3:
+	return _mission_offset
 
 
 func _apply_magnetism(delta: float) -> void:

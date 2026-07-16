@@ -1,0 +1,5 @@
+{
+	"critters": [
+		{"kind": "moth", "count": 3, "center": [1.6, 0.5, -3.35], "spread": 1.2}
+	]
+}

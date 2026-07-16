@@ -1,0 +1,24 @@
+{
+	"missions": [
+		{
+			"id": "d01",
+			"archetype": "race",
+			"params": {
+				"waypoints": [[0.0, 0.0, 0.0], [2.5, 0.0, 2.0], [3.0, 0.0, -1.0], [0.5, 0.0, -2.0]],
+				"speed": 3.2,
+				"trigger_radius": 3.0,
+				"laps": 2
+			},
+			"moon_line_key": "wisp_d01_race"
+		},
+		{
+			"id": "d09",
+			"archetype": "shy",
+			"params": {
+				"reveal_radius": 4.0,
+				"reveal_time": 1.5
+			},
+			"moon_line_key": "wisp_d09_shy"
+		}
+	]
+}
