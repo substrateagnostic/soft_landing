@@ -19,6 +19,17 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-15 — Session 1 (cont. 2): GATE 1 PASSED, Phase 3 launched
+- **Producer greenlight, verbatim: "greenlight! and then some. love it."**
+  Meshy key incoming when producer is unloaded. THE BIG NAP is real.
+- winget diagnosed unhealthy (30+ min, zero output, both jobs killed).
+  Direct-installed to D:\Tools with receipts: **Godot 4.6.2 console**
+  (`4.6.2.stable.official.71f334935`), **gh 2.96.0**, **ffmpeg 8.1.2**;
+  user PATH extended. gh unauthenticated → still a NEEDS-YOU.
+- Phase 3 split: 3A scaffold (Sonnet, running) → then 3B core-feel + 3C
+  harness + 3D worlds in parallel (disjoint file ownership) → 3E director
+  integration/feel/video. Gate 2 packet will be a gameplay mp4.
+
 ### 2026-07-15 — Session 1 (cont.): research landed, pitch written
 - **Phase 1 done in ~25 min wall-clock:** four parallel research agents
   (movement / camera+readability / design study / pipeline) delivered
