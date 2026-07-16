@@ -1,151 +1,79 @@
 {
   "characters": {
-    "pip_v2": {
+    "lamb_keeper": {
       "clips": {
         "idle": {
-          "task": "019f6cc9-403f-77b6-8654-92076adcf1f2",
+          "task": "019f6d16-b8aa-7b77-b2e6-bb5111a30d9c",
           "status": "SUCCEEDED",
           "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_idle.glb"
+          "glb": "assets\\models\\meshy\\rigged\\lamb_keeper\\anim_idle.glb"
         },
         "walk": {
-          "task": "019f6cc9-42bb-7daf-a4ca-cd34b312b07c",
+          "task": "019f6d16-bb52-7440-9d58-f24ebf273a81",
           "status": "SUCCEEDED",
           "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_walk.glb"
-        },
-        "run": {
-          "task": "019f6cc9-4456-7986-ba1a-2594f2f0d057",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_run.glb"
-        },
-        "fall": {
-          "task": "019f6cc9-4677-77b8-869a-73a218716db7",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_fall.glb"
+          "glb": "assets\\models\\meshy\\rigged\\lamb_keeper\\anim_walk.glb"
         },
         "wave": {
-          "task": "019f6cc9-4836-77b9-a5ed-8dd518797c34",
+          "task": "019f6d16-bd0d-7de7-95fc-44d5a0629397",
           "status": "SUCCEEDED",
           "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_wave.glb"
-        },
-        "cheer": {
-          "task": "019f6cc9-4a0f-77ba-8cd8-16e296090e3e",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_cheer.glb"
+          "glb": "assets\\models\\meshy\\rigged\\lamb_keeper\\anim_wave.glb"
         },
         "sleep": {
-          "task": "019f6cc9-4e92-7988-892e-ba559dd29b87",
+          "task": "019f6d16-bf2e-7b78-987a-31a5c428a5b2",
           "status": "SUCCEEDED",
           "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_sleep.glb"
+          "glb": "assets\\models\\meshy\\rigged\\lamb_keeper\\anim_sleep.glb"
         },
-        "pickup": {
-          "task": "019f6cc9-4c4e-7665-a079-9eac28038f03",
+        "cheer": {
+          "task": "019f6d16-c0ab-7de9-89b3-03e7c16b0f8c",
           "status": "SUCCEEDED",
           "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_pickup.glb"
-        },
-        "dance": {
-          "task": "019f6cc9-879f-7db8-a374-0375926ddf4b",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_dance.glb"
-        },
-        "jump": {
-          "task": "019f6cc9-89eb-7db9-9321-92b3ad69cdb2",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_jump.glb"
-        },
-        "skip": {
-          "task": "019f6cc9-8c3c-77c4-8b71-8e6750ebfa53",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\pip_v2\\anim_skip.glb"
+          "glb": "assets\\models\\meshy\\rigged\\lamb_keeper\\anim_cheer.glb"
         }
       },
-      "rig_task": "019f6cc8-b64b-7920-b5a8-7ee57e938573",
+      "rig_task": "019f6d16-060c-7b39-ad21-25d0cb1d7887",
       "rig_status": "SUCCEEDED"
     },
-    "otto_v2": {
+    "moth_shepherd": {
       "clips": {
         "idle": {
-          "task": "019f6cc9-8e20-7991-9068-1b71197df9fe",
+          "task": "019f6d16-c292-7d06-9e32-f3f221d84b8e",
           "status": "SUCCEEDED",
           "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_idle.glb"
+          "glb": "assets\\models\\meshy\\rigged\\moth_shepherd\\anim_idle.glb"
         },
         "walk": {
-          "task": "019f6cc9-9066-77c5-88e7-a103577d8310",
+          "task": "019f6d16-c525-7dea-9a67-9b11b1416b3e",
           "status": "SUCCEEDED",
           "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_walk.glb"
-        },
-        "run": {
-          "task": "019f6cc9-92ba-7dba-b1d1-c4d6a31242cf",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_run.glb"
-        },
-        "fall": {
-          "task": "019f6cc9-950d-7991-b2de-de03a9ad745d",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_fall.glb"
+          "glb": "assets\\models\\meshy\\rigged\\moth_shepherd\\anim_walk.glb"
         },
         "wave": {
-          "task": "019f6cc9-cea1-76e5-b2bf-08a2f093a94c",
+          "task": "019f6d16-c6ad-7deb-b5b2-18cc62e22267",
           "status": "SUCCEEDED",
           "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_wave.glb"
+          "glb": "assets\\models\\meshy\\rigged\\moth_shepherd\\anim_wave.glb"
         },
         "cheer": {
-          "task": "019f6cc9-d0f9-77e6-8825-000bf556a200",
+          "task": "019f6d17-026e-7dfc-acc4-a06e5dba7e0c",
           "status": "SUCCEEDED",
           "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_cheer.glb"
+          "glb": "assets\\models\\meshy\\rigged\\moth_shepherd\\anim_cheer.glb"
         },
         "sleep": {
-          "task": "019f6cc9-d4a2-76fd-8f57-55e9b020297c",
+          "task": "019f6d17-00b7-7b7f-b335-a0a9307b8d14",
           "status": "SUCCEEDED",
           "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_sleep.glb"
-        },
-        "jump": {
-          "task": "019f6cc9-d8e9-79b9-a943-33c494b1e312",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_jump.glb"
-        },
-        "pickup": {
-          "task": "019f6cc9-d2a2-77e7-95bf-3c0f1b2d208f",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_pickup.glb"
-        },
-        "dance": {
-          "task": "019f6cc9-d6c8-7dc1-9d0b-ee150efdca76",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_dance.glb"
-        },
-        "carry": {
-          "task": "019f6cc9-dacf-77ee-993d-b72fafc2c26f",
-          "status": "SUCCEEDED",
-          "credits": 3,
-          "glb": "assets\\models\\meshy\\rigged\\otto_v2\\anim_carry.glb"
+          "glb": "assets\\models\\meshy\\rigged\\moth_shepherd\\anim_sleep.glb"
         }
       },
-      "rig_task": "019f6cc8-ce6a-7626-ba71-c2ad62dd8dc6",
+      "rig_task": "019f6d16-1e18-7cf7-b8fc-f2d239eda4d4",
       "rig_status": "SUCCEEDED"
     }
   },
-  "credits_spent": 76,
-  "balance_before": 2406,
-  "balance_after": 2330
+  "credits_spent": 40,
+  "balance_before": 1880,
+  "balance_after": 1840
 }

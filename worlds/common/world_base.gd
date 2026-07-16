@@ -87,12 +87,33 @@ func _wire_dreamlings() -> void:
 ## what guarantees the zero-behavior-change floor for every classic dreamling.
 func _attach_mission(dreamling: Dreamling, missions: Dictionary) -> void:
 	var mission: Mission = missions.get(dreamling.id) as Mission
-	if mission == null or mission.archetype == Mission.ARCHETYPE_OPEN:
+	if mission == null:
+		return
+	if mission.archetype == Mission.ARCHETYPE_OPEN:
+		_wire_open_moon_line(dreamling, mission)
 		return
 	var driver := MissionDriver.new()
 	driver.name = "MissionDriver"
 	dreamling.add_child(driver)
 	driver.setup(dreamling, mission, world_id())
+
+
+## Mission-author pass: an "open" id still gets NO MissionDriver (D21's
+## zero-behavior-change floor is unchanged) but MAY carry a moon_line_key +
+## `params.speak_on_collect == true` for a genuinely special one-off
+## flourish spoken once, on catch (e.g. bramble's d07, already riding a
+## snore geyser -- "geyser-timing" per the brief). Deliberately opt-in
+## (rather than "any open id with a moon_line_key speaks") so authoring a
+## moon_line_key on an ordinary open dreamling for data-completeness never
+## silently adds a spoken beat on every plain pickup -- that would be the
+## exact "nice job on every catch" over-narration failure NARRATION_BIBLE.md
+## warns against.
+func _wire_open_moon_line(dreamling: Dreamling, mission: Mission) -> void:
+	if mission.moon_line_key.is_empty() or not bool(mission.params.get("speak_on_collect", false)):
+		return
+	dreamling.collected.connect(func(_id: String) -> void:
+		TheMoon.say(mission.moon_line_key)
+	, CONNECT_ONE_SHOT)
 
 
 func _find_dreamlings(node: Node) -> Array[Dreamling]:

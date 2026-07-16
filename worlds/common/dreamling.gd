@@ -26,6 +26,14 @@ const ORBIT_ANGULAR_SPEED: float = 1.2 # rad/s, slow shared drift so the ring re
 const FOLLOW_LAG_K: float = 3.0 # exp-decay follow lag, "trail dreamily"
 const RELEASE_DURATION: float = 0.5
 
+## audio v2 (aliveness_wow.md §2/§6 item 9: "let kids *hear* a dreamling
+## before it's on screen"): a periodic positional giggle while IDLE, picked
+## from 3 variants. Interval is randomized per-fire (not a fixed period) so
+## a room with several dreamlings doesn't giggle in unison.
+const GIGGLE_MIN_INTERVAL: float = 7.0
+const GIGGLE_MAX_INTERVAL: float = 14.0
+const GIGGLE_VARIANTS: Array[String] = ["dreamling_giggle", "dreamling_giggle_2", "dreamling_giggle_3"]
+
 enum State { IDLE, FOLLOWING, RELEASING }
 
 ## carrier instance id -> Array[Dreamling] currently orbiting it, so siblings
@@ -56,6 +64,8 @@ var _release_then_free: bool = false
 ## script needing to know any archetype exists.
 var mission_suppress_magnetism: bool = false
 var _mission_offset: Vector3 = Vector3.ZERO
+
+var _giggle_timer: float = randf_range(GIGGLE_MIN_INTERVAL, GIGGLE_MAX_INTERVAL) # audio v2, staggered per-instance
 
 
 func _ready() -> void:
@@ -95,6 +105,19 @@ func _process_idle(delta: float) -> void:
 		_apply_magnetism(delta)
 	position = _idle_base_local_position + _mission_offset + Vector3(0.0, sin(_bob_phase) * BOB_AMPLITUDE, 0.0)
 	_spin(delta)
+	_update_giggle(delta)
+
+
+## audio v2 -- periodic positional giggle, IDLE only (a dreamling that's
+## already been found stops announcing itself). See GIGGLE_* consts.
+func _update_giggle(delta: float) -> void:
+	_giggle_timer -= delta
+	if _giggle_timer > 0.0:
+		return
+	_giggle_timer = randf_range(GIGGLE_MIN_INTERVAL, GIGGLE_MAX_INTERVAL)
+	var variant: String = GIGGLE_VARIANTS[randi() % GIGGLE_VARIANTS.size()]
+	PositionalAudio.play_at(variant, global_position)
+	print("EVT %s" % JSON.stringify({"type": "dreamling_giggle", "id": id, "variant": variant, "t": Engine.get_physics_frames()}))
 
 
 ## Nudges the dreamling away from its idle anchor without touching the

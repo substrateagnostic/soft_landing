@@ -1,0 +1,18 @@
+{
+  "description": "AUDIO V2 receipt script (audio_ prefix territory): exercises every player verb sound in one pass for the required 'windowed run + volumedetect' proof (docs/verify/audio-v2-VERIFY.md). --pads=2 so Otto never runs BuddyAI (each seat scripted independently, no interference). PIP (seat 1): frames 0-150 run forward (footsteps at MIN_RUN_SPEED-gated, speed-scaled cadence -- core/audio/player_audio.gd); teleport to flat ground @170; jump press@190/release@196, second jump tap press@205/release@211 (same +15-frame double-jump offset flutter_gap.json already proved triggers FLUTTER) -- expect FLUTTER sound + a landed 'land_soft' pat around frame ~256 (press+66, per flutter_gap.json's measured airtime). OTTO (seat 2): ground jump press@300 (while still on original spawn ground, buffer resolves before any teleport ambiguity -- glide_descent.json's proven technique), teleport to (0,8,0)@305 with jump held continuously, release@400 (~1.6s of held GLIDE -- long enough for glide_loop to fade in, sustain, and fade out on release, then a normal fall + land_soft); teleport to (2,5,0)@480 (a few meters up, away from Pip so nothing else interferes), interact press@483/release@489 while airborne (APEX immediately post-teleport, matching pound_bounce.json's technique) triggers POUND -- expect pound_start on entry and pound_land (+ a suppressed generic land_soft, per core/audio/player_audio.gd's _pound_landing_this_frame guard) on landing around frame ~510 (pound_hang_duration 0.15s=9 frames + drop time for a 5m fall at pound_drop_speed 14 m/s ~=0.36s=22 frames past the interact press). Run windowed (never --headless) with --write-movie so the recorded video's audio track can be volumedetect'd as the audible-proof receipt; also run once headless first to grep events.jsonl / stdout for zero 'not found' lines across flutter/glide_loop/pound_start/pound_land/land_soft/footstep.",
+  "events": [
+    {"frame": 0, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 150, "seat": 1, "action": "move", "vec": [0, 0]},
+    {"frame": 170, "seat": 1, "action": "teleport", "pos": [0.0, 0.5, 0.0]},
+    {"frame": 190, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 196, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 205, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 211, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 300, "seat": 2, "action": "jump", "type": "press"},
+    {"frame": 305, "seat": 2, "action": "teleport", "pos": [0.0, 8.0, 0.0]},
+    {"frame": 400, "seat": 2, "action": "jump", "type": "release"},
+    {"frame": 480, "seat": 2, "action": "teleport", "pos": [2.0, 5.0, 0.0]},
+    {"frame": 483, "seat": 2, "action": "interact", "type": "press"},
+    {"frame": 489, "seat": 2, "action": "interact", "type": "release"}
+  ]
+}

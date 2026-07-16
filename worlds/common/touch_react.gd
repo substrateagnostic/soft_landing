@@ -28,6 +28,11 @@ signal poked
 @export var sfx_name: String = "poke_boop"
 
 const PLAYERS_GROUP: String = "players"
+## audio v2: touch_react's boop reuses ONE source asset (poke_boop.ogg) and
+## varies playback pitch across these 3 values rather than baking three
+## near-duplicate files ("touch-react boop set (3 pitches)") -- cheap
+## variety for a sound that can fire dozens of times a session.
+const BOOP_PITCHES: Array[float] = [0.92, 1.0, 1.1]
 
 var _target: Node3D = null
 var _base_scale: Vector3 = Vector3.ONE
@@ -80,7 +85,13 @@ func _react() -> void:
 	if _target == null:
 		return
 	poked.emit()
-	AudioManager.play_sfx(sfx_name)
+	# audio v2: positional (via worlds/common/positional_audio.gd) instead
+	# of AudioManager's flat shared _sfx_player, so a poke reads as coming
+	# from the actual prop -- and a random pitch from BOOP_PITCHES so a
+	# poke-everything spree doesn't sound like one sample on repeat.
+	var pitch: float = BOOP_PITCHES[randi() % BOOP_PITCHES.size()]
+	PositionalAudio.play_at(sfx_name, global_position, pitch)
+	print("EVT %s" % JSON.stringify({"type": "touch_react_poke", "sfx": sfx_name, "t": Engine.get_physics_frames()}))
 
 	var squash: Vector3 = _base_scale * Vector3(1.0 + squash_amount, 1.0 - squash_amount, 1.0 + squash_amount)
 	var tilt: Vector3 = _base_rotation + Vector3(deg_to_rad(tilt_degrees), 0.0, deg_to_rad(tilt_degrees * 0.6))

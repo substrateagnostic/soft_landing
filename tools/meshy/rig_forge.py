@@ -35,26 +35,25 @@ BASE = "https://api.meshy.ai/openapi/v1"
 #   otto 019f69d1-8fa0-7647-b756-bc2dfca1dd69  (h 1.3)
 # v2 = D24 likeness casting (Pip=Ezra, Otto=Caleb, heights 0.9/0.8).
 CHARACTERS = {
-    "pip_v2": {"input_task_id": "019f6cc0-bc90-7747-82f4-f0ae8e359031", "height_meters": 0.9},
-    "otto_v2": {"input_task_id": "019f6cc0-bf13-7bf3-a486-3f4bea3cf8e6", "height_meters": 0.8},
+    # pip_v2 019f6cc0-bc90-7747-82f4-f0ae8e359031 (h 0.9) / otto_v2
+    # 019f6cc0-bf13-7bf3-a486-3f4bea3cf8e6 (h 0.8) — rigged, on disk.
+    # M2 dreamkeepers (moth's wings are a humanoid-rigger risk — 5cr gamble):
+    "lamb_keeper": {"input_task_id": "019f6d0d-12fd-7229-8af4-f0769a2ab2b8", "height_meters": 0.85},
+    "moth_shepherd": {"input_task_id": "019f6d0d-15bd-722a-b2e8-d5541787c4ac", "height_meters": 1.0},
 }
 
 # Shared clip set (name -> action_id). Kid register only — no combat clips.
+# (Players' full set — idle 0, walk 30, run 15, fall 503, wave 28, cheer
+# 303, pickup 276, sleep 269, dance 64; pip jump 44/skip 118, otto jump
+# 61/carry 551 — already rigged. Dreamkeepers get the NPC subset.)
 SHARED_CLIPS = {
     "idle": 0,             # Idle
     "walk": 30,            # Casual Walk
-    "run": 15,             # Run 3
-    "fall": 503,           # Fall 2 (airborne loop for the floaty descent)
     "wave": 28,            # Big Wave Hello
-    "cheer": 303,          # Cheer with Both Hands (dream returned!)
-    "pickup": 276,         # Male Bend Over Pick Up (dreamling catch)
-    "sleep": 269,          # Sleep (title vignette / fort naps)
-    "dance": 64,           # All Night Dance (fort celebration)
+    "sleep": 269,          # Sleep
+    "cheer": 303,          # Cheer with Both Hands
 }
-PER_CHAR_CLIPS = {
-    "pip_v2": {"jump": 44, "skip": 118},   # Happy Jump (lighter) + Skip Forward (Pip skips!)
-    "otto_v2": {"jump": 61, "carry": 551}, # Happy Jump + Carry Heavy Object Walk (carrying Pip)
-}
+PER_CHAR_CLIPS = {}
 
 POLL_INTERVAL = 10.0
 POLL_TIMEOUT = 1200.0

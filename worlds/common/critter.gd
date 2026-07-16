@@ -169,6 +169,12 @@ func _pick_new_hop_target() -> void:
 func _enter_scatter() -> void:
 	_state = State.SCATTER
 	scattered.emit()
+	# audio v2: positional per-kind flee sound -- fires only on genuine
+	# IDLE/RETURN -> SCATTER transitions (the state machine itself already
+	# gates this, see the doc comment above), never every frame while
+	# already fleeing.
+	var sfx: String = "moth_flutter" if kind == "moth" else "mouse_squeak"
+	PositionalAudio.play_at(sfx, global_position)
 	if _scatter_event_cooldown <= 0.0:
 		_scatter_event_cooldown = SCATTER_EVENT_COOLDOWN
 		print("EVT %s" % JSON.stringify({"type": "critter_scatter", "world": world_id, "kind": kind, "t": Engine.get_physics_frames()}))

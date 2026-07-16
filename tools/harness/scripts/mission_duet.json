@@ -1,0 +1,7 @@
+{
+  "description": "Mission-author live-verify (bramble d08, duet, shoulder shelf) -- DUAL PROXIMITY path. Run with --pads=2 (true co-op: both seats human-controlled, no buddy AI in play) so both PlayerBody teleports are the ONLY thing moving either seat. Teleports Pip and Otto simultaneously within DUET_DEFAULT_RADIUS (3.0m) of d08. _process_duet checks `within >= 2` every physics frame with no accumulation needed for the dual-proximity path, so bloom should fire within a frame or two of the teleport landing. Expected receipts: EVT mission_bloomed (archetype=duet, trigger=dual_proximity) almost immediately after frame 20, MOON_SAID bramble_d08_duet, then EVT dreamling_collected + mission_caught for d08 shortly after (whichever seat's Area3D body_entered fires first).",
+  "events": [
+    {"frame": 20, "seat": 1, "action": "teleport", "pos": [24.0, 11.2, 6.3]},
+    {"frame": 20, "seat": 2, "action": "teleport", "pos": [24.0, 11.2, 5.7]}
+  ]
+}

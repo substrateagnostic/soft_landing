@@ -82,5 +82,19 @@
 		"Whoops — up you float. Falling's just another way to land.",
 		"Gotcha. Soft as a pillow, safe as anything.",
 		"No trouble at all, little duck. Up and onward."
-	]
+	],
+	"bramble_d01_race": "Ready, little duck? This one loves a good chase.",
+	"bramble_d02_race": "Another quick one — keep up if you can.",
+	"bramble_d03_ride": "Hold tight. This one likes slow, lazy loops.",
+	"bramble_d04_open": "This one's happy right where it is.",
+	"bramble_d05_ride": "Climb on, little duck — this dream loves to drift.",
+	"bramble_d06_open": "Look — it naps on the bear's own breath.",
+	"bramble_d07_geyser": "Careful — this dream rides the bear's own snore.",
+	"bramble_d08_duet": "This dream needs two, little duck. Bring your friend.",
+	"bramble_d09_shy": "Shh — go slow. This one startles easily.",
+	"bramble_d10_open": "Tucked in close, right by the door home.",
+	"wisp_d01_race": "This dream loves to race along the shore.",
+	"wisp_d09_shy": "Slow down, little duck — this reed-dream is shy.",
+	"marmalade_d01_race": "Someone's quick today, right through the village square.",
+	"marmalade_d09_shy": "Careful now — this one hides among the pots."
 }

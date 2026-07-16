@@ -1,0 +1,6 @@
+{
+  "description": "Mission-author live-verify (bramble d05, ride, haunch peak): DEV TELEPORT drops Pip within RIDE_DEFAULT_TRIGGER_RADIUS of d05's placement while the ride loop is already mid-drift (it's been looping since world _ready(), never gated -- see mission_driver.gd _process_ride). Proves ride is catchable MID-PATH: no settle/pause state exists for ride (unlike race), so any successful catch is by construction a mid-loop catch. Expected receipts: EVT mission_bloomed (archetype=ride, trigger=proximity) shortly after the teleport, MOON_SAID bramble_d05_ride, then EVT dreamling_collected + mission_caught for d05.",
+  "events": [
+    {"frame": 30, "seat": 1, "action": "teleport", "pos": [-30.0, 10.6, 0.5]}
+  ]
+}

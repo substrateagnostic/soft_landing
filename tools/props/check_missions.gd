@@ -18,6 +18,20 @@ extends SceneTree
 ##       fallback_seconds <= FALLBACK_SECONDS_MAX, so the "nothing missable
 ##       solo" escape valve (mission_driver.gd's single-player fallback)
 ##       can't itself be misconfigured into zero or unreasonably long.
+##   (d) moon_line_key_ok — mission-author pass (docs/verify/missions-m2-
+##       VERIFY.md): every NON-open archetype now has mission_driver.gd call
+##       TheMoon.say(moon_line_key) at its own bloom/start moment, so a blank
+##       key there would be a silent, permanent gap (TheMoon.say() fails
+##       soft on an unknown/blank key rather than erroring, which is exactly
+##       why this needs a loud check instead of trusting the runtime).
+##       "open" archetypes are exempt (moon_line_key on "open" is optional
+##       data, spoken only via the opt-in params.speak_on_collect seam —
+##       see world_base.gd._wire_open_moon_line).
+##
+## Also prints one MISSION_ARCHETYPE_COUNTS line per world (informational,
+## never fails the run): a per-archetype tally, so a design pass ("2 race, 2
+## ride, 1 shy, 1 duet, ...") can be eyeballed against the receipt instead of
+## re-reading the JSON by hand.
 ##
 ## Run headless via:
 ##   godot_console.exe --headless --path . --script tools/props/check_missions.gd
@@ -89,8 +103,14 @@ func _check_world(world_id: String) -> void:
 	var dreamling_positions: Dictionary = _index_dreamlings(world) # id -> global_position (Vector3)
 	var rescue_floor_y: float = float(world.call("rescue_floor_y"))
 	var missions: Dictionary = MissionRegistry.load_for_world(world_id)
+	var archetype_counts: Dictionary = {}
 	for mission_id: String in missions.keys():
-		_check_mission(world_id, missions[mission_id] as Mission, dreamling_positions, rescue_floor_y)
+		var mission: Mission = missions[mission_id] as Mission
+		archetype_counts[mission.archetype] = int(archetype_counts.get(mission.archetype, 0)) + 1
+		_check_mission(world_id, mission, dreamling_positions, rescue_floor_y)
+	print("MISSION_ARCHETYPE_COUNTS %s" % JSON.stringify({
+		"world": world_id, "counts": archetype_counts, "total": missions.size(),
+	}))
 
 	world.queue_free()
 	await physics_frame # let the free land before the next world is added
@@ -145,6 +165,11 @@ func _check_mission(world_id: String, mission: Mission, dreamling_positions: Dic
 	if mission.archetype == Mission.ARCHETYPE_DUET:
 		duet_ok = _check_duet_params(mission, reasons)
 
+	var moon_line_key_ok: bool = true
+	if mission.archetype != Mission.ARCHETYPE_OPEN and mission.moon_line_key.is_empty():
+		moon_line_key_ok = false
+		reasons.append("moon_line_key_missing")
+
 	var verdict: String = "PASS" if reasons.is_empty() else "FAIL"
 	if verdict == "FAIL":
 		_any_fail = true
@@ -157,6 +182,7 @@ func _check_mission(world_id: String, mission: Mission, dreamling_positions: Dic
 		"id_found": id_found,
 		"waypoints_ok": waypoints_ok,
 		"duet_ok": duet_ok,
+		"moon_line_key_ok": moon_line_key_ok,
 		"reasons": reasons,
 	}))
 

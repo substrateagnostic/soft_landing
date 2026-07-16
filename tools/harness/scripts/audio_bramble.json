@@ -1,0 +1,8 @@
+{
+  "description": "AUDIO V2 receipt script (audio_ prefix territory), bramble world (--world=bramble): exercises the positional/ambience side of the pass that audio_verbs.json doesn't cover -- critter flee sounds, the dreamling idle giggle, a touch_react poke, and per-world ambience auto-adoption. Otto stays put (--pads=2, no BuddyAI interference). PIP (seat 1): teleport into the bramble moth cluster (data/critters/bramble.json center [-53,0.7,-6], spread 5) at frame 30 to trigger SCATTER -> moth_flutter (worlds/common/critter.gd); teleport into the mouse cluster (center [-53,0.5,10], spread 4) at frame 120 to trigger SCATTER -> mouse_squeak; teleport onto bramble's dream_door visual (worlds/bramble.gd: door.position = SPAWN_PIP + (-6,0,1) = (-61,0,1), touch_react_radius 0.9m) at frame 220 to trigger a touch_react poke -> poke_boop (worlds/common/touch_react.gd, now prints an EVT touch_react_poke receipt). No script events after that -- the run is left to idle to frame ~1100 (18s at 60fps) purely so at least one of bramble's ten IDLE dreamlings (d01..d10, worlds/common/dreamling.gd) rolls its randf_range(7,14)s giggle timer and fires an EVT dreamling_giggle receipt; with 10 independent staggered timers this is effectively certain well inside an 18s window. Run headless (no audio capture needed here -- every claim in this script is proven by a grep'able EVT/print, not by ear) with a generous --quitafter to cover the full idle-giggle window.",
+  "events": [
+    {"frame": 30, "seat": 1, "action": "teleport", "pos": [-53.0, 1.0, -6.0]},
+    {"frame": 120, "seat": 1, "action": "teleport", "pos": [-53.0, 1.0, 10.0]},
+    {"frame": 220, "seat": 1, "action": "teleport", "pos": [-61.0, -0.2, 1.0]}
+  ]
+}

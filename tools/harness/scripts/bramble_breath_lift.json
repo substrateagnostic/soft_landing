@@ -1,0 +1,6 @@
+{
+  "description": "Bramble breath-becomes-weather property (M2 set piece #1, worlds/bramble/breath_weather.gd): Pip is teleported into the broad snout-side updraft (x=58, z=24) shortly after the exhale window opens (BreathWeather's start_delay=6s + exhale_duration=9s, so the window is open frame 360-900 @60fps) and held there by NOT moving. Expected receipts: BREATH exhale_start near t=360, then a run of PLAYER_POS lines for seat 1 showing y climbing well past chest-plateau height (~7.5m) while the updraft is active, then falling back under gravity after BREATH exhale_end near t=900 (or after the player rides up out of the finite-height updraft column, whichever comes first -- see snore_geyser.gd, the same launch-column model this reuses).",
+  "events": [
+    {"frame": 370, "seat": 1, "action": "teleport", "pos": [58.0, 0.5, 24.0]}
+  ]
+}

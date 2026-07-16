@@ -32,11 +32,11 @@ const OUT_DIR: String = "res://scenes/players/rigs/"
 # name -> loop this clip (Animation.LOOP_LINEAR) vs one-shot (LOOP_NONE).
 const LOOPING_CLIPS: Array[String] = ["idle", "walk", "run", "fall", "sleep", "skip", "carry"]
 
-# v1 pip/otto rigs remain merged on disk (scenes/players/rigs/) for
-# provenance; D24 recast the leads as pip_v2 (Ezra) / otto_v2 (Caleb).
+# Already merged on disk (scenes/players/rigs/): pip/otto v1 (provenance),
+# pip_v2/otto_v2 (D24 leads, 11 clips each). Current batch: M2 dreamkeepers.
 const CHARACTERS: Dictionary = {
-	"pip_v2": ["idle", "walk", "run", "fall", "wave", "cheer", "pickup", "sleep", "dance", "jump", "skip"],
-	"otto_v2": ["idle", "walk", "run", "fall", "wave", "cheer", "pickup", "sleep", "dance", "jump", "carry"],
+	"lamb_keeper": ["idle", "walk", "wave", "sleep", "cheer"],
+	"moth_shepherd": ["idle", "walk", "wave", "sleep", "cheer"],
 }
 
 

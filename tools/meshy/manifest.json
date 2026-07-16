@@ -48,5 +48,101 @@
     "category": "character",
     "prompt": "chubby round faced 2 year old toddler boy wearing a soft light grey bear onesie pajama, onesie hood up with two tiny round bear ears, his face fully visible and uncovered, wispy light blond baby hair, very round rosy cheeks, calm sleepy unbothered expression, white chest panel with tiny scattered pastel animal doodle prints, small round bear tail, footed pajama feet, standing upright in T pose with arms out",
     "target_height_hint": 0.8
+  },
+  {
+    "id": "lamb_keeper",
+    "category": "character",
+    "prompt": "sleepy lamb dreamkeeper, small chubby biped plush lamb child standing upright on two legs, wooly cream fleece like footed pajamas, droopy sleepy eyes, tiny nub horns, gentle smile, standing in T pose with arms out",
+    "target_height_hint": 0.85
+  },
+  {
+    "id": "moth_shepherd",
+    "category": "character",
+    "prompt": "gentle moth shepherd dreamkeeper, small chubby biped plush moth child standing upright on two legs, big soft feathery antennae, folded pale dusty-blue wings draped like a cape, softly glowing cream belly like a lantern, sleepy kind face, standing in T pose with arms out",
+    "target_height_hint": 1.0,
+    "enable_pbr": true
+  },
+  {
+    "id": "soft_pine",
+    "category": "prop",
+    "prompt": "big rounded plush pine tree, stacked soft cushion tiers of muted sage green, chunky rounded trunk",
+    "target_height_hint": 3.0
+  },
+  {
+    "id": "soft_pine_small",
+    "category": "prop",
+    "prompt": "small rounded plush pine tree, three soft cushion tiers of muted sage green, stubby rounded trunk",
+    "target_height_hint": 1.8
+  },
+  {
+    "id": "clover_tuft",
+    "category": "prop",
+    "prompt": "small tuft of chunky rounded clover leaves, soft sage green, three fat stems",
+    "target_height_hint": 0.3
+  },
+  {
+    "id": "moon_daisy",
+    "category": "prop",
+    "prompt": "single glowing white daisy flower with soft cream petals and warm golden center, chunky rounded stem and two fat leaves",
+    "target_height_hint": 0.4,
+    "enable_pbr": true
+  },
+  {
+    "id": "mushroom_lamp",
+    "category": "prop",
+    "prompt": "squat rounded mushroom with warm honey glowing spotted cap, chunky cream stem, cozy night-light",
+    "target_height_hint": 0.5,
+    "enable_pbr": true
+  },
+  {
+    "id": "berry_bush",
+    "category": "prop",
+    "prompt": "rounded soft bush of muted sage green with plump glowing honey-gold berries",
+    "target_height_hint": 0.9,
+    "enable_pbr": true
+  },
+  {
+    "id": "stone_soft",
+    "category": "prop",
+    "prompt": "rounded soft mossy boulder, smooth grey-green with sage moss cap",
+    "target_height_hint": 0.7
+  },
+  {
+    "id": "stump_door",
+    "category": "prop",
+    "prompt": "cozy tree stump with a tiny round wooden door and little round window glowing warm from inside",
+    "target_height_hint": 0.8,
+    "enable_pbr": true
+  },
+  {
+    "id": "seed_puff",
+    "category": "prop",
+    "prompt": "fluffy round dandelion seed puff on a short curved stem, soft cream white, dreamy",
+    "target_height_hint": 0.35
+  },
+  {
+    "id": "picnic_basket",
+    "category": "prop",
+    "prompt": "woven picnic basket with folded blanket corner peeking from under the lid, warm browns and cream",
+    "target_height_hint": 0.4
+  },
+  {
+    "id": "birdhouse_lantern",
+    "category": "prop",
+    "prompt": "small wooden birdhouse on a short post with warm light glowing from its round hole, cozy",
+    "target_height_hint": 0.6,
+    "enable_pbr": true
+  },
+  {
+    "id": "haystack_pillow",
+    "category": "prop",
+    "prompt": "small rounded haystack that looks like a plump pillow, soft warm straw yellow",
+    "target_height_hint": 0.8
+  },
+  {
+    "id": "moth_small",
+    "category": "prop",
+    "prompt": "tiny plush moth with round fuzzy body and big soft pale wings, cream and dusty blue, cute",
+    "target_height_hint": 0.25
   }
 ]

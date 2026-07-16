@@ -37,11 +37,18 @@ const VALID_ARCHETYPES: PackedStringArray = [
 var id: String = ""
 var archetype: String = ARCHETYPE_OPEN
 var params: Dictionary = {}
-## Exposed for the narration/UI agent to speak (TheMoon.say(mission.moon_line_key))
-## -- this file and mission_driver.gd deliberately never call TheMoon
-## themselves (brief: "just emit the signal/receipt"). A missing key in
-## data/moon_lines.json is safe: TheMoon.say() falls back to printing the
-## key itself rather than erroring.
+## Mission-author pass (docs/verify/missions-m2-VERIFY.md): mission_driver.gd
+## now calls TheMoon.say(mission.moon_line_key) itself, exactly once, at
+## each archetype's own bloom/start moment (race: trigger; ride: first
+## proximity; shy/duet: reveal/bloom) -- never on every catch, preserving
+## the Moon's "rare, structural beats only" law (NARRATION_BIBLE.md). An
+## "open" mission gets no driver and stays silent UNLESS params has
+## `"speak_on_collect": true` (world_base.gd._wire_open_moon_line()),
+## reserved for a genuinely special one-off flourish (bramble's d07,
+## already riding a snore geyser) rather than every plain pickup. A
+## missing/empty key is always safe: TheMoon.say() falls back to printing
+## the key itself rather than erroring, and every call site guards on a
+## non-empty key before calling.
 var moon_line_key: String = ""
 
 

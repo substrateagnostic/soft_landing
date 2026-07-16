@@ -1,0 +1,6 @@
+{
+  "description": "Mission-author live-verify (bramble d09, shy, fur patch on the haunch): DEV TELEPORT parks Pip inside SHY_DEFAULT_REVEAL_RADIUS (4.0m) of d09 and never moves him again -- _process_shy accumulates _shy_watch_timer every physics frame the nearest player stays within reveal_radius (no literal velocity/stillness check, just continuous proximity, per mission_driver.gd), so a single un-repeated teleport IS the stillness. Expected receipts: EVT mission_bloomed (archetype=shy, trigger=stillness) ~reveal_time (1.5s / 90 physics frames) after the teleport lands, MOON_SAID bramble_d09_shy, then EVT dreamling_collected + mission_caught for d09 shortly after (magnetism was pulling the hidden dreamling toward Pip the whole time -- monitoring=false only gated the Area3D catch, not the pull -- so the catch should land within a second or two of the reveal).",
+  "events": [
+    {"frame": 30, "seat": 1, "action": "teleport", "pos": [-27.0, 9.0, 7.0]}
+  ]
+}

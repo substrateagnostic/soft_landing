@@ -33,6 +33,15 @@ extends Node
 ## can fail. shy/duet gate WHEN something becomes catchable, never whether;
 ## duet's single-player fallback timer is the explicit "nothing missable
 ## solo" escape valve the brief calls for.
+##
+## Moon wiring (mission-author pass, docs/verify/missions-m2-VERIFY.md):
+## _speak_bloom_line() calls TheMoon.say(mission.moon_line_key) exactly once
+## at each archetype's own bloom/start moment (race: trigger_radius entry;
+## ride: first proximity within RIDE_DEFAULT_TRIGGER_RADIUS -- a NEW,
+## purely-observational proximity check added this pass that never gates
+## the loop itself; shy/duet: reveal/bloom) -- never on every catch, per
+## NARRATION_BIBLE.md's "rare, structural beats only" law. A missing/empty
+## moon_line_key is a silent no-op (see mission.gd).
 
 const PLAYERS_GROUP: String = "players"
 const OFFSET_SETTLE_DURATION: float = 0.6
@@ -53,6 +62,7 @@ const RACE_DEFAULT_WAYPOINTS: Array = [
 
 # --- Ride ----------------------------------------------------------------------
 const RIDE_DEFAULT_SPEED: float = 1.1
+const RIDE_DEFAULT_TRIGGER_RADIUS: float = 3.0 # bloom/Moon-line proximity gate (mission-author pass) -- never gates the loop itself
 const RIDE_DEFAULT_WAYPOINTS: Array = [
 	Vector3(0.0, 0.0, 0.0), Vector3(1.0, 0.15, 0.7), Vector3(0.2, 0.25, 1.3), Vector3(-0.9, 0.15, 0.6),
 ]
@@ -86,6 +96,8 @@ var _ride_waypoints: Array = RIDE_DEFAULT_WAYPOINTS
 var _ride_speed: float = RIDE_DEFAULT_SPEED
 var _ride_path_length: float = 0.0
 var _ride_distance: float = 0.0
+var _ride_trigger_radius: float = RIDE_DEFAULT_TRIGGER_RADIUS
+var _ride_bloomed: bool = false
 
 # Shy state
 var _shy_revealed: bool = false
@@ -164,6 +176,17 @@ func _nearest_player_distance() -> float:
 	return best
 
 
+## Shared by every archetype's own bloom/start moment (race trigger, ride
+## first-proximity, shy reveal, duet bloom) -- each call site above reaches
+## this exactly once (state-guarded), which IS the "once per mission per
+## session" contract; a missing/empty key is a documented no-op, not an
+## error (see mission.gd's moon_line_key doc comment).
+func _speak_bloom_line() -> void:
+	if _mission.moon_line_key.is_empty():
+		return
+	TheMoon.say(_mission.moon_line_key)
+
+
 # ---------------------------------------------------------------------------
 # RACE
 # ---------------------------------------------------------------------------
@@ -187,6 +210,7 @@ func _process_race(delta: float) -> void:
 					"type": "mission_race_started", "world": _world_id, "id": _mission.id, "archetype": "race",
 					"t": Engine.get_physics_frames(),
 				}))
+				_speak_bloom_line()
 		RaceState.RUNNING:
 			_advance_race(delta)
 		RaceState.SETTLING:
@@ -229,12 +253,24 @@ func _setup_ride(params: Dictionary) -> void:
 	var parsed: Array = _parse_waypoints(params.get("waypoints", []))
 	_ride_waypoints = parsed if not parsed.is_empty() else RIDE_DEFAULT_WAYPOINTS
 	_ride_speed = float(params.get("speed", RIDE_DEFAULT_SPEED))
+	_ride_trigger_radius = float(params.get("trigger_radius", RIDE_DEFAULT_TRIGGER_RADIUS))
 	_ride_path_length = _closed_path_length(_ride_waypoints)
 
 
+## The loop itself never gates on proximity (it's been drifting since frame 0,
+## magnetism always on, per the archetype's own contract above) -- this ONLY
+## marks the first moment a player notices it, for a one-shot EVT + Moon line,
+## mirroring race's own trigger-radius bloom without touching the motion.
 func _process_ride(delta: float) -> void:
 	_ride_distance = fmod(_ride_distance + _ride_speed * delta, max(_ride_path_length, 0.01))
 	_dreamling.mission_set_local_offset(_sample_closed_path(_ride_waypoints, _ride_distance))
+	if not _ride_bloomed and _nearest_player_distance() <= _ride_trigger_radius:
+		_ride_bloomed = true
+		print("EVT %s" % JSON.stringify({
+			"type": "mission_bloomed", "world": _world_id, "id": _mission.id, "archetype": "ride", "trigger": "proximity",
+			"t": Engine.get_physics_frames(),
+		}))
+		_speak_bloom_line()
 
 
 # ---------------------------------------------------------------------------
@@ -292,6 +328,7 @@ func _reveal_shy() -> void:
 		"type": "mission_bloomed", "world": _world_id, "id": _mission.id, "archetype": "shy", "trigger": "stillness",
 		"t": Engine.get_physics_frames(),
 	}))
+	_speak_bloom_line()
 
 
 # ---------------------------------------------------------------------------
@@ -357,6 +394,7 @@ func _bloom_duet(trigger: String) -> void:
 		"type": "mission_bloomed", "world": _world_id, "id": _mission.id, "archetype": "duet", "trigger": trigger,
 		"t": Engine.get_physics_frames(),
 	}))
+	_speak_bloom_line()
 
 
 # ---------------------------------------------------------------------------

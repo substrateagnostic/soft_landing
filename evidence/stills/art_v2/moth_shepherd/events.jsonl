@@ -1,0 +1,4 @@
+HARNESS_FLAGS {"model":"moth_shepherd","outdir":"evidence/stills/art_v2/moth_shepherd","quitafter":"3","shots":"30,150"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/art_v2/moth_shepherd/shot_30.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/art_v2/moth_shepherd/shot_150.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 3.0s)

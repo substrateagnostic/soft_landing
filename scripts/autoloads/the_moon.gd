@@ -49,11 +49,16 @@ const PITCH_JITTER: float = 0.08
 # Mood pitch bias (Animalese-style: excited runs a little high, gentle/
 # sleepy runs a little low) — keyed by MOON_SAID key, not text content, so
 # it's exact rather than guessed from wording.
-const GENTLE_KEYS: PackedStringArray = ["goodnight", "paused", "mission_shy", "callie_dreams"]
+const GENTLE_KEYS: PackedStringArray = [
+	"goodnight", "paused", "mission_shy", "callie_dreams",
+	"bramble_d09_shy", "wisp_d09_shy", "marmalade_d09_shy", "bramble_d07_geyser",
+]
 const EXCITED_KEYS: PackedStringArray = [
 	"well_done", "world_complete", "fort_grows_5", "fort_grows_10",
 	"move_flutter_first", "move_glide_first", "move_pound_first",
 	"mission_race", "mission_duet", "rescue",
+	"bramble_d01_race", "bramble_d02_race", "bramble_d08_duet",
+	"wisp_d01_race", "marmalade_d01_race",
 ]
 const GENTLE_PITCH_BIAS: float = 0.94
 const EXCITED_PITCH_BIAS: float = 1.07

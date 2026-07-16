@@ -1,0 +1,6 @@
+{
+  "description": "Bonus live-verify (bramble d07, open + params.speak_on_collect): confirms world_base.gd._wire_open_moon_line() actually fires on catch for the one open-archetype exception (geyser-timing flourish). DEV TELEPORT drops Pip at d07's placement atop the snore geyser column. Expected receipts: EVT dreamling_collected for d07, MOON_SAID bramble_d07_geyser (spoken via the collected-signal one-shot hookup, not a MissionDriver -- d07 has none).",
+  "events": [
+    {"frame": 30, "seat": 1, "action": "teleport", "pos": [54.0, 18.2, 4.0]}
+  ]
+}
