@@ -19,6 +19,28 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-15 — Session 1 (cont.): research landed, pitch written
+- **Phase 1 done in ~25 min wall-clock:** four parallel research agents
+  (movement / camera+readability / design study / pipeline) delivered
+  ~1,200 lines of sourced docs. Synthesis in `docs/RESEARCH.md`; sixteen
+  founding decisions in `docs/DECISIONS.md` (D1–D16).
+- Load-bearing findings: Kirby FL removed camera control *on purpose* for
+  exactly our player; variable jump height punishes preschoolers (dropped);
+  Meshy auto-rig only ships walk/run → procedural squash-stretch; Movie
+  Maker needs a real window (never --headless) + clean --quit-after.
+- **The pitch: THE BIG NAP.** Colossal animals asleep for a once-a-century
+  nap; their dreams (dreamlings) drift loose; two kids in onesies — Pip
+  (duck, Ezra's seat) and Otto (bear, helper seat) — carry the dreams home,
+  narrated by the Moon (diegetic TTS). Falling = a dreamling catches you:
+  the Soft Landing. Hub = growing Pillow Fort; World 1 = Bramble the bear
+  (breathing-chest trampoline, snore geysers, fur meadows). Full packet:
+  PITCH.md, GAME_BRIEF.md, SPEC.md, ART_BIBLE.md, DEFINITION_OF_DONE.md.
+- Declined concepts (in PITCH.md): Puddlejump (cloud courier — impersonal
+  rescue), Attic of the Bigs (giant toys — Toy Story shadow, toys don't
+  breathe).
+- winget installs (godot/gh/ffmpeg) still churning in background at pitch
+  time; toolchain.md gets post-install verification when they land.
+
 ### 2026-07-15 — Session 1: the chair, the audit, the founding
 - **Director seated.** Third AI-directed game. Register chosen: *enormous
   tenderness* — a big world that is glad you're small. Repo named

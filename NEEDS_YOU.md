@@ -1,30 +1,47 @@
-# NEEDS YOU — soft_landing
+# NEEDS YOU — soft_landing / THE BIG NAP
 *Updated at the end of every session. What exists, where the evidence is, one
 cold demo command, what's unverified, and what only you can decide.*
 
-## Session 1 (2026-07-15) — in progress
+## Session 1 (2026-07-15)
 
-### What exists
-- Repo founded at `D:\Projects\soft_landing` (git init, main branch,
-  `.gitattributes` = `* text=auto`).
-- GOAL.md (verbatim producer brief, both parts), AGENTS.md (conventions +
-  design floor + routing), alexmemory.md (ops log), this file.
-- Toolchain audit in progress → `evidence/toolchain.md`.
+### ⛔ GATE 1 — GREENLIGHT NEEDED (the big one)
+Read **PITCH.md** (5 min). The pitch: **THE BIG NAP** — colossal animals
+asleep for a century-long nap, their escaped dreams as collectibles, two kids
+in onesies (Pip the duck = Ezra, Otto the bear = you) carrying dreams home,
+the Moon narrating via TTS, falling always caught by a dreamling bubble
+("the Soft Landing"). Hub: a growing Pillow Fort. World 1: Bramble the bear.
+Register: tender-enormous — drawdown was elegiac, ill-will riotous, this one
+is *hushed and huge*.
 
-### Producer decisions pending
-1. **⛔ GATE 1 — greenlight the pitch** (packet arrives in chat this session).
-2. **Meshy key** — paste `MESHY_API_KEY=...` into `D:\Projects\soft_landing\.env`
-   or drop the Dead_Attestation `.env` anywhere on D:. Needed by Phase 4.
-3. **gh auth** — `gh auth login` (browser) or paste a token. Needed for the
-   post-Gate-1 push to github.com/substrateagnostic.
-4. **License** — Apache-2.0 assumed as default; say the word to change it.
+**Say:** "greenlight" (build proceeds to Phase 3 grey-box) · or name changes
+(title, cast names, fiction, camera choice, anything) · or "re-pitch".
+
+### Also pending (async, not blocking Phase 3)
+1. **Meshy key** — paste `MESHY_API_KEY=...` into `D:\Projects\soft_landing\.env`
+   or drop Dead_Attestation's `.env` on D:. Needed by Phase 4 (art proof).
+2. **gh auth** — `gh auth login` or paste a token; needed for the post-Gate-1
+   push to github.com/substrateagnostic. Building local until then.
+3. **License** — Apache-2.0 assumed (D16); veto if you want different.
+4. **Viola stems** (whenever, Phase 5): one lullaby melody per giant; specs
+   will follow after Gate 2 — placeholder synth stems used until then.
+
+### What exists (all committed, main branch)
+- Founding: GOAL.md (verbatim), AGENTS.md, LICENSE, ops log (alexmemory.md).
+- Phase 0: `evidence/toolchain.md` — NOTE: this Windows partition had NO
+  godot/gh/ffmpeg (previous game nights ran on the Pop!_OS side; D:\Projects
+  is Syncthing-shared). winget installs were still running at last update.
+- Phase 1: `docs/research/` (4 sourced docs), `docs/RESEARCH.md`,
+  `docs/DECISIONS.md` (D1–D16).
+- Phase 2: PITCH.md, GAME_BRIEF.md, SPEC.md, ART_BIBLE.md,
+  DEFINITION_OF_DONE.md.
 
 ### Cold demo command
-None yet — no code until after Gate 1. (Phase 3 will put one here.)
+None yet — no code until Gate 1 passes (grey-box slice is Phase 3).
 
 ### UNVERIFIED list
-- Godot ≥4.4 on this partition: **being installed** (winget, in flight).
-- gh: being installed, unauthenticated.
-- ffmpeg: being installed.
-- Meshy key: **unreachable on this partition** (see above).
-- Godot MCP: not available in this session — CLI fallback confirmed as plan.
+- godot / gh / ffmpeg install completion (winget in flight at write time;
+  post-install verification will be appended to evidence/toolchain.md).
+- Meshy key reachability on this partition (blocked on you, item 1).
+- TTS voice quality of Windows SAPI for the Moon (Phase 3 will produce a
+  sample for your ears).
+- Research UNVERIFIED rollup: see docs/RESEARCH.md final section.
