@@ -163,6 +163,7 @@ func _physics_process(delta: float) -> void:
 ## redundant light-tween restart).
 func force_gust() -> void:
 	print("BREATH %s" % JSON.stringify({"phase": "force_gust"}))
+	AudioManager.play_sfx("gust_breath") # audio pass 3: the exhale
 	if not _active:
 		_set_active(true)
 	var timer: SceneTreeTimer = get_tree().create_timer(exhale_duration)

@@ -3,6 +3,15 @@ extends Node
 ## D-PITCH audio). Missing audio files are the expected state until Phase
 ## 4/5 asset delivery: every load path fails soft (one stdout note, no
 ## error, no crash).
+##
+## audio pass 3 (tools/audio_gen/generate_audio_v3.py) added seven keystone
+## set-piece one-shots to the flat assets/audio/sfx/ pool play_sfx() already
+## reads by name — no new directory or API needed: giant_rumble (all three
+## keystone-sequence starts), giant_yawn_sigh (bear wake / whale settle /
+## cat stretch apex), debris_soft_tumble (mountain_dressing reveal),
+## water_rise_shimmer (dive flood beat), roof_slide_soft (stretch plate
+## shift), heartbeat_thump (HeartbeatCrossing pulse), gust_breath
+## (BreathWeather.force_gust()).
 
 const SFX_DIR: String = "res://assets/audio/sfx/"
 const STEMS_DIR: String = "res://assets/audio/stems/"
@@ -69,6 +78,30 @@ func play_sfx(sfx_name: String) -> void:
 		return
 	_sfx_player.stream = load(path) as AudioStream
 	_sfx_player.play()
+
+
+## play_sfx_overlay — audio pass 3, additive. Same lookup/fail-soft-print
+## convention as play_sfx(), but spawns an ephemeral AudioStreamPlayer
+## (freed on `finished`) instead of reusing the shared _sfx_player, so this
+## call never cuts off whatever _sfx_player is already mid-playback (and a
+## later plain play_sfx()/play_sfx_overlay() call never cuts THIS one off
+## either). Mirrors core/audio/player_audio.gd's own established "own
+## AudioStreamPlayer pool... never AudioManager's shared _sfx_player"
+## convention (audio v2), lifted to a one-line AudioManager call for
+## call sites — the keystone set-piece sequences — where two real one-shots
+## legitimately fire within the same synchronous frame and both need to be
+## heard, not just whichever call happened to run last.
+func play_sfx_overlay(sfx_name: String) -> void:
+	var path: String = SFX_DIR + sfx_name + ".ogg"
+	if not ResourceLoader.exists(path):
+		print("AudioManager: sfx not found (no-op): ", path)
+		return
+	var player := AudioStreamPlayer.new()
+	player.bus = SFX_BUS
+	player.stream = load(path) as AudioStream
+	add_child(player)
+	player.finished.connect(player.queue_free)
+	player.play()
 
 
 ## load_sfx_stream — audio v2. Same lookup/fail-soft-print as play_sfx, but

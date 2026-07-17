@@ -8,15 +8,9 @@ extends Node3D
 ## itself — foreshadowing the sleeping giant underfoot, before the reveal
 ## ever confirms it.
 ##
-## No audio: checked every registered SFX under assets/audio/sfx/*.ogg
-## (AudioManager.SFX_DIR) — footstep/land_soft/pound_land/snore_geyser are
-## the closest neighbors and none reads as a soft rhythmic bass thump. Per
-## the brief ("else generate nothing, emit HEARTBEAT receipt + a subtle
-## light pulse only, and note the missing sound honestly"), this ships
-## light+scale only. A future pass with a real low-thump asset can add
-## AudioManager.play_sfx("heartbeat_thump") as a one-line addition here —
-## the call site is deliberately absent, not stubbed, to avoid a permanent
-## silent no-op print spamming every beat.
+## Audio: heartbeat_thump (audio pass 3, generate_audio_v3.py) — a
+## pillow-muffled lub-dub matched to this crossing's own pulse shape,
+## played at the pulse trigger under the existing cooldown.
 
 const PULSE_PERIOD: float = 0.9 # ~66bpm, a slow resting heartbeat
 const SCALE_AMPLITUDE: float = 0.018 # ~1.8%, within the brief's 1-2% ask
@@ -111,4 +105,5 @@ func _physics_process(delta: float) -> void:
 
 	if pulse > 0.85 and _receipt_cooldown <= 0.0:
 		_receipt_cooldown = RECEIPT_COOLDOWN
+		AudioManager.play_sfx("heartbeat_thump") # audio pass 3: rate-limited by the receipt cooldown above
 		print("HEARTBEAT %s" % JSON.stringify({"seat": _bodies[0].name}))
