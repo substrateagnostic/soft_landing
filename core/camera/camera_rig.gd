@@ -239,7 +239,12 @@ func _update_yaw(delta: float) -> void:
 	elif _pip != null:
 		var horizontal_vel: Vector3 = Vector3(_pip.velocity.x, 0.0, _pip.velocity.z)
 		if horizontal_vel.length() > leash_speed_threshold:
-			var heading: float = atan2(horizontal_vel.x, horizontal_vel.z)
+			# Camera forward is -Z rotated by yaw: forward = (-sin y, -cos y).
+			# Facing the TRAVEL direction therefore needs atan2(-vx, -vz);
+			# atan2(vx, vz) is exactly pi off — the camera trailed players
+			# facing BACKWARD whenever no CameraHint covered them (found on
+			# the D25 ascent, where hints have gaps; confirmed analytically).
+			var heading: float = atan2(-horizontal_vel.x, -horizontal_vel.z)
 			_leash_yaw = lerp_angle(_leash_yaw, heading, 1.0 - exp(-leash_k * delta))
 		# else: hold — heavily damped, no jitter when circling or idle
 		_yaw = lerp_angle(_yaw, _leash_yaw, 1.0 - exp(-yaw_k * delta))
