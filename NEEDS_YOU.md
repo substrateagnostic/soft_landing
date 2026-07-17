@@ -2,6 +2,21 @@
 *Updated at the end of every session. What exists, where the evidence is,
 one cold demo command, what's unverified, and what only you can decide.*
 
+## Session 2, third wave — THE KEYSTONE (your note, same night)
+
+- Your read was right: the roll-over didn't read because there was no bear
+  to read. Now there is: **Bramble is a rigged giant teddy** (T-pose gen ->
+  humanoid rig at 1.8m -> engine-scaled to 28m). His permanent idle is the
+  Sleep clip — a breathing giant beside the ear door. At 10/10 (or
+  `--rollover`): letterboxed cutscene, he **wakes, sits up under the moon,
+  takes one enormous breath, tosses-and-turns back to sleep** while the
+  far meadow opens. 27s video in chat. 110 credits total (2 sculpted
+  sleeping candidates kept on disk as fallback/props).
+- Known honest gaps: breath-weather burst not yet synced to his breathe
+  clip (needs a public hook, queued); the mound terrain still reads
+  abstract next to him — full terrain-rebuild-around-the-giant is the top
+  M3 card now, same treatment for Wisp/Marmalade (rig their giants).
+
 ## Session 2, second wave — M2: BRAMBLE THE PROOF WORLD (same night)
 
 - **THE ROLL-OVER is real**: return all 10 of Bramble's dreams (or run with
