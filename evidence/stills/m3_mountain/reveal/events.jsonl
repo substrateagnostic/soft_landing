@@ -1,0 +1,16 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/m3_mountain/reveal","pads":"2","quitafter":"25","rollover":true,"shots":"150,240,300,360,450,600,900,1300","skipmenu":true,"world":"bramble"}
+EVT {"mode":0,"mode_name":"COOP","t":1,"type":"mode_changed"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(2)
+EVT {"seat":1,"t":9,"type":"landed"}
+EVT {"seat":2,"t":11,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_mountain/reveal/shot_150.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_mountain/reveal/shot_240.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_mountain/reveal/shot_300.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_mountain/reveal/shot_360.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_mountain/reveal/shot_450.png
+EVT {"seat":1,"t":460,"type":"landed"}
+EVT {"seat":2,"t":462,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_mountain/reveal/shot_600.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_mountain/reveal/shot_900.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_mountain/reveal/shot_1300.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 25.0s)

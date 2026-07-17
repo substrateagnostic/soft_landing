@@ -1,0 +1,37 @@
+{
+  "_comment": "Hub population spots (aliveness_wow.md Top 12 #11). Each spot is a cozy resting place around the fort's exterior -- window-sill-height nooks along the blanket walls, the flanks of the two walkable cushions, and the shoulders of each world's own door -- authored to keep the fort mouth (BrambleDoor's approach south of the fort), every door's own trigger box, and Callie's cushion fully clear (worlds/pillow_fort/pillow_fort.gd's own dressing-prop comment: 'None of these props carry collision ... so they cannot physically block anything', but FortResident placement still keeps a real visual gap so nothing reads as cluttering a walked route). 'world' is the preferred group (worlds/pillow_fort/pillow_fort.gd's per-world door tint: bramble=umber, marmalade=orange, wisp=silver-blue) -- overflow beyond a group's own returned-dream count is filled from any spot still free, per _build_fort_residents()'s assignment order.",
+  "spots": [
+    {"pos": [-2.3, 0.5, -4.6], "world": "bramble"},
+    {"pos": [-3.2, 0.5, -5.2], "world": "bramble"},
+    {"pos": [-3.6, 0.5, -6.2], "world": "bramble"},
+    {"pos": [-3.9, 0.5, -7.2], "world": "bramble"},
+    {"pos": [-4.3, 0.5, -7.9], "world": "bramble"},
+    {"pos": [-3.5, 0.5, -9.2], "world": "bramble"},
+    {"pos": [-2.5, 0.5, -9.8], "world": "bramble"},
+    {"pos": [-4.5, 0.5, -6.5], "world": "bramble"},
+    {"pos": [-5.0, 0.5, -8.0], "world": "bramble"},
+    {"pos": [-1.8, 0.5, -3.3], "world": "bramble"},
+
+    {"pos": [4.5, 0.5, 2.0], "world": "marmalade"},
+    {"pos": [5.5, 0.5, 1.0], "world": "marmalade"},
+    {"pos": [6.5, 0.5, 2.5], "world": "marmalade"},
+    {"pos": [7.5, 0.5, 1.5], "world": "marmalade"},
+    {"pos": [8.3, 0.5, 0.5], "world": "marmalade"},
+    {"pos": [4.5, 0.5, -4.5], "world": "marmalade"},
+    {"pos": [5.5, 0.5, -5.5], "world": "marmalade"},
+    {"pos": [6.8, 0.5, -4.8], "world": "marmalade"},
+    {"pos": [8.0, 0.5, -4.0], "world": "marmalade"},
+    {"pos": [8.6, 0.5, -3.6], "world": "marmalade"},
+
+    {"pos": [-4.5, 0.5, 2.0], "world": "wisp"},
+    {"pos": [-5.5, 0.5, 1.0], "world": "wisp"},
+    {"pos": [-6.0, 0.5, 4.0], "world": "wisp"},
+    {"pos": [-8.0, 0.5, -0.2], "world": "wisp"},
+    {"pos": [-8.3, 0.5, 0.5], "world": "wisp"},
+    {"pos": [-4.5, 0.5, -4.5], "world": "wisp"},
+    {"pos": [-5.5, 0.5, -5.5], "world": "wisp"},
+    {"pos": [-6.8, 0.5, -4.8], "world": "wisp"},
+    {"pos": [-8.0, 0.5, -4.0], "world": "wisp"},
+    {"pos": [-8.6, 0.5, -3.6], "world": "wisp"}
+  ]
+}

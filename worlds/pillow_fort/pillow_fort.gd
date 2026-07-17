@@ -33,6 +33,10 @@ const CALLIE_CUSHION_HEIGHT_SCALE: float = 0.55 # squashed flatter than the walk
 const DREAMKEEPER_SCENE: PackedScene = preload("res://worlds/common/dreamkeeper.tscn")
 const DREAMKEEPER_DATA_PATH_FORMAT: String = "res://data/dreamkeepers/%s.json"
 
+const FORT_RESIDENT_SCENE: PackedScene = preload("res://worlds/common/fort_resident.tscn")
+const FORT_RESIDENT_SPOTS_PATH: String = "res://data/fort_residents/spots.json"
+const FORT_RESIDENT_CAP: int = 30
+
 # --- Dressing M2 props (assets/models/meshy/generated/, tools/meshy/
 # manifest.json target_height_hint values) -- all placed WEST of the fort's
 # center line or hugging the fence, deliberately clear of the east-cushion
@@ -73,6 +77,9 @@ const BEAR_SILHOUETTE_COLOR: Color = Color(0.35, 0.33, 0.32) # grey-umber, unrea
 
 const RESCUE_FLOOR_Y: float = -10.0
 
+var _resident_spots: Array[Dictionary] = [] # {"pos": Vector3, "world": String, "used": bool}
+var _resident_spawned_keys: Dictionary = {} # "<world_id>/<dream_id>" -> true
+
 
 func _ready() -> void:
 	_build_clearing()
@@ -86,6 +93,7 @@ func _ready() -> void:
 	_build_callie_home()
 	_build_dreamkeepers()
 	_build_dressing()
+	_build_fort_residents()
 	super._ready()
 
 
@@ -552,6 +560,111 @@ func _spawn_dreamkeeper(entry: Dictionary) -> void:
 	keeper.face_yaw_degrees = float(entry.get("face_yaw", 0.0))
 	keeper.position = Vector3(float(pos_arr[0]), float(pos_arr[1]), float(pos_arr[2]))
 	add_child(keeper)
+
+
+# --- Fort Residents (Hub Population, aliveness_wow.md Top 12 #11) ----------
+
+## Every dream that has ever come home, from ANY world, takes up visible
+## residence here -- the fort becomes a map of where your kindness has been
+## (the brief's own framing). Loads data/fort_residents/spots.json (~30
+## authored cozy positions, each tagged with a preferred world so bramble's
+## residents cluster near the umber door, marmalade's near the orange door,
+## wisp's near the silver door -- pillow_fort.gd's own _add_world_door()
+## tints above), then spawns one FortResident per already-returned dream up
+## to FORT_RESIDENT_CAP, deterministically ordered (sorted world ids, sorted
+## dream ids within each world) so re-running against the same save always
+## rebuilds the identical fort. Also live-updates: a dream returned WHILE
+## this fort instance happens to be loaded spawns its resident immediately
+## via GameState.dream_returned, matching _build_fort_growth()'s "the fort
+## remembers" pattern above -- no explicit disconnect on world-switch, same
+## established convention as dreamkeeper.gd's own _ready() (this node is
+## queued_free() on world switch, which the engine already treats as an
+## invalid connection target).
+func _build_fort_residents() -> void:
+	_load_resident_spots()
+	var world_ids: Array = GameState.dreamlings.keys()
+	world_ids.sort()
+	for world_id: String in world_ids:
+		var ids: Array[String] = GameState.returned_ids(world_id)
+		ids.sort()
+		for dream_id: String in ids:
+			_spawn_resident_for(world_id, dream_id)
+	GameState.dream_returned.connect(_on_dream_returned)
+
+
+func _on_dream_returned(world_id: String, id: String) -> void:
+	_spawn_resident_for(world_id, id)
+
+
+func _load_resident_spots() -> void:
+	if not FileAccess.file_exists(FORT_RESIDENT_SPOTS_PATH):
+		return
+	var file: FileAccess = FileAccess.open(FORT_RESIDENT_SPOTS_PATH, FileAccess.READ)
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if not (parsed is Dictionary):
+		push_warning("PillowFort: fort_residents spots data did not parse to a Dictionary")
+		return
+	var list: Variant = (parsed as Dictionary).get("spots", [])
+	if not (list is Array):
+		return
+	for entry: Variant in (list as Array):
+		if not (entry is Dictionary):
+			continue
+		var pos_raw: Variant = (entry as Dictionary).get("pos", [])
+		if not (pos_raw is Array) or (pos_raw as Array).size() < 3:
+			continue
+		var pos_arr: Array = pos_raw as Array
+		_resident_spots.append({
+			"pos": Vector3(float(pos_arr[0]), float(pos_arr[1]), float(pos_arr[2])),
+			"world": String((entry as Dictionary).get("world", "")),
+			"used": false,
+		})
+
+
+## Picks the next free spot tagged for `world_id`; if that group is used up
+## (or a spot was never tagged), falls back to any spot still free --
+## "overflow goes anywhere free" per the brief. Returns an empty Dictionary
+## if every authored spot is already spoken for (FORT_RESIDENT_CAP exists
+## precisely so this shouldn't happen with the current ~30-spot authoring,
+## but a resident with nowhere to stand is a silent no-op, never an error).
+func _claim_spot(world_id: String) -> Dictionary:
+	for spot: Dictionary in _resident_spots:
+		if not bool(spot["used"]) and String(spot["world"]) == world_id:
+			spot["used"] = true
+			return spot
+	for spot: Dictionary in _resident_spots:
+		if not bool(spot["used"]):
+			spot["used"] = true
+			return spot
+	return {}
+
+
+func _spawn_resident_for(world_id: String, dream_id: String) -> void:
+	var key: String = "%s/%s" % [world_id, dream_id]
+	if _resident_spawned_keys.has(key):
+		return
+	if _resident_spawned_keys.size() >= FORT_RESIDENT_CAP:
+		return
+	var spot: Dictionary = _claim_spot(world_id)
+	if spot.is_empty():
+		return
+	_resident_spawned_keys[key] = true
+	var resident: FortResident = FORT_RESIDENT_SCENE.instantiate() as FortResident
+	resident.name = "FortResident_%s_%s" % [world_id, dream_id]
+	resident.id = dream_id
+	var spot_pos: Vector3 = spot["pos"] as Vector3
+	resident.position = spot_pos # set BEFORE add_child -- D10 ordering, see fort_resident.gd header
+	add_child(resident)
+	# Receipt (verify brief: "receipts show N residents spawned at expected
+	# spots") -- one line per resident, initial batch or live update alike,
+	# so `grep -c FORT_RESIDENT_SPAWNED` gives N and each line shows exactly
+	# where it landed.
+	print("FORT_RESIDENT_SPAWNED %s" % JSON.stringify({
+		"world": world_id, "id": dream_id,
+		"pos": [snappedf(spot_pos.x, 0.01), snappedf(spot_pos.y, 0.01), snappedf(spot_pos.z, 0.01)],
+		"spot_world_tag": String(spot["world"]),
+	}))
 
 
 # --- Dressing M2 props -------------------------------------------------------

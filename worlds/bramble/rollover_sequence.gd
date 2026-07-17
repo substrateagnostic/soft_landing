@@ -161,6 +161,13 @@ func _play_sequence(forced: bool) -> void:
 	_bubble_all_players()
 	_tween_haunch_settle()
 
+	# D25 THE REVEAL: at sequence start, right after the letterbox comes in —
+	# his breath-gust blows the disguise clouds away. mountain_dressing's own
+	# reveal() is NOT called here (see _play_keystone()/the fallback branch
+	# below): its debris-fall portion is timed to land during the "wake"
+	# clip specifically, per the brief.
+	_trigger_breath_gust()
+
 	# The keystone (producer direction): the giant stirs, sits up, takes
 	# one enormous breath, tosses-and-turns, and settles back to sleep —
 	# played by the rigged bear if present, rigid-roll fallback otherwise.
@@ -168,6 +175,9 @@ func _play_sequence(forced: bool) -> void:
 	if keystone != null:
 		await _play_keystone(keystone)
 	else:
+		# No rig clip to time against — trigger the mountain reveal here,
+		# alongside the rigid-roll fallback, instead of mid-clip.
+		_trigger_dressing_reveal()
 		_tween_shell_roll()
 		var timer: SceneTreeTimer = get_tree().create_timer(ROTATE_DURATION)
 		await timer.timeout
@@ -198,12 +208,42 @@ func _find_shell_anim_player() -> AnimationPlayer:
 	return null
 
 
+## D25 THE REVEAL: fires breath_weather.force_gust() (D25's public API,
+## worlds/bramble/breath_weather.gd) via duck-typed Object.call() rather than
+## a static `as BreathWeather` cast — camera_rig.gd's own class member
+## resolution note (a node fetched at runtime and cast to an externally
+## class_name'd type fails to resolve members under --headless in Godot
+## 4.6.2) applies just the same here, so this sidesteps it the same way.
+## Fails soft if BreathWeather isn't present (dev/test scenes, older saves).
+func _trigger_breath_gust() -> void:
+	var weather: Node = _world.get_node_or_null("BreathWeather")
+	if weather != null and weather.has_method("force_gust"):
+		weather.call("force_gust")
+
+
+## D25 THE REVEAL: mountain_dressing.gd's reveal() — clouds blow away, then
+## debris falls, staggered ~2.5s. Same duck-typed call() as _trigger_breath_
+## gust() above, same reason. Idempotent (MountainDressing guards _revealed
+## itself) so it is safe to call from either the keystone or fallback path,
+## never both in the same run.
+func _trigger_dressing_reveal() -> void:
+	var dressing: Node = _world.get_node_or_null("MountainDressing")
+	if dressing != null and dressing.has_method("reveal"):
+		dressing.call("reveal")
+
+
 func _play_keystone(player: AnimationPlayer) -> void:
 	for clip: String in KEYSTONE_CLIPS:
 		if not player.has_animation(clip):
 			continue
 		player.play(clip)
 		print("ROLLOVER %s" % JSON.stringify({"phase": "keystone", "clip": clip}))
+		if clip == "wake":
+			# Timed so the debris-fall portion of reveal() lands DURING this
+			# clip, per the brief — clouds already blew away at sequence
+			# start (_trigger_breath_gust(), called right after the
+			# letterbox came in), so only the prop-fall half fires here.
+			_trigger_dressing_reveal()
 		var cap: SceneTreeTimer = get_tree().create_timer(
 			minf(player.get_animation(clip).length + 0.3, KEYSTONE_CLIP_CAP))
 		await cap.timeout

@@ -1,0 +1,14 @@
+HARNESS_FLAGS {"devcam":true,"devcam_fov":"50","devcam_look":"38,15,10","devcam_pos":"-30,25,10","outdir":"evidence/stills/m3_mountain/v1_scale_probe2","pads":"2","quitafter":"3","script":"tools/harness/scripts/bramble_scale_probe.json","shots":"150","skipmenu":true,"world":"bramble"}
+EVT {"mode":0,"mode_name":"COOP","t":1,"type":"mode_changed"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(2)
+HARNESS_NOTE script loaded: res://tools/harness/scripts/bramble_scale_probe.json (2 events) - D25 dev-only scale probe: Pip teleports to the candidate ascent-base point (west flank, ground level) and Otto teleports to the candidate summit point (near the head sphere top) so a devcam still shows both known-height (0.9m/0.8m) markers against the bear at once. Not a shipped property test.
+EVT {"seat":1,"t":9,"type":"landed"}
+EVT {"seat":2,"t":11,"type":"landed"}
+HARNESS_TELEPORT {"pos":[20.0,0.5,6.0],"seat":1}
+HARNESS_EVENT {"action":"teleport","frame":30,"pos":[20.0,0.5,6.0],"seat":1}
+HARNESS_TELEPORT {"pos":[41.5,29.5,10.0],"seat":2}
+HARNESS_EVENT {"action":"teleport","frame":30,"pos":[41.5,29.5,10.0],"seat":2}
+EVT {"seat":2,"t":68,"type":"landed"}
+EVT {"seat":1,"t":74,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_mountain/v1_scale_probe2/shot_150.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 3.0s)

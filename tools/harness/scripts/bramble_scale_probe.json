@@ -1,0 +1,7 @@
+{
+  "description": "D25 dev-only scale probe: Pip teleports to the candidate ascent-base point (west flank, ground level) and Otto teleports to the candidate summit point (near the head sphere top) so a devcam still shows both known-height (0.9m/0.8m) markers against the bear at once. Not a shipped property test.",
+  "events": [
+    {"frame": 30, "seat": 1, "action": "teleport", "pos": [20.0, 0.5, 6.0]},
+    {"frame": 30, "seat": 2, "action": "teleport", "pos": [41.5, 29.5, 10.0]}
+  ]
+}

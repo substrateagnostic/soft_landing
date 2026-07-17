@@ -1,0 +1,13 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/m3_hub","pads":"1","quitafter":"9","script":"tools/harness/scripts/fort_population.json","shots":"40,150,270,340","skipmenu":true,"world":"pillow_fort"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(1)
+HARNESS_NOTE script loaded: res://tools/harness/scripts/fort_population.json (3 events) - HUB POPULATION property (pillow_fort start, --pads=1, SOLO). Assumes a save.json pre-seeded with returned dreams across bramble (d01,d02,d03), marmalade (d01), and wisp (d01,d02) -- see docs/verify/hub-population-VERIFY.md for the exact seed JSON, and Gotcha #10 (backup/clear/restore user://save.json around this run; NEVER run against a real player's save). On boot, PillowFort._build_fort_residents() should print six FORT_RESIDENT_SPAWNED receipts (3 bramble-tagged near the umber BrambleDoor, 1 marmalade-tagged near the orange door, 2 wisp-tagged near the silver door). Pip then walks west along the fort's north flank and south past both clusters; expected RESIDENT {"event":"greet","id":...} receipts for wisp's d01, wisp's d02, bramble's d02, and bramble's d03 as Pip passes within GREET_RADIUS (3m) of each (verified: docs/verify/hub-population-VERIFY.md). A DIFFERENT, real teleport+collect+return round trip through bramble's own d01/d02 + ear DreamDoor (the pattern gate2_return.json/save_corruption_collect.json already prove) is the documented alternative once worlds/bramble/bramble.gd's current concurrent-edit blocker (an orphaned `super._ready()` left as dead code inside `_dressing_cone()`, confirmed by WORLD_READY never printing for bramble on this session's boots) is fixed by that file's owner -- not this pass's territory to touch.
+EVT {"seat":1,"t":2,"type":"landed"}
+EVT {"seat":2,"t":2,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_hub/shot_40.png
+HARNESS_EVENT {"action":"move","frame":60,"seat":1,"vec":[-1.0,0.0]}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_hub/shot_150.png
+HARNESS_EVENT {"action":"move","frame":160,"seat":1,"vec":[0.0,-1.0]}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_hub/shot_270.png
+HARNESS_EVENT {"action":"move","frame":280,"seat":1,"vec":[0.0,0.0]}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_hub/shot_340.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 9.0s)

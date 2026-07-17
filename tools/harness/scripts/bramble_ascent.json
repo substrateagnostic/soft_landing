@@ -1,0 +1,23 @@
+{
+  "description": "D25 ascent property (worlds/bramble/bramble.gd _build_ascent()). PHASE 1 (un-teleported, from the real spawn, --pads=2): Pip idles 3s (camera settles to MeadowApproachHint, yaw=-90/faces +X), strafes pure-right (+Z, camera-relative) ~6s to clear the old haunch/chest/shoulder mound chain (parks at z~24, outside all three mounds' z:-16..16 footprint band), walks pure-forward (+X) ~19s across the AscentApproachHint bridge to reach ASCENT_BASE (18,0,22), then climbs Seg0 (BASE->L1) entirely under camera-relative pure-forward input (AscentHint1, yaw -135) -- no teleport anywhere in this phase. Expected: a continuous PLAYER_POS climb in seat 1's y from ~0 toward ~6 as x/z approach L1 (28,6,32) -- 'at least the first switchback reachable unassisted.' PHASE 2 (teleport-assisted, explicitly sanctioned by the brief for the per-ramp proof): teleports onto each waypoint in turn (L1, L2, L3, L4, SUMMIT) -- each teleport landing and HOLDING its position (no fall) proves that waypoint's ledge is solid ground -- and after the L1 and L2 landings walks a short pure-forward burst under that segment's own AscentHint to demonstrate the climb actually begins (y rising) before the next teleport. Ends at ASCENT_SUMMIT (44,32,14), inside the DreamDoor's trigger box (3.6x4.6x3.6). UNVERIFIED (see docs/verify/mountain-m3-VERIFY.md): a SUSTAINED camera-relative walk across a segment's FULL run length is reliable for Seg0 (proven, Phase 1) but got progressively less reliable for the later, steeper switchbacks during iteration -- CameraRig's yaw (core/**, out of this file's territory) didn't hold a clean diagonal long enough to complete a multi-second walk without drifting/reversing on at least one segment tested live. Flagged honestly rather than papered over; every waypoint's ground and every ramp's INITIAL climb direction are still proven here.",
+  "events": [
+    {"frame": 180, "seat": 1, "action": "move", "vec": [1.0, 0.0]},
+    {"frame": 540, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 1680, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+
+    {"frame": 1860, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 2400, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+
+    {"frame": 2500, "seat": 1, "action": "teleport", "pos": [28.0, 6.5, 32.0]},
+    {"frame": 2740, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 2830, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+
+    {"frame": 2930, "seat": 1, "action": "teleport", "pos": [36.0, 13.5, 36.0]},
+    {"frame": 3170, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 3260, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+
+    {"frame": 3360, "seat": 1, "action": "teleport", "pos": [42.0, 20.5, 30.5]},
+    {"frame": 3600, "seat": 1, "action": "teleport", "pos": [46.0, 27.5, 20.0]},
+    {"frame": 3840, "seat": 1, "action": "teleport", "pos": [44.0, 32.5, 14.0]}
+  ]
+}

@@ -1,12 +1,20 @@
 class_name Bramble
 extends WorldBase
 ## Bramble — the first world (PITCH.md, GAME_BRIEF.md): a bear the size of
-## a hill, asleep in a dusk meadow. Body runs along +X from the meadow-edge
-## spawn: haunch mound -> breathing chest plateau -> shoulder -> head, with
-## the EAR (the DreamDoor) on top at the far end. Two snore geysers near the
-## snout, two foreleg paw ramps flanking the chest, ten dreamlings placed
-## per the D12 dense-cadence rule (see docs/verify/worlds-VERIFY.md for the
-## full d01-d10 route table). Grey-box: primitive meshes, flat
+## a hill, asleep in a dusk meadow. D25 ("THE MOUNTAIN IS THE BEAR",
+## docs/DECISIONS.md): a rescaled (~42m) rigged bear now sits sunk/half-
+## buried as the world's central-east massif (see _build_bear_shell()), an
+## authored switchback path (_build_ascent()) climbs his back to a summit
+## platform at his ear/DreamDoor (_build_ear_and_door()), and
+## worlds/bramble/mountain_dressing.gd dresses him as terrain. The ORIGINAL
+## haunch -> chest -> shoulder -> head mound chain along +X is left in place
+## unmoved (seven of the ten dreamlings pin to those exact coordinates — see
+## _build_dreamlings()) and now reads as a string of low foothills at the
+## massif's western base. Two snore geysers near the old head anchor, two
+## foreleg paw ramps flanking the chest, ten dreamlings placed per the D12
+## dense-cadence rule (see docs/verify/worlds-VERIFY.md for the original
+## d01-d10 route table and docs/verify/mountain-m3-VERIFY.md for the D25
+## relocation of d04/d06/d10). Grey-box: primitive meshes, flat
 ## StandardMaterial3D colors from ART_BIBLE.md only.
 
 const DREAMLING_SCENE: PackedScene = preload("res://worlds/common/dreamling.tscn")
@@ -128,8 +136,10 @@ func _ready() -> void:
 	_build_haunch()
 	_build_chest()
 	_build_shoulder()
-	_build_head()
-	_build_ear_and_door()
+	# _build_head() retired (D25): the old grey-box Head sphere is gone —
+	# the rigged massif (_build_bear_shell()) IS the head/ear now. Its
+	# math survives read-only in GEYSER_ANCHOR_*'s _sphere_surface_y() call
+	# below (d07 pinned to the old formula, not to the mound rendering it).
 	_build_geysers()
 	_build_paw_ramps()
 	_build_fur_patches()
@@ -139,24 +149,70 @@ func _ready() -> void:
 	_build_ambient_lighting()
 	_build_grass_fields()
 	_build_bear_shell() # before _build_rollover: the sequence looks it up
+	_build_ascent()
+	_build_ear_and_door() # D25: now builds at the summit platform, not the old head mound
 	_build_breath_weather()
 	_build_rollover()
 	_build_dreamkeepers()
 	_build_dressing()
+	_build_mountain_dressing()
+	_build_dev_camera()
+	# BUG FIX (found live during D25 work, not a D25 change itself): this call
+	# had gone missing from _ready() proper -- stranded as dead code after a
+	# `return` inside _dressing_cone() instead (removed there). Without it,
+	# WorldBase._ready() (dreamling wiring, DreamDoor.returned connection,
+	# mission attachment, critters, the WORLD_READY receipt) never ran for
+	# Bramble at all -- world completion only ever worked via the forced
+	# --rollover dev flag, never via natural 10/10 play. wisp.gd/
+	# pillow_fort.gd both already call this as the last line of their own
+	# _ready() (confirmed by grep) -- this restores the same contract here.
+	super._ready()
 
 
-# --- The readable bear (producer note: the roll-over must READ) --------------
-# A bear-proportioned mesh can never drape the 111m x 12m mound chain
-# (9:1 — the mounds were never bear-shaped). V1: the visible, keystone-
-# performing bear sleeps beside the ear door at the level's east end; the
-# mounds remain his blanketed bulk. Full terrain-rebuild-around-him is an
-# M3 card. Rigged scene preferred (keystone clips); static GLB fallback.
-
-const BEAR_SHELL_POSITION: Vector3 = Vector3(44.0, 0.0, 27.0) # toss-turn envelope stays on the meadow
-const BEAR_SHELL_HEIGHT: float = 13.0 # static-fallback lying height
-const BEAR_SHELL_RIG_STANDING_HEIGHT: float = 28.0 # rig is T-pose; sleep clip lies him down
-const BEAR_SHELL_YAW_DEGREES: float = 0.0 # tuned by still
+# --- D25 THE MOUNTAIN IS THE BEAR (docs/DECISIONS.md D25) --------------------
+# The rig is not lying flat: the "sleep" clip is a hunched, curled-forward
+# SIT (rump down, head bowed low between raised knees/paws — confirmed by
+# still, evidence/stills/m3_mountain/baseline*), which reads as a rounded
+# hill on its own even before dressing. Central-east placement, sunk so the
+# haunches/legs vanish below the meadow plane and only mid-torso-up shows
+# (half-buried). At BEAR_SHELL_YAW_DEGREES=90 his local forward (+Z, verified
+# by still — camera south of him at yaw 0 saw his face) points +X, so his
+# BACK faces -X/west, toward the spawn approach: arriving players see his
+# back rising up first and climb it, per the brief's "authored ascent."
+# The old haunch/chest/shoulder/paw-ramp/fur-patch mound chain is UNTOUCHED
+# (d01/d02/d03/d05/d07/d08/d09 pin to those exact coordinates — see
+# _build_dreamlings()); they now read as low foothills scattered at his
+# western flank/base rather than "the bear" themselves. The old Head mound +
+# ear bump are retired (see _build_ear_and_door() below — replaced by the
+# summit anchor on the new rig); GEYSER_ANCHOR_* still derives its Y from the
+# old HEAD_CENTER/HEAD_RADIUS sphere math on purpose (d07 pinned) even though
+# that sphere is no longer rendered.
+const BEAR_SHELL_POSITION: Vector3 = Vector3(38.0, -5.0, 10.0) # sunk ~5m: half-buried
+const BEAR_SHELL_HEIGHT: float = 19.0 # static-fallback sitting height (x1.5 of old 13.0 lying fallback)
+const BEAR_SHELL_RIG_STANDING_HEIGHT: float = 42.0 # rig is T-pose; sleep clip curls him into the massif (+50% per D25)
+const BEAR_SHELL_YAW_DEGREES: float = 90.0 # back to spawn/west — see header note above; tuned by still
 const BEAR_SHELL_RIG_SCENE: String = "res://scenes/players/rigs/bramble_bear_rig_rig.tscn"
+
+# Collision-blocker stack approximating the curled sit (torso capsule + head
+# sphere — his head reads as the single largest mass in the pose, per still)
+# in BearShellAnchor-local space, i.e. before the anchor's own sink/yaw.
+# Not mesh-hugging (no primitive in this codebase is, see haunch/shoulder/
+# head sphere mounds elsewhere in this file) — generous enough that a child
+# can never clip into the visual mesh; the ascent ramps (_build_ascent())
+# carry the actual walkable surface on top of/around this blocker.
+const BEAR_TORSO_CAPSULE_RADIUS: float = 13.0
+const BEAR_TORSO_CAPSULE_HEIGHT: float = 30.0
+const BEAR_TORSO_CAPSULE_LOCAL_Y: float = 10.0
+const BEAR_HEAD_SPHERE_RADIUS: float = 12.0
+const BEAR_HEAD_SPHERE_LOCAL: Vector3 = Vector3(0.0, 25.0, 4.0) # forward-and-up: the bowed head
+# World-space read of the head sphere (anchor + local, yaw=90 maps local +Z to
+# world +X — see header note): used by _build_ascent()/_build_mountain_dressing()
+# to anchor the summit without re-deriving the rotation each time.
+const BEAR_HEAD_WORLD_CENTER: Vector3 = Vector3(
+	BEAR_SHELL_POSITION.x + BEAR_HEAD_SPHERE_LOCAL.z,
+	BEAR_SHELL_POSITION.y + BEAR_HEAD_SPHERE_LOCAL.y,
+	BEAR_SHELL_POSITION.z + BEAR_HEAD_SPHERE_LOCAL.x
+)
 
 
 func _build_bear_shell() -> void:
@@ -166,19 +222,29 @@ func _build_bear_shell() -> void:
 	anchor.rotation_degrees.y = BEAR_SHELL_YAW_DEGREES
 	add_child(anchor)
 
-	# Soft collision so nobody walks inside him (visual mesh has none).
+	# Soft collision so nobody clips into him (visual mesh has none of its
+	# own) — a torso capsule plus a head sphere, not one long lying capsule
+	# (D25: he sits/curls, he does not lie flat — see header note).
 	var body := StaticBody3D.new()
 	body.name = "BearShellBody"
 	body.collision_layer = 1
 	body.collision_mask = 0
-	var shape := CollisionShape3D.new()
-	var capsule := CapsuleShape3D.new()
-	capsule.radius = 7.0
-	capsule.height = 22.0
-	shape.shape = capsule
-	shape.rotation_degrees = Vector3(90.0, 90.0, 0.0) # lying along X
-	shape.position = Vector3(0.0, 5.0, 0.0)
-	body.add_child(shape)
+
+	var torso_shape := CollisionShape3D.new()
+	var torso_capsule := CapsuleShape3D.new()
+	torso_capsule.radius = BEAR_TORSO_CAPSULE_RADIUS
+	torso_capsule.height = BEAR_TORSO_CAPSULE_HEIGHT
+	torso_shape.shape = torso_capsule
+	torso_shape.position = Vector3(0.0, BEAR_TORSO_CAPSULE_LOCAL_Y, 0.0)
+	body.add_child(torso_shape)
+
+	var head_shape := CollisionShape3D.new()
+	var head_sphere := SphereShape3D.new()
+	head_sphere.radius = BEAR_HEAD_SPHERE_RADIUS
+	head_shape.shape = head_sphere
+	head_shape.position = BEAR_HEAD_SPHERE_LOCAL
+	body.add_child(head_shape)
+
 	anchor.add_child(body)
 
 	# Rigged giant preferred (keystone clips); static GLB shell fallback.
@@ -224,6 +290,168 @@ func _find_first_mesh(node: Node) -> MeshInstance3D:
 		if found != null:
 			return found
 	return null
+
+
+# --- D25 ascent: authored switchback path up his back to the summit --------
+# Waypoints are world-space; each ramp is a straight PrismMesh slope (same
+# primitive _add_paw_ramp already uses) between two waypoints, with a flat
+# landing ledge at every turn, ending in a summit platform the DreamDoor sits
+# on (_build_ear_and_door()). Placed against the sunk/rescaled
+# BearShellAnchor by still (evidence/stills/m3_mountain/v1_*) — not
+# mesh-hugging (nothing in this file mesh-hugs an organic surface; see the
+# haunch/shoulder sphere mounds), generous enough that the small gap between
+# a ledge and his visual fur reads as "resting against him," not "floating
+# in open air." d04/d06/d10 ride this path (_build_dreamlings());
+# d01/d02/d03/d05/d07/d08/d09 are untouched (D25 brief: pinned coordinates).
+# v2 (still-corrected, evidence/stills/m3_mountain/v2_ascent_*): v1's
+# waypoints swept east far enough (x up to 58) to visually cross his FACE
+# (he faces +X — see BEAR_SHELL_YAW_DEGREES note) instead of climbing his
+# back/south flank as intended — caught live in v2_ascent_east/shot_150.png,
+# ramps clearly cutting across his snout. v2 keeps Z generously south
+# (>=14 throughout, clear of the Shoulder mound's z:-14..14 band at the
+# base) and caps X well short of the head's forward reach, ending the
+# summit beside/atop his head's south side rather than in front of it.
+const ASCENT_BASE: Vector3 = Vector3(18.0, 0.0, 22.0) # meadow trailhead, clear of the Shoulder mound footprint
+const ASCENT_L1: Vector3 = Vector3(28.0, 6.0, 32.0)
+const ASCENT_L2: Vector3 = Vector3(36.0, 13.0, 36.0)
+const ASCENT_L3: Vector3 = Vector3(42.0, 20.0, 30.0)
+const ASCENT_L4: Vector3 = Vector3(46.0, 27.0, 20.0)
+const ASCENT_SUMMIT: Vector3 = Vector3(44.0, 32.0, 14.0) # platform TOP surface; door rests on it
+
+# v3 (evidence/_scratch/ascent_run2): 4.5m was too narrow for a camera-
+# relative un-teleported walk to reliably land on — a still-blending camera
+# yaw (or the leash fallback) drifts the diagonal a few meters over a run
+# this long, and a narrow ramp gets missed entirely (walked past on the flat
+# meadow beside it). 9.0m keeps well past the brief's 3m floor while giving
+# real tolerance for that drift.
+const ASCENT_RAMP_WIDTH: float = 9.0
+# v4 (evidence/_scratch/ascent_run4): widening these to match the ramp
+# (9x9) backfired — a ledge box centered ON the waypoint extends back far
+# enough along the ramp's own rise to poke its underside (y=top-thickness)
+# BELOW the ramp's still-climbing surface a couple meters before the ramp
+# actually reaches that height, trapping a walking player against it as a
+# low ceiling. Kept modest instead; the ramp's own width (9m) is what
+# needed the margin, not the landing.
+const ASCENT_LEDGE_SIZE: Vector2 = Vector2(8.0, 8.0)
+const ASCENT_LEDGE_THICKNESS: float = 2.5
+const ASCENT_SUMMIT_SIZE: Vector2 = Vector2(9.0, 9.0)
+const COLOR_PATH_DIRT: Color = Color("8C6F52") # warm dirt-path tint, distinct from COLOR_FUR_DARK
+
+# Per-segment CameraHint yaw (degrees; same convention as _build_camera_hints:
+# 0=-Z forward, -90=+X, +90=-X), one per ramp segment below, computed from
+# that segment's own direction of travel so the auto-camera looks up-slope
+# while a player climbs it (the "on-rails-ish" framing, D25/D18).
+const ASCENT_HINT_YAWS: Array[float] = [-135.0, -117.0, -45.0, -22.0, 18.0]
+
+
+func _build_ascent() -> void:
+	# Bridges a real gap between the two pre-existing hints (MeadowApproach-
+	# Hint: x<0 any z; ClimbHint: |z|<20 any x within its box) and the new
+	# ASCENT_BASE trailhead at z=22 -- caught live running bramble_ascent.
+	# json (--poslog): with no hint covering x:0..20,z~22, CameraRig falls
+	# back to its velocity leash, whose heading formula (camera_rig.gd,
+	# core/**, out of this file's territory) yawed the camera to face BACK
+	# the way the player came, producing a walk-into-reverse oscillation
+	# instead of a straight climb toward the trailhead. Same yaw (-90, +X)
+	# as its neighbors, so ties where boxes overlap are harmless.
+	_add_camera_hint("AscentApproachHint", Vector3(5.0, 7.5, 22.0), Vector3(40.0, 15.0, 16.0), -90.0, 1, 0.9)
+
+	var waypoints: Array[Vector3] = [ASCENT_BASE, ASCENT_L1, ASCENT_L2, ASCENT_L3, ASCENT_L4, ASCENT_SUMMIT]
+	for i: int in range(waypoints.size() - 1):
+		_add_ascent_ramp("AscentRamp%d" % (i + 1), waypoints[i], waypoints[i + 1])
+		var mid: Vector3 = (waypoints[i] + waypoints[i + 1]) * 0.5
+		var span: Vector3 = (waypoints[i + 1] - waypoints[i]).abs()
+		# v6 (evidence/_scratch/ascent_run5): a walking player veered off
+		# past L1 instead of settling on it — root cause wasn't the ramp/
+		# ledge seam (thickening the ledge, v5, made no difference); it was
+		# THIS hint's box overlapping AscentHint2's box with the SAME
+		# priority, so CameraRig._find_active_hint ties between them near
+		# every segment boundary and the yaw can land on whichever the
+		# physics query returns first — neither -135 nor a clean -117, some
+		# unstable blend of both. Two changes: tighter padding (span+6, not
+		# +12) shrinks the overlap; a strictly increasing priority per
+		# segment (2,3,4,5,6) makes every tie resolve toward the segment
+		# the player has actually progressed into, not an arbitrary pick.
+		_add_camera_hint("AscentHint%d" % (i + 1), mid + Vector3(0.0, 3.0, 0.0),
+			Vector3(span.x + 6.0, 12.0, span.z + 6.0), ASCENT_HINT_YAWS[i], 2 + i, 0.9)
+	for i: int in range(1, waypoints.size() - 1):
+		_add_ascent_ledge("AscentLedge%d" % i, waypoints[i], ASCENT_LEDGE_SIZE)
+	_add_ascent_ledge("SummitPlatform", ASCENT_SUMMIT, ASCENT_SUMMIT_SIZE)
+	_add_camera_hint("SummitHint", ASCENT_SUMMIT + Vector3(0.0, 4.0, 0.0), Vector3(16.0, 12.0, 16.0), 180.0, 8, 0.9)
+
+
+## Straight sloped ramp between two waypoints (differing only in height —
+## every ASCENT_* pair here climbs). Rotation derived from the segment's own
+## horizontal direction: PrismMesh's local +X (the "ridge rises this way"
+## axis _add_paw_ramp already uses, left_to_right=1.0) maps to world
+## (cos(yaw), 0, -sin(yaw)) under a plain Y-rotation, so yaw =
+## atan2(-delta.z, delta.x) points local +X at the target — confirmed
+## against _add_paw_ramp's own zero-rotation case (delta=(RUN,0), yaw=0).
+func _add_ascent_ramp(ramp_name: String, from_point: Vector3, to_point: Vector3) -> void:
+	var delta: Vector3 = to_point - from_point
+	var run: float = Vector2(delta.x, delta.z).length()
+	var rise: float = delta.y
+	var yaw: float = atan2(-delta.z, delta.x)
+
+	var mesh := PrismMesh.new()
+	mesh.size = Vector3(run, absf(rise), ASCENT_RAMP_WIDTH)
+	mesh.left_to_right = 1.0 if rise >= 0.0 else 0.0
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = COLOR_PATH_DIRT
+	mesh.material = mat
+
+	var center: Vector3 = (from_point + to_point) * 0.5
+	center.y = minf(from_point.y, to_point.y) + absf(rise) * 0.5
+
+	var visual := MeshInstance3D.new()
+	visual.name = ramp_name
+	visual.mesh = mesh
+	visual.position = center
+	visual.rotation.y = yaw
+	add_child(visual)
+
+	var body := StaticBody3D.new()
+	body.name = ramp_name + "Body"
+	body.collision_layer = 1
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	shape.shape = mesh.create_trimesh_shape()
+	shape.position = center
+	shape.rotation.y = yaw
+	body.add_child(shape)
+	add_child(body)
+
+
+## Flat landing ledge whose TOP surface sits exactly at top_point.y — matches
+## _add_ground_slab's own top_y/thickness convention so a dreamling or the
+## summit door can anchor directly to the waypoint constant with no extra
+## surface-height lookup.
+func _add_ascent_ledge(ledge_name: String, top_point: Vector3, size: Vector2) -> void:
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(size.x, ASCENT_LEDGE_THICKNESS, size.y)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = COLOR_PATH_DIRT
+	mesh.material = mat
+
+	var center: Vector3 = Vector3(top_point.x, top_point.y - ASCENT_LEDGE_THICKNESS * 0.5, top_point.z)
+
+	var visual := MeshInstance3D.new()
+	visual.name = ledge_name
+	visual.mesh = mesh
+	visual.position = center
+	add_child(visual)
+
+	var body := StaticBody3D.new()
+	body.name = ledge_name + "Body"
+	body.collision_layer = 1
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var box_shape := BoxShape3D.new()
+	box_shape.size = mesh.size
+	shape.shape = box_shape
+	shape.position = center
+	body.add_child(shape)
+	add_child(body)
 
 
 # --- Dreamkeepers (M2, director wire-up of the dormant data file) ------------
@@ -361,7 +589,25 @@ func _dressing_cone(radius: float, height: float, color: Color) -> Mesh:
 	mat.albedo_color = color
 	mesh.material = mat
 	return mesh
-	super._ready()
+
+
+## D25: the terrain-disguise registry (worlds/bramble/mountain_dressing.gd) —
+## stones/pines/snow-caps/cloud-ring dressing the massif + ascent path, with
+## the reveal() API the finale calls (rollover_sequence.gd, timed to the
+## "wake" keystone clip).
+const MOUNTAIN_CLOUD_RING_HEIGHT: float = 20.0 # world y — "at his shoulders" per D25
+
+
+func _build_mountain_dressing() -> void:
+	var dressing := MountainDressing.new()
+	dressing.name = "MountainDressing"
+	var cloud_center: Vector3 = Vector3(BEAR_SHELL_POSITION.x, MOUNTAIN_CLOUD_RING_HEIGHT, BEAR_SHELL_POSITION.z)
+	var waypoints: Array[Vector3] = [ASCENT_BASE, ASCENT_L1, ASCENT_L2, ASCENT_L3, ASCENT_L4, ASCENT_SUMMIT]
+	# setup() BEFORE add_child() — established ordering rule in this file
+	# (see _build_rollover()'s own comment: entering the tree fires _ready()
+	# synchronously, so a reversed order runs _ready() before setup() lands).
+	dressing.setup(world_id(), cloud_center, waypoints)
+	add_child(dressing)
 
 
 ## Warm practical fill at the fireflies area (recipe: "warm fill lights at
@@ -434,6 +680,32 @@ func _build_rollover() -> void:
 	# rollover_sequence.gd's _ready(), see bramble-setpieces-VERIFY.md).
 	rollover.setup(self, get_node("Haunch") as MeshInstance3D, get_node("HaunchBody") as StaticBody3D)
 	add_child(rollover)
+
+
+# --- D25 layout-iteration tool: a static free camera for framing stills while
+# placing the massif/ascent/dressing blind (no editor, headless CLI only).
+# Inert unless --devcam is passed; never affects normal play. Reads
+# --devcam_pos=x,y,z / --devcam_look=x,y,z (comma floats) so a still can be
+# re-aimed per capture without a code edit each time.
+func _build_dev_camera() -> void:
+	var devcam_flag: Variant = Harness.flag("devcam", false)
+	if devcam_flag == false or devcam_flag == null:
+		return
+	var cam := Camera3D.new()
+	cam.name = "DevCam"
+	add_child(cam)
+	cam.position = _parse_vec3(str(Harness.flag("devcam_pos", "")), Vector3(20.0, 45.0, 95.0))
+	cam.look_at(_parse_vec3(str(Harness.flag("devcam_look", "")), Vector3(20.0, 10.0, 0.0)), Vector3.UP)
+	cam.fov = float(str(Harness.flag("devcam_fov", "60")))
+	cam.current = true
+	print("DEVCAM %s" % JSON.stringify({"pos": [cam.position.x, cam.position.y, cam.position.z]}))
+
+
+func _parse_vec3(s: String, fallback: Vector3) -> Vector3:
+	var parts: PackedStringArray = s.split(",")
+	if parts.size() < 3:
+		return fallback
+	return Vector3(float(parts[0]), float(parts[1]), float(parts[2]))
 
 
 func world_id() -> String:
@@ -620,42 +892,16 @@ func _build_shelf() -> void:
 	add_child(body)
 
 
-func _build_head() -> void:
-	_add_mound("Head", HEAD_CENTER, HEAD_RADIUS, COLOR_FUR)
-
-
+## D25: the ear/DreamDoor moved from the old grey-box head mound to the
+## summit of the new rigged massif (ASCENT_SUMMIT, the top of the authored
+## ascent — see _build_ascent()). The SummitPlatform ledge it built already
+## reads as the "ear hollow" landing; no separate bump sphere needed here
+## the way the old flat mound-top did. Function name kept (D26 minimal-diff
+## convention — same door, same "ear" fiction, new coordinates).
 func _build_ear_and_door() -> void:
-	var anchor_y: float = _sphere_surface_y(HEAD_CENTER, HEAD_RADIUS, EAR_ANCHOR_X, EAR_ANCHOR_Z)
-	var ear_top: Vector3 = Vector3(EAR_ANCHOR_X, anchor_y + EAR_BUMP_HEIGHT, EAR_ANCHOR_Z)
-
-	var mesh := SphereMesh.new()
-	mesh.radius = EAR_BUMP_RADIUS
-	mesh.height = EAR_BUMP_RADIUS * 2.0
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = COLOR_FUR_DARK
-	mesh.material = mat
-
-	var visual := MeshInstance3D.new()
-	visual.name = "Ear"
-	visual.mesh = mesh
-	visual.position = ear_top
-	add_child(visual)
-
-	var body := StaticBody3D.new()
-	body.name = "EarBody"
-	body.collision_layer = 1
-	body.collision_mask = 0
-	var shape := CollisionShape3D.new()
-	var sphere_shape := SphereShape3D.new()
-	sphere_shape.radius = EAR_BUMP_RADIUS
-	shape.shape = sphere_shape
-	shape.position = ear_top
-	body.add_child(shape)
-	add_child(body)
-
 	var door: DreamDoor = DREAM_DOOR_SCENE.instantiate() as DreamDoor
 	door.name = "DreamDoor"
-	door.position = ear_top
+	door.position = ASCENT_SUMMIT
 	add_child(door)
 
 
@@ -734,6 +980,14 @@ func _add_fur_patch(center: Vector3) -> void:
 		add_child(blade)
 
 
+## D25: d04/d06/d10 relocated onto the new ascent path (see ASCENT_* in
+## _build_ascent() above) — d04 off the retired -Z paw ramp, d06 off the
+## chest (the chest itself stays put as a foothill trampoline; see
+## _build_chest()'s own comment), d10 off the old ear bump to the new
+## summit, "near the door" exactly as before (same offset-from-door
+## convention, new coordinates). d01/d02/d03/d05/d07/d08/d09 are BYTE-FOR-
+## BYTE unchanged from pre-D25 — existing harness scripts (finale_home.json,
+## mission_*.json) pin to these exact coordinates.
 func _build_dreamlings() -> void:
 	var positions: Dictionary = {
 		"d01": Vector3(-48.0, 0.55, 3.0), # meadow approach, near spawn
@@ -741,33 +995,30 @@ func _build_dreamlings() -> void:
 		# original (-40, -6) sat INSIDE the hill — buried and unreachable.
 		"d02": Vector3(-42.0, 0.55, -14.0), # meadow approach, south side
 		"d03": Vector3(3.0, 2.7, PAW_Z_OFFSET), # on the +Z paw ramp
-		"d04": Vector3(3.0, 2.7, -PAW_Z_OFFSET), # on the -Z paw ramp
 		"d05": Vector3(HAUNCH_CENTER.x, HAUNCH_CENTER.y + HAUNCH_RADIUS + 0.3, 0.0), # haunch peak, first plateau
 		"d08": Vector3(SHELF_ANCHOR_X, 0.0, SHELF_ANCHOR_Z), # y filled in below, on the shoulder shelf
 		"d09": Vector3(FUR_PATCH_HAUNCH_X, 0.0, FUR_PATCH_HAUNCH_Z), # y filled in below, hidden in fur
-		# P3 fix (docs/verify/properties-VERIFY.md): was EAR_ANCHOR_Z - 1.5,
-		# which sat 1.50 m from the ear-bump sphere's center -- inside its
-		# 1.8 m radius, i.e. embedded. -2.3 clears the bump (radius 1.8 +
-		# dreamling clearance 0.35 = 2.15 m required, 2.30 m actual) while
-		# staying close enough to read as "in the ear hollow" beside the
-		# DreamDoor, y still anchored on the bump surface below.
-		"d10": Vector3(EAR_ANCHOR_X, 0.0, EAR_ANCHOR_Z - 2.3),
 	}
 	positions["d08"].y = _sphere_surface_y(SHOULDER_CENTER, SHOULDER_RADIUS, SHELF_ANCHOR_X, SHELF_ANCHOR_Z) + SHELF_HEIGHT_ABOVE_ANCHOR + 0.6
 	positions["d09"].y = _sphere_surface_y(HAUNCH_CENTER, HAUNCH_RADIUS, FUR_PATCH_HAUNCH_X, FUR_PATCH_HAUNCH_Z) + 0.35
-	positions["d10"].y = _sphere_surface_y(HEAD_CENTER, HEAD_RADIUS, EAR_ANCHOR_X, EAR_ANCHOR_Z) + EAR_BUMP_HEIGHT
 
 	for id: String in positions.keys():
 		_add_dreamling(id, positions[id], self)
-
-	# d06 rides the chest: parented to it, so it moves with the breath.
-	var chest_top_local: Vector3 = Vector3(0.0, CHEST_THICKNESS * 0.5 + 0.3, 0.0)
-	_add_dreamling("d06", chest_top_local, _chest)
 
 	# d07 rides the +Z snore geyser: parented to the column (the marmalade
 	# thermal exemption pattern) so the placement property understands it —
 	# a dreamling atop an updraft has no ground beneath by design.
 	_add_dreamling("d07", Vector3(0.0, GEYSER_HEIGHT - 0.3, 0.0), _geyser_a)
+
+	# --- D25 ascent relocations (on the path, per the brief) -----------------
+	# Ledge2, off-center from the AscentLedge2 slab's middle so it doesn't sit
+	# exactly on a player's natural walk-through line.
+	_add_dreamling("d04", ASCENT_L2 + Vector3(0.0, 0.55, -1.5), self)
+	# Ledge4, near the top of the climb.
+	_add_dreamling("d06", ASCENT_L4 + Vector3(0.0, 0.55, 1.5), self)
+	# Beside the summit door — same "offset from the door" convention the old
+	# ear placement used (2.3 m clears the door's own trigger radius).
+	_add_dreamling("d10", ASCENT_SUMMIT + Vector3(2.3, 0.55, 0.0), self)
 
 
 func _add_dreamling(id: String, local_position: Vector3, parent: Node3D) -> void:

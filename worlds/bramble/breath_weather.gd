@@ -152,6 +152,26 @@ func _physics_process(delta: float) -> void:
 		_lift_bodies(delta)
 
 
+## force_gust — D25 finale reveal (rollover_sequence.gd): fires one exhale
+## (lift/particles/light/audio) on demand, WITHOUT touching _time/
+## cycle_period — the ambient cycle keeps ticking underneath exactly as
+## before, so this never corrupts it (per the D25 brief's explicit
+## requirement). _set_active(true)/(false) is idempotent either way: the
+## regular _physics_process cycle may also call _set_active around this
+## forced beat (harmless overlap — the world is mid-finale, not mid-
+## playtest, by the time this ever fires; no player is present to notice a
+## redundant light-tween restart).
+func force_gust() -> void:
+	print("BREATH %s" % JSON.stringify({"phase": "force_gust"}))
+	if not _active:
+		_set_active(true)
+	var timer: SceneTreeTimer = get_tree().create_timer(exhale_duration)
+	timer.timeout.connect(func() -> void:
+		if _active:
+			_set_active(false)
+	)
+
+
 func _set_active(is_active: bool) -> void:
 	_active = is_active
 	_visual.visible = is_active
