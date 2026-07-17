@@ -129,6 +129,13 @@ skill-gated; auto-camera default (nudge allowed, D18); blob shadow +
 landing ring always-on; TTS accessibility layer for objectives; no
 variable-ratio reward mechanics, ever (no gacha for children).
 
+## Budget frame (producer, 2026-07-16 late)
+
+~60% of the 20x Fable limit is allocated to this project through 07-19
+(~15% spent so far; 10% reserved for other projects). Translation: keep
+tonight's full pace EVERY remaining day — multiple waves/day, agents
+liberally, D26 sync each wave. Producer's words: "No sweat. Just fun."
+
 ## Next actions (M3, in order)
 
 1. **D25 build** (agents may already be running — check `git log` and
@@ -138,6 +145,17 @@ variable-ratio reward mechanics, ever (no gacha for children).
    dressing group (path/rocks/pines/snow/cloud ring using existing +
    maybe new Meshy props), reveal sequence v2 (gust → clouds off →
    debris falls → sit-up keystone), persistence of revealed state.
+1b. **Bear-path JOY PASS** (producer: "have fun with the bear path") —
+   after the structural ascent lands, a dedicated wave adds playful beats
+   up the climb. Candidate list (producer may veto/add): the HEARTBEAT
+   CROSSING (a stretch where the ground thumps softly underfoot — bass
+   pulse + faint camera breath — foreshadowing); fur-grass patches that
+   ripple as you wade; a snore-geyser shortcut ride; a telegraphed,
+   gentle ear-twitch ledge; the WHISPER SPOT (alcove near his face —
+   music ducks, the Moon says "shhh", pure silence design); the
+   dreamkeepers' mid-ascent picnic (lamb + moth + basket, they wave);
+   seed-puff pound-bounce toys; a wordless trailhead sign with a
+   sleeping-moon icon (pre-reader joke: "quiet, please").
 2. Wisp giant: rig the whale (T-pose fails — whales aren't bipeds; use
    static sculpt + transform animation, or generate a "plush whale with
    arms"? Director's call pending), lake swim tech, world to M2 template.
