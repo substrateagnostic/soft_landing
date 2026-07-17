@@ -19,6 +19,22 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-17, overnight — Session 3 cont.: TORTOISE + VOICES + LENSES
+- AUNT TORTOISE world shipped (fifth world, radial terraced garden over
+  her shell, SLOW RISE keystone on CineSequence, fourth fort door,
+  575/900 moon words). Placements 5/5 green; the checker caught two
+  real bugs mid-build (terrain curvature under ledges, ramp/dreamling
+  overlap).
+- Audio pass 3: 7 deterministic set-piece sounds + play_sfx_overlay
+  (shared player was cutting rumble at bubble-pop frame). Rollover
+  receipt -16.8 → -13.6 dB.
+- CineSequence extracted (3 copies → 1, byte-identical receipts);
+  PHOTO MODE v1 (pause → orbit → shutter → user://photos). Camera
+  "drift" closed as leash-warp-by-design.
+- All four giants now forged (bear/whale/cat/tortoise, ~1,580 cr left).
+- Producer overnight: at the Shedd with Ezra today; showed Wisp before
+  bed. Three-keystones video + slow-rise video delivered to chat.
+
 ### 2026-07-17 — Session 3: EVERY GIANT HAS ITS KEYSTONE
 - Three parallel world lanes, same architecture (world_completed + force
   flag + letterboxed cine + bubble-lift + persistence): Bramble disguise

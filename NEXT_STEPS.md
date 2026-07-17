@@ -150,19 +150,27 @@ Marmalade giant + THE STRETCH; fort residents; camera leash-yaw fix
 (was pi off). All receipted in docs/verify/{disguise-joy,wisp-giant,
 marmalade-giant,hub-population,mountain-m3}-VERIFY.md.
 
-REMAINING (was the old list below; renumbered):
-1. Photo mode v1 (family feature, Astro-Bot minimal).
-2. Polish queue: heartbeat bass SFX + stretch SFX (audio pass 3),
-   Wisp establishing framing (murky from spawn), seesaw plank pokes
-   teal through whale tail, Pip-Otto separation-dependent camera drift
-   (core/camera, reported by disguise agent), buddy-AI wading on lily
-   route, top-down cloud gap (unreachable angle, cosmetic).
-3. M4: Aunt Tortoise world (use the giant+keystone template — generate
-   plush tortoise, garden-over-shell), the Waking finale, generalize the
-   cine/letterbox rig into core (three copies exist now: rollover/dive/
-   stretch — extract core/cinematic/cine_sequence.gd), full narration
-   pass, save-slot diorama.
-4. M5 per ROADMAP (perf/Steam/trailer/demo).
+ALSO DONE (overnight 07-17): audio pass 3 (7 set-piece sounds + overlay
+API); CineSequence extraction (receipts byte-identical) + Photo Mode v1;
+camera-drift = leash-warp as designed (closed); AUNT TORTOISE world +
+THE SLOW RISE (fifth world; placements 5/5 green); fourth fort door;
+resident cap 38. All giants forged: bear/whale/cat/tortoise.
+
+REMAINING (in order):
+1. **The Waking finale** (M4 headline): when ALL FOUR worlds are
+   complete — dawn comes; a whole-game ending sequence (CineSequence),
+   the giants stir together, the kids carried home to bed, credits over
+   the fort at sunrise. Persistence + a post-game "quiet morning" fort
+   state (dawn palette) would be extraordinary if cheap.
+2. Polish queue: tortoise ambience bed + world stems (audio pass 4);
+   terrace art-blend (tortoise ramps read plank-like); Wisp establishing
+   framing; whale-tail teal plank; buddy-AI wading on lily route;
+   Otto-targeting for photo mode.
+3. Narration completeness pass: every world_complete/keystone has lines;
+   the Waking needs its script (bible voice, budget 900 — at 575).
+4. M5 per ROADMAP: perf receipts on real hardware, input remap,
+   photosensitivity/colorblind review, Steam export presets, capsule
+   art, trailer cut from receipts, store copy, demo build.
 
 ## Original next-actions list (superseded, kept for context)
 

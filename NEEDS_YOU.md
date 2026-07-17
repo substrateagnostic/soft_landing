@@ -3,6 +3,35 @@
 evidence is, one cold demo command, what's unverified, and what only you
 can decide. Cold-start handoff for any instance: NEXT_STEPS.md.*
 
+## Session 3, overnight waves (2026-07-17, while you slept)
+
+- **AUNT TORTOISE EXISTS.** The fourth giant world: a terraced garden
+  grown over her shell (radial layout — new for the game), 10 authored
+  missions, a moss-green fourth door in the fort, and her keystone —
+  **THE SLOW RISE**: the world's gentlest earthquake, 12 seconds of the
+  whole garden lifting as she stands, a long moonlit hold, then settling
+  with a sigh. A "Highest Bloom" reward stays behind at the crown.
+  Placements green across ALL FIVE worlds. Video in chat.
+- **The giants have voices** (audio pass 3): deep gentle rumble, a huge
+  yawn-sigh, felt debris-tumble, rising water shimmer, roof-slide, the
+  Heartbeat Crossing's real lub-dub, the gust breath. Rollover's audio
+  receipt is 3.2 dB richer. (A shared-player bug was cutting the rumble
+  the same frame bubbles popped — fixed with an overlay API.)
+- **CineSequence extracted** (three letterbox copies → one class, byte-
+  identical receipts) and **PHOTO MODE v1** is in the pause menu: orbit,
+  shutter, UI-less PNGs to user://photos. Take pictures of the boys.
+- The reported camera "drift" was the frustum-leash bubble-warp working
+  as documented (still of the bubble mid-carry in the verify doc).
+- Fort resident cap raised to 38 (one home per authored spot).
+- Credits: ~1,580. Honest queue: tortoise audio bed, terrace art-blend
+  (ramps read plank-like), wisp framing, whale-tail plank.
+
+### ⛔ New decisions pending (overnight)
+1. **Tortoise register** — the slowest world by design; watch the rise
+   video and say if the pacing holds a 5-year-old.
+2. **Photo mode** — try it on the couch; shutter is jump, back is
+   interact.
+
 ## Session 3 (2026-07-17) — EVERY GIANT HAS ITS KEYSTONE
 
 - **The disguise WORKS now** (your note drove two rounds): Bramble is
