@@ -5,12 +5,41 @@ extends CanvasLayer
 ## (dreamling counter) and PauseMenu (Start-button pause) as children so
 ## main.gd only ever talks to one node. Also owns the "pause" input action
 ## itself — main.gd doesn't need to know pausing exists.
+##
+## Also owns the PhotoMode instance (scenes/ui/photo_mode.gd, script-only,
+## no scene — same pattern SubtitleRibbon/IconDraw already use), built here
+## rather than in pause_menu.gd because photo mode needs to hide HUD, which
+## PauseMenu has no reference to; GameUI is the one node that already knows
+## about both.
 
 @onready var _hud: HUD = $HUD
 @onready var _pause_menu: PauseMenu = $PauseMenu
 
+var _photo_mode: PhotoMode = null
+
 
 func _ready() -> void:
+	_photo_mode = PhotoMode.new()
+	_photo_mode.name = "PhotoMode"
+	add_child(_photo_mode)
+	_photo_mode.setup(_hud, _pause_menu)
+	_pause_menu.photo_mode_requested.connect(_photo_mode.enter)
+	# --debug_photo: same debug seam as --debug_pause/--debug_options/
+	# --debug_pause_sleep below — opens the pause menu then requests photo
+	# mode, so a harness --script (which can only send p1/p2-prefixed action
+	# events, never the raw "pause" action) can drive the shutter/back flow
+	# end-to-end without a real Start-button press. enter() is deferred one
+	# frame (unlike the other debug_* seams, which don't touch the scene
+	# tree): this fires from GameUI's own _ready(), while main.tscn's whole
+	# subtree is still mid-instantiation, and PhotoMode.enter()'s rig needs
+	# to add_child() onto get_tree().current_scene — caught live as "Parent
+	# node is busy setting up children" when called synchronously here; by
+	# the next frame the scene has finished settling. Real play never hits
+	# this ordering at all (pausing is only possible once gameplay is
+	# already running, long after boot).
+	if Harness.flag("debug_photo", false):
+		_pause_menu.open()
+		_photo_mode.enter.call_deferred()
 	# Debug seam (docs/verify/ui-VERIFY.md §d): --debug_pause opens the
 	# pause menu on boot so a windowed --shots run can screenshot it
 	# without a real Start-button press, which the harness cannot script.

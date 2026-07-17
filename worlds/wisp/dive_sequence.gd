@@ -41,11 +41,13 @@ signal dive_finished
 
 const BUBBLE_SCENE: PackedScene = preload("res://core/rescue/bubble_effect.tscn")
 
-# --- Cinematic camera (duplicated from worlds/bramble/rollover_sequence.gd
-# per the task brief's explicit one-night exception; generalizing this into
-# core is an M4 card, noted here and in docs/verify/wisp-giant-VERIFY.md).
-# Wide: whale + lake in one frame. Dolly: slow follow DOWN as he settles.
-# Push: pans west to the newly-flooded shore route + islet. -----------------
+# --- Cinematic camera (machinery generalized into core/cinematic/
+# cine_sequence.gd -- the M4 card that worlds/bramble/rollover_sequence.gd
+# and this file's own header both flagged as "duplicated... an M4 card, not
+# tonight's"; docs/verify/wisp-giant-VERIFY.md's own note is now stale in
+# that one respect). Wide: whale + lake in one frame. Dolly: slow follow
+# DOWN as he settles. Push: pans west to the newly-flooded shore route +
+# islet. Only this world's own waypoints stay here. -----------------
 const CINE_WIDE_POS: Vector3 = Vector3(25.0, 50.0, 110.0)
 const CINE_WIDE_LOOK: Vector3 = Vector3(30.0, 8.0, 0.0)
 const CINE_DESCEND_POS: Vector3 = Vector3(45.0, 30.0, 78.0)
@@ -53,8 +55,6 @@ const CINE_DESCEND_LOOK: Vector3 = Vector3(40.0, 1.0, 0.0)
 const CINE_ROUTES_POS: Vector3 = Vector3(-40.0, 24.0, 44.0)
 const CINE_ROUTES_LOOK: Vector3 = Vector3(-32.0, 3.0, 16.0)
 const CINE_TAIL: float = 3.0 # seconds held on the new routes after they open
-const LETTERBOX_FRACTION: float = 0.085 # matches rollover_sequence.gd's own tuned value
-const LETTERBOX_FADE: float = 0.6
 
 # --- Whale settle ("he exhales... settles gently down into the lake") ------
 const WHALE_DESCEND_DURATION: float = 8.0 # brief: "~8s"
@@ -132,6 +132,11 @@ var _whale_rest_y: float = 0.0
 var _flood_route_root: Node3D = null
 var _played: bool = false
 
+## core/cinematic/cine_sequence.gd (M4 card) -- owns the letterbox +
+## cine-camera machinery; this file only supplies waypoints (CINE_* consts
+## above) via begin()/dolly_to()/push_to()/end().
+var _cine: CineSequence = null
+
 
 func setup(world: Node3D, whale: WhaleDrift, lake_surface: MeshInstance3D) -> void:
 	_world = world
@@ -142,6 +147,10 @@ func setup(world: Node3D, whale: WhaleDrift, lake_surface: MeshInstance3D) -> vo
 func _ready() -> void:
 	_whale_rest_y = _whale.position.y # still the un-ticked rest value at this point in boot (see wisp.gd _build_dive()'s own ordering note)
 	_lake_surface_rest_y = _lake_surface.position.y
+	_cine = CineSequence.new()
+	_cine.name = "DiveCine"
+	add_child(_cine)
+	_cine.setup(_world, "DiveCineCamera", "DiveLetterbox")
 	_build_flood_route_geometry() # built once, hidden+disabled -- reveal is a visibility/collision flip + a rise tween, never a rebuild
 
 	if GameState.is_world_completed("wisp"):
@@ -170,19 +179,22 @@ func _play_sequence(forced: bool) -> void:
 	_played = true
 	print("DIVE %s" % JSON.stringify({"phase": "start", "forced": forced}))
 	dive_started.emit()
-	AudioManager.play_sfx("whale_dive_sigh") # fails soft (AudioManager convention) until an asset lands
+	AudioManager.play_sfx_overlay("giant_rumble") # audio pass 3: the ground remembering it's alive -- overlay so bubble_catch (fired moments later, same frame) doesn't cut it off
 	TheMoon.say("world_complete") # same generic key rollover_sequence.gd reuses for its own set-piece beat
 
-	_cine_begin()
+	_cine.begin(CINE_WIDE_POS, CINE_WIDE_LOOK)
+	_cine.dolly_to(CINE_DESCEND_POS, CINE_DESCEND_LOOK, WHALE_DESCEND_DURATION)
 	_bubble_all_players() # every connected player, off the whale and safe, BEFORE it moves at all
 	_whale.begin_settle(_whale_rest_y - WHALE_SETTLE_DROP, WHALE_DESCEND_DURATION, WHALE_SETTLE_AMPLITUDE)
 
 	var descend_timer: SceneTreeTimer = get_tree().create_timer(WHALE_DESCEND_DURATION)
 	await descend_timer.timeout
+	AudioManager.play_sfx("giant_yawn_sigh") # audio pass 3: the whale settle
 	print("DIVE %s" % JSON.stringify({"phase": "settled"}))
 
-	_cine_push_routes()
+	_cine.push_to(CINE_ROUTES_POS, CINE_ROUTES_LOOK, WATER_RISE_DURATION * 0.9)
 	_reveal_flood_route() # collision solid FIRST, immediately -- rollover_sequence.gd's own lesson, applied here even though (per the header note) nothing is actually racing it this time
+	AudioManager.play_sfx_overlay("water_rise_shimmer") # audio pass 3: the flood beat -- overlay so it layers under giant_yawn_sigh's settle beat instead of cutting it off
 	_tween_flood_route_rise()
 
 	var rise_timer: SceneTreeTimer = get_tree().create_timer(WATER_RISE_DURATION)
@@ -191,7 +203,7 @@ func _play_sequence(forced: bool) -> void:
 
 	var tail_timer: SceneTreeTimer = get_tree().create_timer(CINE_TAIL)
 	await tail_timer.timeout
-	_cine_end()
+	_cine.end()
 
 	print("DIVE %s" % JSON.stringify({"phase": "end", "forced": forced}))
 	dive_finished.emit()
@@ -220,90 +232,6 @@ func _apply_already_dived_state() -> void:
 	_lake_surface.position.y = _lake_surface_rest_y + WATER_RISE_HEIGHT
 	_flood_route_root.position.y = 0.0
 	_reveal_flood_route()
-
-
-# --- Cinematic camera (duplicated from rollover_sequence.gd; see header) ---
-
-var _cine_cam: Camera3D = null
-var _cine_look: Vector3 = Vector3.ZERO
-var _prev_cam: Camera3D = null
-var _letterbox: CanvasLayer = null
-var _bar_top: ColorRect = null
-var _bar_bottom: ColorRect = null
-
-
-func _cine_begin() -> void:
-	_prev_cam = get_viewport().get_camera_3d()
-	if _cine_cam == null:
-		_cine_cam = Camera3D.new()
-		_cine_cam.name = "DiveCineCamera"
-		_world.add_child(_cine_cam)
-	_cine_cam.position = CINE_WIDE_POS
-	_cine_look = CINE_WIDE_LOOK
-	_cine_cam.look_at_from_position(CINE_WIDE_POS, CINE_WIDE_LOOK, Vector3.UP)
-	_cine_cam.current = true
-	_show_letterbox(true)
-	var tween: Tween = create_tween()
-	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.set_parallel(true)
-	tween.tween_property(_cine_cam, "position", CINE_DESCEND_POS, WHALE_DESCEND_DURATION)
-	tween.tween_property(self, "_cine_look", CINE_DESCEND_LOOK, WHALE_DESCEND_DURATION)
-
-
-func _cine_push_routes() -> void:
-	if _cine_cam == null:
-		return
-	var tween: Tween = create_tween()
-	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.set_parallel(true)
-	tween.tween_property(_cine_cam, "position", CINE_ROUTES_POS, WATER_RISE_DURATION * 0.9)
-	tween.tween_property(self, "_cine_look", CINE_ROUTES_LOOK, WATER_RISE_DURATION * 0.9)
-
-
-func _cine_end() -> void:
-	if is_instance_valid(_prev_cam):
-		_prev_cam.current = true
-	_show_letterbox(false)
-
-
-func _process(_delta: float) -> void:
-	if _cine_cam != null and _cine_cam.current:
-		_cine_cam.look_at(_cine_look, Vector3.UP)
-
-
-func _show_letterbox(shown: bool) -> void:
-	if _letterbox == null:
-		_letterbox = CanvasLayer.new()
-		_letterbox.name = "DiveLetterbox"
-		_letterbox.layer = 90
-		_world.add_child(_letterbox)
-		_bar_top = _make_bar(true)
-		_bar_bottom = _make_bar(false)
-	var bar_height: float = get_viewport().get_visible_rect().size.y * LETTERBOX_FRACTION
-	var tween: Tween = create_tween()
-	tween.set_parallel(true)
-	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(_bar_top, "offset_bottom", bar_height if shown else 0.0, LETTERBOX_FADE)
-	tween.tween_property(_bar_bottom, "offset_top", -bar_height if shown else 0.0, LETTERBOX_FADE)
-
-
-func _make_bar(top: bool) -> ColorRect:
-	var bar := ColorRect.new()
-	bar.color = Color(0.05, 0.06, 0.12) # near-black dusk, matches rollover_sequence.gd's own bar tone
-	if top:
-		bar.anchor_left = 0.0
-		bar.anchor_right = 1.0
-		bar.anchor_top = 0.0
-		bar.anchor_bottom = 0.0
-		bar.offset_bottom = 0.0
-	else:
-		bar.anchor_left = 0.0
-		bar.anchor_right = 1.0
-		bar.anchor_top = 1.0
-		bar.anchor_bottom = 1.0
-		bar.offset_top = 0.0
-	_letterbox.add_child(bar)
-	return bar
 
 
 # --- Flood route rise --------------------------------------------------------

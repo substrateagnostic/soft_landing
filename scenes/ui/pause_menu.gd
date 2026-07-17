@@ -15,6 +15,15 @@ extends CanvasLayer
 ## every dream_returned/fort change (D14), so the hold is about accidental
 ## taps, not data loss. process_mode WHEN_PAUSED keeps everything live
 ## while get_tree().paused freezes gameplay.
+##
+## "Photo" (camera icon, between Options and Sleep) hands off to PhotoMode
+## (scenes/ui/photo_mode.gd) via the photo_mode_requested signal below --
+## GameUI owns and wires the actual PhotoMode instance since it also owns
+## HUD, which photo mode needs to hide. This menu just hides itself
+## (visible = false, tree stays paused) for the duration; PhotoMode's own
+## exit() flips it back to visible.
+
+signal photo_mode_requested
 
 const OVERLAY_COLOR: Color = Color(0.180392, 0.231373, 0.368627, 0.82) # dusk blue, dim overlay
 const BUTTON_BG_COLOR: Color = Color(0.243137, 0.301961, 0.427451, 1.0) # lighter dusk blue
@@ -49,6 +58,7 @@ const VOICE_MODE_LABEL: Dictionary = {
 
 var _keep_playing_button: Button = null
 var _options_button: Button = null
+var _photo_button: Button = null
 var _sleep_button: Button = null
 var _sleep_ring: HoldRing = null
 
@@ -73,6 +83,7 @@ func _ready() -> void:
 	_build_ui()
 	_keep_playing_button.pressed.connect(_on_keep_playing_pressed)
 	_options_button.pressed.connect(_on_options_pressed)
+	_photo_button.pressed.connect(_on_photo_pressed)
 	_sleep_button.button_down.connect(func() -> void: _sleep_mouse_held = true)
 	_sleep_button.button_up.connect(func() -> void: _sleep_mouse_held = false)
 	_back_button.pressed.connect(_on_back_pressed)
@@ -108,9 +119,11 @@ func _build_main_row(parent: Control) -> void:
 
 	_keep_playing_button = _make_icon_button(IconDraw.Kind.PLAY, "Keep Playing")
 	_options_button = _make_icon_button(IconDraw.Kind.GEAR, "Options")
+	_photo_button = _make_icon_button(IconDraw.Kind.CAMERA, "Photo")
 	_sleep_button = _make_icon_button(IconDraw.Kind.MOON, "Sleep")
 	_main_row.add_child(_keep_playing_button)
 	_main_row.add_child(_options_button)
+	_main_row.add_child(_photo_button)
 	_main_row.add_child(_sleep_button)
 
 	_sleep_ring = HoldRing.new()
@@ -389,8 +402,10 @@ func _current_voice_mode() -> String:
 func _layout_focus_neighbors() -> void:
 	_keep_playing_button.focus_neighbor_right = _keep_playing_button.get_path_to(_options_button)
 	_options_button.focus_neighbor_left = _options_button.get_path_to(_keep_playing_button)
-	_options_button.focus_neighbor_right = _options_button.get_path_to(_sleep_button)
-	_sleep_button.focus_neighbor_left = _sleep_button.get_path_to(_options_button)
+	_options_button.focus_neighbor_right = _options_button.get_path_to(_photo_button)
+	_photo_button.focus_neighbor_left = _photo_button.get_path_to(_options_button)
+	_photo_button.focus_neighbor_right = _photo_button.get_path_to(_sleep_button)
+	_sleep_button.focus_neighbor_left = _sleep_button.get_path_to(_photo_button)
 
 	var chain: Array[Control] = [
 		_music_slider, _sfx_slider, _voice_button, _camera_toggle_button,
@@ -453,6 +468,14 @@ func _on_options_pressed() -> void:
 	_main_row.visible = false
 	_options_panel.visible = true
 	_music_slider.grab_focus()
+
+
+## _on_photo_pressed — this menu's own job stops at emitting the request;
+## GameUI (which owns both HUD and the actual PhotoMode instance) does the
+## rest, including hiding this menu (see class doc comment above).
+func _on_photo_pressed() -> void:
+	AudioManager.play_sfx("ui_select")
+	photo_mode_requested.emit()
 
 
 func _on_back_pressed() -> void:

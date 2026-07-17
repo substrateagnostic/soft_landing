@@ -1,0 +1,9 @@
+{
+  "description": "Photo mode v1 property (scenes/ui/photo_mode.gd), driven by --debug_photo (dev/capture seam, opens the pause menu and immediately requests photo mode -- game_ui.gd's own debug-seam convention, same family as --debug_pause/--debug_options/--debug_pause_sleep). Expected receipts, in order: PHOTO_MODE {\"phase\":\"enter\"} (from the boot-time --debug_photo seam, one frame deferred -- see game_ui.gd's own comment on why); seat 1 jump press/release (shutter) at frame 60/66 -> PHOTO {\"path\":\"user://photos/photo_<n>.png\"} in a windowed run (headless prints PHOTO_NOTE screenshot skipped (headless) instead, matching tools/harness/harness.gd's own --shots convention); seat 1 interact press/release (back) at frame 120/126 -> PHOTO_MODE {\"phase\":\"exit\"}, returning to the (still-paused, still-open) pause menu.",
+  "events": [
+    {"frame": 60, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 66, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 120, "seat": 1, "action": "interact", "type": "press"},
+    {"frame": 126, "seat": 1, "action": "interact", "type": "release"}
+  ]
+}

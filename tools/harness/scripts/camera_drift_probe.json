@@ -1,0 +1,7 @@
+{
+  "description": "Camera-drift repro (docs/verify/disguise-joy-VERIFY.md's 'Pip-Otto-separation-dependent horizontal drift' live finding, reported against core/camera/camera_rig.gd and/or core/movement/player_body.gd). Both seats teleported ~40m apart on bramble's own Meadow ground slab (bramble.gd MEADOW_SIZE 140x80, x:-70..70/z:-40..40 -- both points well inside, no void nearby) at frame 30, then ZERO further input from either seat for the rest of the run -- deliberately no jump/interact at all, to isolate whether separation alone (not any particular button combo) is what triggers the reported movement. poslog=10 for a fine-grained trajectory; watch stdout for WARP lines (core/coop/seat_manager.gd's own receipt) and PLAYER_POS for the seat that moves.",
+  "events": [
+    {"frame": 30, "seat": 1, "action": "teleport", "pos": [-55.0, 0.5, 0.0]},
+    {"frame": 30, "seat": 2, "action": "teleport", "pos": [-15.0, 0.5, 0.0]}
+  ]
+}

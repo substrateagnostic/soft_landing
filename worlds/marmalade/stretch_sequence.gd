@@ -52,7 +52,11 @@ var playing: bool = false
 const BUBBLE_SCENE: PackedScene = preload("res://core/rescue/bubble_effect.tscn")
 
 # --- Cinematic camera (letterboxed wide -> drift along her body -> push to
-# the newly-open route -> push to the nook) --------------------------------
+# the newly-open route -> push to the nook). Machinery (letterbox +
+# cine-camera create/tween/restore) lives in core/cinematic/cine_sequence.gd
+# (M4 card, generalized out of the near-identical block this file used to
+# duplicate from rollover_sequence.gd — see that class's own header); only
+# this world's own waypoints stay here. --------------------------------
 const CINE_WIDE_POS: Vector3 = Vector3(-60.0, 14.0, 26.0)
 const CINE_WIDE_LOOK: Vector3 = Vector3(-20.0, 6.0, 0.0)
 const CINE_DRIFT_POS: Vector3 = Vector3(-5.0, 16.0, 22.0)
@@ -65,8 +69,6 @@ const CINE_DRIFT_TIME: float = 4.0
 const CINE_ROUTE_TIME: float = 4.0
 const CINE_NOOK_TIME: float = 3.0
 const CINE_TAIL: float = 3.0 # seconds holding on the nook before letterbox out
-const LETTERBOX_FRACTION: float = 0.085 # matches rollover_sequence.gd's tuned value (0.11 clipped the Moon's subtitle)
-const LETTERBOX_FADE: float = 0.6
 
 # --- The stretch choreography (~8s total, per the brief) -------------------
 const RISE_TIME: float = 2.0
@@ -117,6 +119,11 @@ var _nook_hint_shape: CollisionShape3D = null
 var _cat_rest_position: Vector3 = Vector3.ZERO
 var _played: bool = false
 
+## core/cinematic/cine_sequence.gd (M4 card) -- owns the letterbox +
+## cine-camera machinery; this file only supplies waypoints (CINE_* consts
+## above) via begin()/dolly_to()/push_to()/end().
+var _cine: CineSequence = null
+
 
 ## setup — called by marmalade.gd BEFORE add_child (see that file's own
 ## _build_stretch() comment for why: entering the tree fires _ready()
@@ -129,6 +136,10 @@ func setup(world: Node3D, cat_anchor: Node3D) -> void:
 
 func _ready() -> void:
 	_cat_rest_position = _cat_anchor.position
+	_cine = CineSequence.new()
+	_cine.name = "StretchCine"
+	add_child(_cine)
+	_cine.setup(_world, "StretchCineCamera", "StretchLetterbox")
 	_index_plates()
 	_compute_plate_targets()
 	_build_nook_geometry() # built once, hidden+disabled — reveal is a visibility/collision flip, never a rebuild
@@ -193,25 +204,26 @@ func _play_sequence(forced: bool) -> void:
 	playing = true
 	print("STRETCH %s" % JSON.stringify({"phase": "start", "forced": forced}))
 	stretch_started.emit()
-	AudioManager.play_sfx("bear_rollover_rumble") # placeholder reuse until a dedicated purr/stretch SFX exists — fails soft (AudioManager convention)
+	AudioManager.play_sfx_overlay("giant_rumble") # audio pass 3: the ground remembering it's alive -- overlay so bubble_catch (fired moments later, same frame) doesn't cut it off
 	TheMoon.say("world_complete")
 
 	_reveal_nook_ground()
-	_cine_begin()
+	_cine.begin(CINE_WIDE_POS, CINE_WIDE_LOOK)
+	_cine.dolly_to(CINE_DRIFT_POS, CINE_DRIFT_LOOK, CINE_DRIFT_TIME)
 	_bubble_all_players()
 
 	await _tween_stretch_and_plates()
 
 	print("STRETCH %s" % JSON.stringify({"phase": "route_open"}))
-	_cine_route_push()
+	_cine.push_to(CINE_ROUTE_POS, CINE_ROUTE_LOOK, CINE_ROUTE_TIME)
 	var route_tail: SceneTreeTimer = get_tree().create_timer(CINE_ROUTE_TIME)
 	await route_tail.timeout
 
-	_cine_nook_push()
+	_cine.push_to(CINE_NOOK_POS, CINE_NOOK_LOOK, CINE_NOOK_TIME)
 	var nook_tail: SceneTreeTimer = get_tree().create_timer(CINE_NOOK_TIME + CINE_TAIL)
 	await nook_tail.timeout
 
-	_cine_end()
+	_cine.end()
 	playing = false
 	print("STRETCH %s" % JSON.stringify({"phase": "end", "forced": forced}))
 	stretch_finished.emit()
@@ -227,6 +239,7 @@ func _tween_stretch_and_plates() -> void:
 
 
 func _tween_plates() -> void:
+	AudioManager.play_sfx("roof_slide_soft") # audio pass 3: the plates sliding
 	print("STRETCH %s" % JSON.stringify({"phase": "plates_shifting"}))
 	var tween: Tween = create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -258,6 +271,7 @@ func _tween_cat() -> void:
 	await rise.finished
 
 	# Arch: the sssstretch — scale up tall, squash narrow.
+	AudioManager.play_sfx("giant_yawn_sigh") # audio pass 3: the stretch apex
 	print("STRETCH %s" % JSON.stringify({"phase": "arch"}))
 	var arch: Tween = create_tween()
 	arch.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -432,95 +446,3 @@ func _add_nook_hint() -> void:
 	_nook_hint_shape = shape
 
 
-# --- Cinematic camera --------------------------------------------------------
-
-var _cine_cam: Camera3D = null
-var _cine_look: Vector3 = Vector3.ZERO
-var _prev_cam: Camera3D = null
-var _letterbox: CanvasLayer = null
-var _bar_top: ColorRect = null
-var _bar_bottom: ColorRect = null
-
-
-func _cine_begin() -> void:
-	_prev_cam = get_viewport().get_camera_3d()
-	if _cine_cam == null:
-		_cine_cam = Camera3D.new()
-		_cine_cam.name = "StretchCineCamera"
-		_world.add_child(_cine_cam)
-	_cine_cam.position = CINE_WIDE_POS
-	_cine_look = CINE_WIDE_LOOK
-	_cine_cam.look_at_from_position(CINE_WIDE_POS, CINE_WIDE_LOOK, Vector3.UP)
-	_cine_cam.current = true
-	_show_letterbox(true)
-	var tween: Tween = create_tween()
-	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.set_parallel(true)
-	tween.tween_property(_cine_cam, "position", CINE_DRIFT_POS, CINE_DRIFT_TIME)
-	tween.tween_property(self, "_cine_look", CINE_DRIFT_LOOK, CINE_DRIFT_TIME)
-
-
-func _cine_route_push() -> void:
-	if _cine_cam == null:
-		return
-	var tween: Tween = create_tween()
-	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.set_parallel(true)
-	tween.tween_property(_cine_cam, "position", CINE_ROUTE_POS, CINE_ROUTE_TIME)
-	tween.tween_property(self, "_cine_look", CINE_ROUTE_LOOK, CINE_ROUTE_TIME)
-
-
-func _cine_nook_push() -> void:
-	if _cine_cam == null:
-		return
-	var tween: Tween = create_tween()
-	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.set_parallel(true)
-	tween.tween_property(_cine_cam, "position", CINE_NOOK_POS, CINE_NOOK_TIME)
-	tween.tween_property(self, "_cine_look", CINE_NOOK_LOOK, CINE_NOOK_TIME)
-
-
-func _cine_end() -> void:
-	if is_instance_valid(_prev_cam):
-		_prev_cam.current = true
-	_show_letterbox(false)
-
-
-func _process(_delta: float) -> void:
-	if _cine_cam != null and _cine_cam.current:
-		_cine_cam.look_at(_cine_look, Vector3.UP)
-
-
-func _show_letterbox(shown: bool) -> void:
-	if _letterbox == null:
-		_letterbox = CanvasLayer.new()
-		_letterbox.name = "StretchLetterbox"
-		_letterbox.layer = 90
-		_world.add_child(_letterbox)
-		_bar_top = _make_bar(true)
-		_bar_bottom = _make_bar(false)
-	var bar_height: float = get_viewport().get_visible_rect().size.y * LETTERBOX_FRACTION
-	var tween: Tween = create_tween()
-	tween.set_parallel(true)
-	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(_bar_top, "offset_bottom", bar_height if shown else 0.0, LETTERBOX_FADE)
-	tween.tween_property(_bar_bottom, "offset_top", -bar_height if shown else 0.0, LETTERBOX_FADE)
-
-
-func _make_bar(top: bool) -> ColorRect:
-	var bar := ColorRect.new()
-	bar.color = Color(0.05, 0.06, 0.12) # near-black dusk, not pure black
-	if top:
-		bar.anchor_left = 0.0
-		bar.anchor_right = 1.0
-		bar.anchor_top = 0.0
-		bar.anchor_bottom = 0.0
-		bar.offset_bottom = 0.0
-	else:
-		bar.anchor_left = 0.0
-		bar.anchor_right = 1.0
-		bar.anchor_top = 1.0
-		bar.anchor_bottom = 1.0
-		bar.offset_top = 0.0
-	_letterbox.add_child(bar)
-	return bar
