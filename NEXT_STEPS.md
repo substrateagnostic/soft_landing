@@ -120,6 +120,12 @@ NEEDS_YOU.md). Repo: github.com/substrateagnostic/soft_landing (Apache-2.0).
     `GET /openapi/v2/text-to-3d?page_size=50` (prompt-match), not tears.
 13. Subagents: disjoint file territories, verbatim finish-in-one-run
     line, no commits (director integrates), served_model in VERIFY docs.
+14. Godot auto-names unnamed child nodes (@CollisionShape3D@N) — name
+    lookups silently fail; find by TYPE or set force_readable_name.
+15. seat_manager's frustum leash snaps back a player teleported alone —
+    harness scripts must teleport both seats together.
+16. Camera forward is -Z: velocity-heading yaw is atan2(-vx, -vz);
+    atan2(vx, vz) faces exactly backward (cost us the ascent walk).
 
 ## The design floor (never moves, any model in the chair)
 
@@ -136,7 +142,29 @@ variable-ratio reward mechanics, ever (no gacha for children).
 tonight's full pace EVERY remaining day — multiple waves/day, agents
 liberally, D26 sync each wave. Producer's words: "No sweat. Just fun."
 
-## Next actions (M3, in order)
+## Next actions (M3, in order — UPDATED 2026-07-17)
+
+DONE this wave: D25 mountain + disguise (all angles PASS) + joy pass
+(heartbeat/whisper/picnic/seed-puffs/sign); Wisp giant + THE DIVE;
+Marmalade giant + THE STRETCH; fort residents; camera leash-yaw fix
+(was pi off). All receipted in docs/verify/{disguise-joy,wisp-giant,
+marmalade-giant,hub-population,mountain-m3}-VERIFY.md.
+
+REMAINING (was the old list below; renumbered):
+1. Photo mode v1 (family feature, Astro-Bot minimal).
+2. Polish queue: heartbeat bass SFX + stretch SFX (audio pass 3),
+   Wisp establishing framing (murky from spawn), seesaw plank pokes
+   teal through whale tail, Pip-Otto separation-dependent camera drift
+   (core/camera, reported by disguise agent), buddy-AI wading on lily
+   route, top-down cloud gap (unreachable angle, cosmetic).
+3. M4: Aunt Tortoise world (use the giant+keystone template — generate
+   plush tortoise, garden-over-shell), the Waking finale, generalize the
+   cine/letterbox rig into core (three copies exist now: rollover/dive/
+   stretch — extract core/cinematic/cine_sequence.gd), full narration
+   pass, save-slot diorama.
+4. M5 per ROADMAP (perf/Steam/trailer/demo).
+
+## Original next-actions list (superseded, kept for context)
 
 1. **D25 build** (agents may already be running — check `git log` and
    docs/verify/ for *-m3-* files): rescale rigged Bramble to ~42m, sink/

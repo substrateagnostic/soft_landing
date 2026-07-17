@@ -3,6 +3,39 @@
 evidence is, one cold demo command, what's unverified, and what only you
 can decide. Cold-start handoff for any instance: NEXT_STEPS.md.*
 
+## Session 3 (2026-07-17) — EVERY GIANT HAS ITS KEYSTONE
+
+- **The disguise WORKS now** (your note drove two rounds): Bramble is
+  rock-tinted while disguised (multiply-tint keeps his texture, drags hue
+  to moss/stone), the cloud bank fully swallows his face from every
+  gameplay angle, foothills merge his silhouette into the ground, the
+  trail reads as stone. THE REVEAL now includes his warm fur color
+  RETURNING as the mountain falls off him. Verdict per angle in
+  docs/verify/disguise-joy-VERIFY.md.
+- **The bear path is FUN**: Heartbeat Crossing (the ground thumps softly
+  underfoot — no audio yet, queued), Whisper Spot (music ducks; the Moon
+  says "Shhh."), the dreamkeepers' picnic on a landing, pound-bounce
+  seed-puff toys, and a wordless sleeping-moon trailhead sign.
+- **WISP: THE DIVE** — the real plush whale (88m, sleepy lashes) settles
+  into the lake at 10/10; the water rises; five lily-cushions float up
+  into a hop-route to a mossy islet. `--dive` to preview.
+- **MARMALADE: THE STRETCH** — the real plush tabby (18m, breathing over
+  the village) does one enormous sleepy stretch at 10/10; four rooftop
+  plates shift into a chimney-hop chain to a hidden attic nook.
+  `--stretch` to preview.
+- **Fort residents**: every returned dream now lives in the fort as a
+  small golden resident, clustered by which giant's door it came from,
+  greeting the kids with a hop and a chime.
+- **Camera bug fixed**: the velocity-leash yaw was pi off — the camera
+  faced BACKWARD outside CameraHint zones. Analytic fix, receipted.
+- Three-keystone showcase video in chat. Credits: ~1,610.
+
+### ⛔ New decisions pending (Session 3)
+1. **Keystone pacing** — three cutscenes, ~20-25s each: watch the video;
+   too long/short for the boys?
+2. **Wisp establishing framing** still murky-dark from spawn (old polish
+   note, now more visible) — queued unless you veto the priority.
+
 ## Session 2, fourth wave — M3 BEGINS: THE MOUNTAIN IS THE BEAR (D25)
 
 - **Your "bear with me" pitch is approved and building.** Logged as D25:

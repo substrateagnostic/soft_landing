@@ -19,6 +19,24 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-17 — Session 3: EVERY GIANT HAS ITS KEYSTONE
+- Three parallel world lanes, same architecture (world_completed + force
+  flag + letterboxed cine + bubble-lift + persistence): Bramble disguise
+  round 2 (rock-tint multiply, face-swallowing cloud bank, foothill
+  merging — all 4 angles PASS; reveal restores warm fur) + all 5 joy
+  beats; Wisp DIVE (real 88m whale, flood route, islet); Marmalade
+  STRETCH (real 18m cat, rooftop chimney-hop chain, attic nook). Plus
+  fort residents (returned dreams live in the fort, door-clustered).
+- Director catches: camera velocity-leash yaw was PI OFF (faced backward
+  outside hints — analytic fix); whale A too dumpling (B's flukes won);
+  wired the missing "Shhh." line.
+- Agent catches worth the ledger: Godot silently renames unnamed
+  CollisionShapes (@CollisionShape3D@N — name lookups fail), seat-manager
+  frustum leash snaps back single-seat teleports, whale orientation
+  backward on first fit.
+- Giants: 90cr (whale a/b + cat). Credits 1,730 → ~1,610.
+- D26 in effect: NEXT_STEPS.md is the standing cold-start handoff.
+
 ### 2026-07-16, late — Session 2, wave 2: M2 BRAMBLE PROOF WORLD
 - Four parallel lanes + director integration, same night as Foundation:
   set pieces (breath-elevator + THE ROLL-OVER with bubble-lift to a far
