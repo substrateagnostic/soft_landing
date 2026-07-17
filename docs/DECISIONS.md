@@ -139,6 +139,28 @@ races/chases/timing games with celebration-only outcomes. No lockouts, no
 lose states, no score shaming. Losing a race means the dreamling giggles
 and offers again.
 
+**D25 — THE MOUNTAIN IS THE BEAR (producer direction, 2026-07-16 late).**
+Bramble scales to ~42 m (+50%) and becomes the world's central massif,
+half-buried, breathing subtly over static collision. An on-rails-ish
+ascent path (authored collision ramps + CameraHint framing + quests/
+dreamkeepers on the way up) leads to the summit — his ear, where dreams
+are returned. He is dressed AS terrain: dirt path segments, rocks, pines,
+snow caps, a cloud ring at his shoulders. The 10/10 finale becomes THE
+REVEAL: his breath blows the clouds away, he stirs, and the mountain
+falls off him — path, rocks, snow tumbling — as he sits up. A young
+child must be able to play the whole world without knowing. Reveal state
+persists; on-rails means authored camera, never taken control (D18
+unchanged). V1 constraints accepted: static collision under subtle visual
+breathing (±0.3 m drift budget), scripted prop-fall (physics later).
+
+**D26 — Docs-current house rule (producer mandate, 2026-07-16 late).**
+Every working wave ends by syncing: NEEDS_YOU.md, ROADMAP.md, this log,
+alexmemory.md, and NEXT_STEPS.md (the standing handoff document — full
+current state, pipelines, gotchas, next actions). The bar: ANY instance —
+this model, a successor, another lab's model — must be able to resume the
+director's chair from NEXT_STEPS.md alone, cold. Auto-memory carries a
+pointer, never the content.
+
 **D24 — The kids are THE kids (producer reference photo, 2026-07-16).**
 Pip = Ezra: blond, rosy-cheeked, duck onesie with the hood as a soft duck
 head — face fully visible (kills the weak duck-bill from batch 1).

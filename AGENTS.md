@@ -94,6 +94,12 @@ via the contract only, so parallel subagents can build them without conflicts.
 - `alexmemory.md`: running ops log, newest at top, NEEDS YOU section current.
 - `NEEDS_YOU.md`: updated at end of every session — what exists, evidence
   paths, one cold demo command, UNVERIFIED list, producer decisions pending.
+- **Docs-current rule (D26, producer mandate):** every working wave ends
+  by syncing NEEDS_YOU.md, ROADMAP.md, docs/DECISIONS.md, alexmemory.md,
+  and `NEXT_STEPS.md` — the standing handoff document. The bar: ANY
+  instance (this model, a successor, another lab's) resumes the chair from
+  NEXT_STEPS.md alone, cold. The remote session can drop at any moment;
+  the docs are the continuity, not the context window.
 - Commit working increments; never let a session accumulate uncommitted work.
 - Gates (1–4) block on the producer; everything between runs autonomous.
 - License: Apache-2.0 (default; producer final call logged in NEEDS_YOU.md).

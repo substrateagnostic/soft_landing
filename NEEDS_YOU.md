@@ -1,6 +1,27 @@
 # NEEDS YOU — soft_landing / THE BIG NAP
-*Updated at the end of every session. What exists, where the evidence is,
-one cold demo command, what's unverified, and what only you can decide.*
+*Updated at the end of every WAVE (house rule D26). What exists, where the
+evidence is, one cold demo command, what's unverified, and what only you
+can decide. Cold-start handoff for any instance: NEXT_STEPS.md.*
+
+## Session 2, fourth wave — M3 BEGINS: THE MOUNTAIN IS THE BEAR (D25)
+
+- **Your "bear with me" pitch is approved and building.** Logged as D25:
+  Bramble scales ~50% to a half-buried central massif you climb via an
+  on-rails-ish path (CameraHint framing, quests on the way up, summit =
+  his ear). Dressed as terrain — path, rocks, pines, snow, cloud ring —
+  so a young child never suspects. The 10/10 finale is now THE REVEAL:
+  breath blows the clouds, the mountain falls off him as he sits up.
+- **Scale costs zero credits** (rig is scale-invariant); the clipping you
+  saw gets solved by design (he's embedded, not intersecting).
+- **No MCP server needed** for this — blind-placement tooling + still
+  iteration built everything so far; MCP on your laptop is a nice-to-have
+  for hand-polish later, not a blocker.
+- **D26 house rule live:** every wave ends with NEEDS_YOU / ROADMAP /
+  DECISIONS / alexmemory / **NEXT_STEPS.md** synced. NEXT_STEPS.md is the
+  full cold-start handoff (state, pipelines, gotchas ledger, next
+  actions) — written so any model in the chair on the 20th can resume,
+  regardless of what happens with Fable access on the 19th.
+- Credits: ~1,730 in the shared pool.
 
 ## Session 2, third wave — THE KEYSTONE (your note, same night)
 

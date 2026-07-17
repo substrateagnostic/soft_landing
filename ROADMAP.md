@@ -77,15 +77,26 @@ template and the vertical slice is honest.
 producer + kids. This is the gate where "fun for a real child" gets its
 first honest receipt.
 
-## M3 — THE OTHER GIANTS (week of 7/24)
+## M3 — THE MOUNTAIN IS THE BEAR + THE OTHER GIANTS (started 7/16, D25)
 
+- **Headline card — D25 (producer direction):** Bramble scales to ~42 m
+  and becomes the central massif, half-buried, breathing subtly. An
+  on-rails-ish ascent path (authored collision ramps + CameraHint
+  framing + quests/dreamkeepers on the way up) leads to the summit —
+  his ear, where dreams come home. He is dressed AS terrain (path,
+  rocks, pines, snow caps, cloud ring); the 10/10 finale becomes THE
+  REVEAL: his breath blows the clouds away, the mountain falls off him
+  as he sits up, and a child who never suspected sees the bear. Reveal
+  persists across saves.
 - **Wisp**: swimming (Meshy swim clips exist), the lake becomes playable
   water; signature function: **the dive** — Wisp settles into the lake and
   the shoreline floods gently into new routes (soft Landing catches
-  everyone, always).
+  everyone, always). Giant treatment: whale is non-biped — static sculpt
+  + transform/procedural animation (director's call at build time).
 - **Marmalade**: the village wakes at night — market stalls, lamplighter
   mice, rooftop routes; signature function: **the stretch** — the cat
-  stretches and the rooftops shift like plates.
+  stretches and the rooftops shift like plates. Giant treatment: quadruped
+  — static sculpt + procedural stretch keystone.
 - Hub population loop: every returned dreamling takes up residence in the
   fort (visible, wave-able, nameable); fort growth stages 4–6.
 - Photo mode v1 (family feature; Astro Bot-minimal).
