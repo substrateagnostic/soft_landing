@@ -1,23 +1,23 @@
 {
-  "generated_at": "2026-07-16T18:38:38.4619390-05:00",
+  "generated_at": "2026-07-16T23:32:00.7541452-05:00",
   "model_requested": "meshy-6",
   "preview_only": false,
   "batch_size": 5,
   "items": [
     {
-      "id": "bramble_bear_rig",
+      "id": "marmalade_cat",
       "category": "giant",
-      "prompt": "giant plush teddy bear standing upright in T pose with arms straight out, chunky rounded soft toy proportions, thick body and short legs, warm umber brown fur, cream muzzle and round belly patch, small round ears, sleepy closed eyes, gentle peaceful smile, huggable stuffed animal",
-      "full_prompt": "giant plush teddy bear standing upright in T pose with arms straight out, chunky rounded soft toy proportions, thick body and short legs, warm umber brown fur, cream muzzle and round belly patch, small round ears, sleepy closed eyes, gentle peaceful smile, huggable stuffed animal, soft plush low poly, rounded chunky toddler-toy proportions, flat colors, matte, no textures needed, game asset, clean silhouette, single object, gentle and friendly, Kenney/KayKit style",
+      "prompt": "enormous sleeping plush cat lying stretched out on its side in full profile, long soft body, closed sleepy eyes and tiny smiling mouth, orange marmalade tabby with cream chest and paws, long tail curled around, small triangular ears, rounded chunky stuffed animal, deeply asleep",
+      "full_prompt": "enormous sleeping plush cat lying stretched out on its side in full profile, long soft body, closed sleepy eyes and tiny smiling mouth, orange marmalade tabby with cream chest and paws, long tail curled around, small triangular ears, rounded chunky stuffed animal, deeply asleep, soft plush low poly, rounded chunky toddler-toy proportions, flat colors, matte, no textures needed, game asset, clean silhouette, single object, gentle and friendly, Kenney/KayKit style",
       "status": "ok",
-      "preview_task": "019f6d49-8189-7f92-a5a2-3c3036155163",
+      "preview_task": "019f6e54-ef42-70e4-a04a-dbfc640419c8",
       "preview_status": "SUCCEEDED",
-      "refine_task": "019f6d4a-d790-74d6-ac47-b39d910e7891",
+      "refine_task": "019f6e57-5c94-7f70-b1cf-d62f89e325b0",
       "refine_status": "SUCCEEDED",
       "credits": 30,
       "served_model": "meshy-6",
       "served_model_source": "not_reported_by_api_echoing_requested",
-      "glb_path": "D:\\Projects\\soft_landing\\assets\\models\\meshy\\generated\\bramble_bear_rig.glb",
+      "glb_path": "D:\\Projects\\soft_landing\\assets\\models\\meshy\\generated\\marmalade_cat.glb",
       "error": null
     }
   ],

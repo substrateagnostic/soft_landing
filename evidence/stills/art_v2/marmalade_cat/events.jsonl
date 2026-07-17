@@ -1,0 +1,4 @@
+HARNESS_FLAGS {"model":"marmalade_cat","outdir":"evidence/stills/art_v2/marmalade_cat","quitafter":"3.2","shots":"30,150"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/art_v2/marmalade_cat/shot_30.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/art_v2/marmalade_cat/shot_150.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 3.2s)

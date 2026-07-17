@@ -162,5 +162,23 @@
     "category": "giant",
     "prompt": "giant plush teddy bear standing upright in T pose with arms straight out, chunky rounded soft toy proportions, thick body and short legs, warm umber brown fur, cream muzzle and round belly patch, small round ears, sleepy closed eyes, gentle peaceful smile, huggable stuffed animal",
     "target_height_hint": 1.8
+  },
+  {
+    "id": "wisp_whale",
+    "category": "giant",
+    "prompt": "enormous sleeping plush whale floating gently, seen in profile, soft rounded chunky toy proportions, closed sleepy eyes and gentle smiling mouth line, pale moonlit blue grey body with cream white belly, big soft rounded tail flukes, small fins tucked, dreamy stuffed animal",
+    "target_height_hint": 14.0
+  },
+  {
+    "id": "wisp_whale_b",
+    "category": "giant",
+    "prompt": "long sleeping plush whale in full side profile, streamlined gentle body three times longer than tall, big soft rounded tail flukes lifted slightly, closed sleepy eye and calm smiling mouth line, small tucked side fin, pale moonlit blue grey with cream white belly grooves, soft chunky stuffed animal",
+    "target_height_hint": 14.0
+  },
+  {
+    "id": "marmalade_cat",
+    "category": "giant",
+    "prompt": "enormous sleeping plush cat lying stretched out on its side in full profile, long soft body, closed sleepy eyes and tiny smiling mouth, orange marmalade tabby with cream chest and paws, long tail curled around, small triangular ears, rounded chunky stuffed animal, deeply asleep",
+    "target_height_hint": 10.0
   }
 ]
