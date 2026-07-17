@@ -52,6 +52,7 @@ const PITCH_JITTER: float = 0.08
 const GENTLE_KEYS: PackedStringArray = [
 	"goodnight", "paused", "mission_shy", "callie_dreams",
 	"bramble_d09_shy", "wisp_d09_shy", "marmalade_d09_shy", "bramble_d07_geyser",
+	"tortoise_d08_shy", "tortoise_d07_bloom",
 ]
 const EXCITED_KEYS: PackedStringArray = [
 	"well_done", "world_complete", "fort_grows_5", "fort_grows_10",
@@ -59,6 +60,7 @@ const EXCITED_KEYS: PackedStringArray = [
 	"mission_race", "mission_duet", "rescue",
 	"bramble_d01_race", "bramble_d02_race", "bramble_d08_duet",
 	"wisp_d01_race", "marmalade_d01_race",
+	"tortoise_d01_race", "tortoise_d05_duet",
 ]
 const GENTLE_PITCH_BIAS: float = 0.94
 const EXCITED_PITCH_BIAS: float = 1.07

@@ -35,7 +35,7 @@ const DREAMKEEPER_DATA_PATH_FORMAT: String = "res://data/dreamkeepers/%s.json"
 
 const FORT_RESIDENT_SCENE: PackedScene = preload("res://worlds/common/fort_resident.tscn")
 const FORT_RESIDENT_SPOTS_PATH: String = "res://data/fort_residents/spots.json"
-const FORT_RESIDENT_CAP: int = 30
+const FORT_RESIDENT_CAP: int = 38 # = authored spots.json count (4 worlds x ~10, tortoise added 8)
 
 # --- Dressing M2 props (assets/models/meshy/generated/, tools/meshy/
 # manifest.json target_height_hint values) -- all placed WEST of the fort's
@@ -496,6 +496,8 @@ func _build_bramble_door() -> void:
 	# One door per giant, each tinted to its world's palette so a pre-reader
 	# can tell them apart at a glance. Bramble: umber, straight out the back
 	# (toward the silhouette on the skyline). Marmalade: east. Wisp: west.
+	# Tortoise: north (the clearing's one remaining clear side -- checked
+	# against every existing door/cushion/resident-spot/route below).
 	var half_d: float = FORT_DEPTH * 0.5
 	_add_world_door("BrambleDoor", "bramble",
 		FORT_CENTER + Vector3(0.0, 0.0, -half_d - 1.2), 0.0, Color("8A6552"))
@@ -503,6 +505,15 @@ func _build_bramble_door() -> void:
 		Vector3(9.5, 0.0, -2.0), 90.0, Color("D98E4A"))
 	_add_world_door("WispDoor", "wisp",
 		Vector3(-9.5, 0.0, -2.0), -90.0, Color("C9D4E4"))
+	# North: radial yaw=0.0 (same convention as BrambleDoor's own south-side
+	# placement -- both sit on the Z axis, tangent along X). Checked clear of
+	# both spawn points (>6m), both cushions (>10m), Callie's cushion (>10m),
+	# every fort_residents/spots.json entry (all z <= 2.5, this door sits at
+	# z=9.2), and the nearest fence post ((0,0,11.5), FENCE_POST_RADIUS=11.5
+	# at angle 90 deg) by 2.3m. finale_home.json's own route never moves past
+	# spawn's z=3.0 toward +Z, so it is unaffected -- see tortoise-world-VERIFY.md.
+	_add_world_door("TortoiseDoor", "tortoise",
+		Vector3(0.0, 0.0, 9.2), 0.0, Color("8C9463"))
 
 
 func _add_world_door(door_name: String, target: String, door_position: Vector3, yaw_degrees: float, tint: Color) -> void:

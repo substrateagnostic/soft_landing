@@ -48,7 +48,7 @@ extends SceneTree
 
 const WORLD_SCENE_PATH_FORMAT: String = "res://worlds/%s/%s.tscn"
 const MISSION_DATA_PATH_FORMAT: String = "res://data/missions/%s.json"
-const DEFAULT_WORLDS: PackedStringArray = ["bramble", "wisp", "marmalade"]
+const DEFAULT_WORLDS: PackedStringArray = ["bramble", "wisp", "marmalade", "tortoise"]
 const SETTLE_PHYSICS_FRAMES: int = 3
 const FALLBACK_SECONDS_MAX: float = 30.0
 const DREAMLING_SCRIPT_PATH: String = "res://worlds/common/dreamling.gd"

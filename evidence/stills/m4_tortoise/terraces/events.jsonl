@@ -1,0 +1,5 @@
+HARNESS_FLAGS {"devcam":true,"devcam_look":"32,8,0","devcam_pos":"-30,55,50","outdir":"evidence/stills/m4_tortoise/terraces","quitafter":"3","shots":"90","skipmenu":true,"world":"tortoise"}
+EVT {"seat":1,"t":9,"type":"landed"}
+EVT {"seat":2,"t":11,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m4_tortoise/terraces/shot_90.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 3.0s)

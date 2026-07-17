@@ -1,0 +1,55 @@
+{
+	"missions": [
+		{
+			"id": "d01",
+			"archetype": "race",
+			"story": "The first dream is eager to run before it comes home.",
+			"params": {
+				"waypoints": [[0.0, 0.0, 0.0], [2.5, 0.0, 2.0], [3.0, 0.0, -1.0], [0.5, 0.0, -2.0]],
+				"speed": 3.0,
+				"trigger_radius": 3.0,
+				"laps": 2
+			},
+			"moon_line_key": "tortoise_d01_race"
+		},
+		{
+			"id": "d04",
+			"archetype": "ride",
+			"story": "A dream drifts slow loops above the garden, like pollen on the breeze.",
+			"params": {
+				"waypoints": [[0.0, 0.0, 0.0], [0.8, 0.2, 0.6], [0.1, 0.3, 1.1], [-0.7, 0.2, 0.5]],
+				"speed": 0.9
+			},
+			"moon_line_key": "tortoise_d04_ride"
+		},
+		{
+			"id": "d05",
+			"archetype": "duet",
+			"story": "A dream tucked in a garden clearing, waiting for two friends together.",
+			"params": {
+				"duet_radius": 3.0,
+				"fallback_seconds": 10.0
+			},
+			"moon_line_key": "tortoise_d05_duet"
+		},
+		{
+			"id": "d07",
+			"archetype": "open",
+			"story": "A dream naps right on her slow, gentle breath.",
+			"params": {
+				"speak_on_collect": true
+			},
+			"moon_line_key": "tortoise_d07_bloom"
+		},
+		{
+			"id": "d08",
+			"archetype": "shy",
+			"story": "A shy dream hides among the clover, waiting for someone patient.",
+			"params": {
+				"reveal_radius": 4.0,
+				"reveal_time": 1.5
+			},
+			"moon_line_key": "tortoise_d08_shy"
+		}
+	]
+}

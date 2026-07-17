@@ -1,0 +1,9 @@
+HARNESS_FLAGS {"devcam":true,"devcam_look":"30,12,3","devcam_pos":"38,22,-10","outdir":"evidence/stills/m4_tortoise/crown","pads":"2","quitafter":"30","rise":true,"shots":"1770","skipmenu":true,"world":"tortoise"}
+EVT {"mode":0,"mode_name":"COOP","t":1,"type":"mode_changed"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(2)
+EVT {"seat":1,"t":8,"type":"landed"}
+EVT {"seat":2,"t":10,"type":"landed"}
+EVT {"seat":1,"t":452,"type":"landed"}
+EVT {"seat":2,"t":454,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m4_tortoise/crown/shot_1770.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 30.0s)

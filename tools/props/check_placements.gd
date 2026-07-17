@@ -46,7 +46,7 @@ extends SceneTree
 ## (nonzero exit on any FAIL, per the brief).
 
 const WORLD_SCENE_PATH_FORMAT: String = "res://worlds/%s/%s.tscn"
-const DEFAULT_WORLDS: PackedStringArray = ["pillow_fort", "bramble"]
+const DEFAULT_WORLDS: PackedStringArray = ["pillow_fort", "bramble", "tortoise"]
 const COLLISION_MASK_WORLD_GEOMETRY: int = 1 # matches core/movement/player_body.gd PLAYER_COLLISION_MASK
 const MAX_STANDABLE_GAP: float = 2.0
 const RAY_DOWN_DISTANCE: float = 50.0

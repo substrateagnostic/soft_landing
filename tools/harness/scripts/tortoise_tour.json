@@ -1,0 +1,13 @@
+{
+  "description": "Tortoise spawn-to-dreamling tour (--pads=1, buddy AI keeps Otto with Pip): proves real walking legs (not teleports) reach the meadow's two dreamlings. Camera-settle discipline (gotcha #7): idle ~3s after boot, then PURE-AXIS stick legs only (never diagonal). Movement here is camera-relative (core/movement/player_body.gd _camera_relative_dir) -- MeadowApproachHint's yaw=-90 makes the spawn camera's forward world +X, so 'move_up' (vec=[0,-1]) walks toward the shell and 'move_right' (vec=[1,0]) walks toward +Z (confirmed empirically via a throwaway probe script, not assumed). Route: walk +X ~12m toward d01 (race, meadow at (-18,0.55,4)), then +Z ~4m to close on/trigger it, hold to let the race loop + catch resolve, then +X ~12m and -Z ~8m to reach d02 (open, at (-6,0.55,-4)) and catch it via magnetism. Expected receipts: an EVT mission_race_started for d01, two EVT dreamling_collected lines (d01, d02), zero RESCUE lines (flat meadow the whole route).",
+  "events": [
+    {"frame": 180, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 375, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 395, "seat": 1, "action": "move", "vec": [1.0, 0.0]},
+    {"frame": 465, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 900, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 1063, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 1083, "seat": 1, "action": "move", "vec": [-1.0, 0.0]},
+    {"frame": 1210, "seat": 1, "action": "move", "vec": [0.0, 0.0]}
+  ]
+}
