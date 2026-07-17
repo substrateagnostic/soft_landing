@@ -1,0 +1,6 @@
+HARNESS_FLAGS {"model":"wisp_whale_b","outdir":"evidence/stills/m3_wisp/preview","quitafter":"4.2","shots":"30,90,150,210"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_wisp/preview/shot_30.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_wisp/preview/shot_90.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_wisp/preview/shot_150.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_wisp/preview/shot_210.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 4.2s)

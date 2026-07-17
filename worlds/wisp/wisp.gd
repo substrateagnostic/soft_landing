@@ -138,6 +138,31 @@ const WATER_SPOUT_ANCHOR_X: float = 79.0
 const WATER_SPOUT_ANCHOR_Z: float = -5.0
 const WATER_SPOUT_HEIGHT: float = 14.0
 
+# --- Wisp giant treatment (ROADMAP M3): the real plush whale model replaces
+# the primitive Tail/Body/Head mounds as WHAT YOU SEE, while every mound's
+# collision (plus the shelves/ledges/rim built on top of them) stays exactly
+# where it always was -- bramble_bear_rig's precedent (worlds/bramble/
+# bramble.gd _build_bear_shell()): oversized, non-mesh-hugging collision the
+# visible giant merely stands generously inside of, not a re-derivation.
+# wisp_whale_b.glb's own local AABB (measured via tools/meshy/preview_model.
+# tscn, evidence/stills/m3_wisp/preview) is (x=0.873, y=0.544, z=1.906) --
+# long axis is local Z, so a 90 deg yaw maps it to world +X exactly the same
+# way bramble's BEAR_SHELL_YAW_DEGREES=90 maps the rig's local +Z forward to
+# world +X (that file's own header note, confirmed by still there; confirmed
+# independently by still here -- see WHALE_SHELL_VERIFY notes in
+# docs/verify/wisp-giant-VERIFY.md). Anchored at the TAIL/HEAD span's
+# midpoint ((7+73)/2=40) so the ~88 m model (target_height * z/y ratio)
+# roughly envelops the old ~93 m mound chain without moving a single
+# existing dreamling/shelf/ledge coordinate.
+const WHALE_SHELL_POSITION: Vector3 = Vector3(40.0, -3.0, 0.0)
+# v2 (still-corrected, evidence/stills/m3_wisp/whale_check/shot_30.png): a
+# 90 deg yaw put the model's NOSE toward the shore/tail end (world -X) and
+# its FLUKES toward the blowhole/head end (world +X) -- backwards. -90 deg
+# fixes it (confirmed by the follow-up still): local +Z is the model's
+# FLUKE end, not its nose end, opposite of bramble's own rig.
+const WHALE_SHELL_YAW_DEGREES: float = -90.0
+const WHALE_SHELL_TARGET_HEIGHT: float = 25.0 # meters -- length works out to ~88 m at this GLB's aspect ratio
+
 # Shore reeds (tall thin boxes; d09 hides in the first patch).
 const REED_PATCH_1_X: float = -68.0
 const REED_PATCH_1_Z: float = 8.0
@@ -209,6 +234,9 @@ var _lily_pads: Array[LilyPad] = []
 var _flipper_ledge_center: Vector3 = Vector3.ZERO
 var _belly_shelf_center: Vector3 = Vector3.ZERO
 var _dorsal_crest_center: Vector3 = Vector3.ZERO
+var _tail_visual: MeshInstance3D = null
+var _body_visual: MeshInstance3D = null
+var _head_visual: MeshInstance3D = null
 
 
 func _ready() -> void:
@@ -224,6 +252,8 @@ func _ready() -> void:
 	_build_ambient_lighting()
 	_build_dreamkeepers()
 	_build_dressing()
+	_build_dive() # ROADMAP M3 wisp-giant: THE DIVE, looks up _whale/LakeSurface -- after both exist
+	_build_dev_camera()
 	super._ready()
 
 
@@ -457,9 +487,9 @@ func _build_whale() -> void:
 	_whale.period = WHALE_DRIFT_PERIOD
 	add_child(_whale)
 
-	_add_whale_mound("Tail", TAIL_CENTER, TAIL_RADIUS, COLOR_HIDE)
-	_add_whale_mound("Body", BODY_CENTER, BODY_RADIUS, COLOR_HIDE)
-	_add_whale_mound("Head", HEAD_CENTER, HEAD_RADIUS, COLOR_HIDE)
+	_tail_visual = _add_whale_mound("Tail", TAIL_CENTER, TAIL_RADIUS, COLOR_HIDE)
+	_body_visual = _add_whale_mound("Body", BODY_CENTER, BODY_RADIUS, COLOR_HIDE)
+	_head_visual = _add_whale_mound("Head", HEAD_CENTER, HEAD_RADIUS, COLOR_HIDE)
 
 	_flipper_ledge_center = _add_whale_shelf(
 		"FlipperLedge", FLIPPER_LEDGE_ANCHOR_X, FLIPPER_LEDGE_ANCHOR_Z,
@@ -480,12 +510,48 @@ func _build_whale() -> void:
 	_build_tail_seesaw()
 	_build_blowhole()
 	_build_water_spout()
+	_build_whale_shell()
+
+
+## ROADMAP M3 giant treatment: swaps wisp_whale_b.glb in as the whale's
+## actual visible body via a plain ModelSlot (static mesh, no rig -- "animate
+## by TRANSFORM", per the task brief; WhaleDrift already IS that transform).
+## The GLB lands in its own small anchor (mirrors bramble's BearShellAnchor),
+## parented under `_whale` so it rides the drift/dive exactly like every
+## other shape on the compound body -- no separate sync code needed (same
+## reasoning as the dorsal slide / tail seesaw's own nested-AnimatableBody3D
+## comments elsewhere in this file). Only once the swap actually lands does
+## this hide the old Tail/Body/Head sphere VISUALS (their collision, and
+## every shelf/ledge/rim built on top of them, stays exactly as-is -- the
+## brief's "keep its collision exactly"): if wisp_whale_b.glb is ever
+## missing, the primitive mounds are what a player sees instead, same
+## zero-GLBs-required floor every other ModelSlot in this game honors.
+func _build_whale_shell() -> void:
+	var anchor := Node3D.new()
+	anchor.name = "WhaleShellAnchor"
+	anchor.position = WHALE_SHELL_POSITION
+	anchor.rotation_degrees.y = WHALE_SHELL_YAW_DEGREES
+
+	var slot := ModelSlot.new()
+	slot.name = "ModelSlot"
+	slot.model_id = "wisp_whale_b"
+	slot.target_height = WHALE_SHELL_TARGET_HEIGHT
+	anchor.add_child(slot)
+
+	_whale.add_child(anchor) # slot._ready() (the swap) fires synchronously here
+
+	if slot.get_child_count() > 0:
+		_tail_visual.visible = false
+		_body_visual.visible = false
+		_head_visual.visible = false
 
 
 ## Adds a MeshInstance3D + CollisionShape3D directly as children of `_whale`
 ## -- part of the SAME compound physics body, so it rides the whole-whale
-## drift with the exact same velocity as every other shape on it.
-func _add_whale_mound(mound_name: String, center: Vector3, radius: float, color: Color) -> void:
+## drift with the exact same velocity as every other shape on it. Returns
+## the visual mesh so callers (the giant-treatment shell swap) can hide it
+## later without a second lookup by name.
+func _add_whale_mound(mound_name: String, center: Vector3, radius: float, color: Color) -> MeshInstance3D:
 	var mesh := SphereMesh.new()
 	mesh.radius = radius
 	mesh.height = radius * 2.0
@@ -505,6 +571,8 @@ func _add_whale_mound(mound_name: String, center: Vector3, radius: float, color:
 	shape.shape = sphere_shape
 	shape.position = center
 	_whale.add_child(shape)
+
+	return visual
 
 
 ## A flat platform anchored on a mound's surface (bramble's shelf pattern),
@@ -585,10 +653,22 @@ func _add_whale_ramp(ramp_name: String, top: Vector3, bottom: Vector3, width: fl
 ## The fluke -- its own nested AnimatableBody3D (same reasoning as the
 ## ramp: it has local motion of its own, rotation this time, which needs
 ## its own sync_to_physics body regardless of the friction question).
+## The tail_bridge-equivalent traversal element here is TailSeesaw (Wisp has
+## no marmalade-style TailBridge/arc_position() -- confirmed by repo search;
+## this world's own bonus tail element is the rocking seesaw plank per
+## worlds/wisp/tail_seesaw.gd). Giant-treatment pass: collision/shape/
+## position all stay exactly as authored (still nested under `_whale`, still
+## rides the drift/dive identically) -- only re-skinned to a cream tone
+## pulled from wisp_whale_b's own belly color so it reads as part of the new
+## whale instead of the old silver-hide primitive palette.
+const TAIL_SEESAW_COLOR: Color = Color("F0EAD9") # cream, matches the GLB's belly
+
+
 func _build_tail_seesaw() -> void:
 	var seesaw := TailSeesaw.new()
 	seesaw.name = "TailSeesaw"
 	seesaw.length = TAIL_SEESAW_LENGTH
+	seesaw.plank_color = TAIL_SEESAW_COLOR
 	seesaw.position = TAIL_SEESAW_PIVOT
 	_whale.add_child(seesaw)
 
@@ -818,3 +898,45 @@ func _add_prop_cylinder_collision(prop_position: Vector3, radius: float, height:
 	shape.position = prop_position + Vector3(0.0, height * 0.5, 0.0)
 	body.add_child(shape)
 	add_child(body)
+
+
+# --- ROADMAP M3 THE DIVE (docs/design/world-cards/wisp.md's signature body-
+# function) -------------------------------------------------------------
+
+## setup() BEFORE add_child() -- entering the tree fires _ready() SYNCHRO-
+## NOUSLY (bramble.gd's own _build_rollover() comment, same engine behavior
+## here), so a reversed order would run DiveSequence._ready() with _world/
+## _whale/_lake_surface still unset. LakeSurface is looked up by name (built
+## by _build_lake() -> _add_lake_plane(), which runs before this in _ready()).
+func _build_dive() -> void:
+	var dive := DiveSequence.new()
+	dive.name = "DiveSequence"
+	dive.setup(self, _whale, get_node("LakeSurface") as MeshInstance3D)
+	add_child(dive)
+
+
+# --- Layout-iteration tool (mirrors worlds/bramble/bramble.gd's own
+# _build_dev_camera() verbatim): a static free camera for framing stills
+# while placing the whale shell / dive geometry blind (no editor, headless-
+# or-windowed CLI only). Inert unless --devcam is passed; never affects
+# normal play. Reads --devcam_pos=x,y,z / --devcam_look=x,y,z (comma floats)
+# so a still can be re-aimed per capture without a code edit each time.
+func _build_dev_camera() -> void:
+	var devcam_flag: Variant = Harness.flag("devcam", false)
+	if devcam_flag == false or devcam_flag == null:
+		return
+	var cam := Camera3D.new()
+	cam.name = "DevCam"
+	add_child(cam)
+	cam.position = _parse_vec3(str(Harness.flag("devcam_pos", "")), Vector3(40.0, 45.0, 110.0))
+	cam.look_at(_parse_vec3(str(Harness.flag("devcam_look", "")), Vector3(40.0, 8.0, 0.0)), Vector3.UP)
+	cam.fov = float(str(Harness.flag("devcam_fov", "60")))
+	cam.current = true
+	print("DEVCAM %s" % JSON.stringify({"pos": [cam.position.x, cam.position.y, cam.position.z]}))
+
+
+func _parse_vec3(s: String, fallback: Vector3) -> Vector3:
+	var parts: PackedStringArray = s.split(",")
+	if parts.size() < 3:
+		return fallback
+	return Vector3(float(parts[0]), float(parts[1]), float(parts[2]))

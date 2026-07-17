@@ -1,0 +1,13 @@
+{
+  "description": "D26 disguise/joy-pass property (worlds/bramble/heartbeat_crossing.gd, whisper_spot.gd, seed_puff_toy.gd). --pads=2. Seat 1 (Pip) teleports onto AscentLedge3/ASCENT_L3 (42,20,30) at frame 10 and holds through frame 250 (~4s) -- expect repeated HEARTBEAT receipts (rate-limited every 2s while occupied). At frame 260 Pip teleports into the WhisperSpot alcove near ASCENT_SUMMIT (41,33,11) -- expect WHISPER {\"event\":\"hush\"} once, plus a MOON_SAID receipt for the whisper_shh key (falls back to printing the raw key as text -- data/moon_lines.json is out of this pass's territory, see whisper_spot.gd's own header). At frame 320 Pip teleports away (clear of the 3m alcove radius) -- expect WHISPER {\"event\":\"restore\"}. Seat 2 (Otto) teleports near SeedPuffToyBase (15.0,0.45,19.0 -- fixed live: the original (20,0.45,20) sat ON Ramp1's sloped surface, ~2.8m from its centerline and well inside the 4.5m half-width, and a pound there slid Otto ~40m off course instead of landing in place; (15,19) has a NEGATIVE dot product against the ramp's own travel direction -- behind its start edge, flat pre-climb meadow) at frame 340, then performs the SAME proven jump-then-airborne-interact pound sequence as tools/harness/scripts/pound_bounce.json (jump press/release, interact press/release ~20/26 ticks later while still airborne) -- expect SEED_PUFF {\"event\":\"burst\"} once POUND_LAND fires and the toy's BURST_RADIUS (3.5m) check passes.",
+  "events": [
+    {"frame": 10, "seat": 1, "action": "teleport", "pos": [42.0, 20.5, 30.0]},
+    {"frame": 260, "seat": 1, "action": "teleport", "pos": [41.0, 33.5, 11.0]},
+    {"frame": 320, "seat": 1, "action": "teleport", "pos": [-10.0, 0.5, -10.0]},
+    {"frame": 340, "seat": 2, "action": "teleport", "pos": [15.0, 0.45, 19.0]},
+    {"frame": 360, "seat": 2, "action": "jump", "type": "press"},
+    {"frame": 366, "seat": 2, "action": "jump", "type": "release"},
+    {"frame": 380, "seat": 2, "action": "interact", "type": "press"},
+    {"frame": 386, "seat": 2, "action": "interact", "type": "release"}
+  ]
+}

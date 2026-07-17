@@ -96,5 +96,8 @@
 	"wisp_d01_race": "This dream loves to race along the shore.",
 	"wisp_d09_shy": "Slow down, little duck — this reed-dream is shy.",
 	"marmalade_d01_race": "Someone's quick today, right through the village square.",
-	"marmalade_d09_shy": "Careful now — this one hides among the pots."
+	"marmalade_d09_shy": "Careful now — this one hides among the pots.",
+	"whisper_shh": [
+		"Shhh."
+	]
 }

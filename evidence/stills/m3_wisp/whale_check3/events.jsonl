@@ -1,0 +1,6 @@
+HARNESS_FLAGS {"devcam":true,"devcam_look":"35,10,3","devcam_pos":"45,35,60","outdir":"evidence/stills/m3_wisp/whale_check3","pads":"1","quitafter":"3","shots":"30","skipmenu":true,"world":"wisp"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(1)
+EVT {"seat":1,"t":9,"type":"landed"}
+EVT {"seat":2,"t":11,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/m3_wisp/whale_check3/shot_30.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 3.0s)

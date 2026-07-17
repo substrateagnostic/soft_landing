@@ -1,0 +1,18 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/m3_wisp/finale_wisp_run","pads":"2","quitafter":"15","script":"tools/harness/scripts/finale_wisp.json","skipmenu":true,"world":"wisp"}
+EVT {"mode":0,"mode_name":"COOP","t":1,"type":"mode_changed"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(2)
+HARNESS_NOTE script loaded: res://tools/harness/scripts/finale_wisp.json (8 events) - Finale seg C (--pads=2, wisp): shore walk toward the moonlit lake and the drifting whale, one hop, a pause to let the world breathe.
+EVT {"seat":1,"t":8,"type":"landed"}
+EVT {"seat":2,"t":10,"type":"landed"}
+HARNESS_EVENT {"action":"move","frame":240,"seat":1,"vec":[0.0,-1.0]}
+HARNESS_EVENT {"action":"move","frame":250,"seat":2,"vec":[0.0,-1.0]}
+HARNESS_EVENT {"action":"jump","frame":360,"seat":1,"type":"press"}
+EVT {"seat":1,"t":361,"type":"jumped"}
+HARNESS_EVENT {"action":"jump","frame":366,"seat":1,"type":"release"}
+EVT {"seat":1,"t":416,"type":"landed"}
+HARNESS_EVENT {"action":"move","frame":480,"seat":1,"vec":[0.0,0.0]}
+HARNESS_EVENT {"action":"move","frame":490,"seat":2,"vec":[0.0,0.0]}
+HARNESS_EVENT {"action":"move","frame":600,"seat":1,"vec":[0.0,-1.0]}
+EVT {"seat":1,"t":631,"type":"landed"}
+HARNESS_EVENT {"action":"move","frame":720,"seat":1,"vec":[0.0,0.0]}
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 15.0s)

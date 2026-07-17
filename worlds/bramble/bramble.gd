@@ -149,11 +149,14 @@ func _ready() -> void:
 	_build_ambient_lighting()
 	_build_grass_fields()
 	_build_bear_shell() # before _build_rollover: the sequence looks it up
+	_build_base_skirts() # D26 disguise pass: foothill masses merging his base into the ground
 	_build_ascent()
 	_build_ear_and_door() # D25: now builds at the summit platform, not the old head mound
 	_build_breath_weather()
 	_build_rollover()
 	_build_dreamkeepers()
+	_build_dreamkeeper_picnic() # D26 joy pass #7: relocate the moth keeper to a mid-ascent landing
+	_build_whisper_spot() # D26 joy pass #6
 	_build_dressing()
 	_build_mountain_dressing()
 	_build_dev_camera()
@@ -292,6 +295,29 @@ func _find_first_mesh(node: Node) -> MeshInstance3D:
 	return null
 
 
+# --- D26 disguise pass: "merge him into the ground" (item 3) ----------------
+# The director's verdict on v4_wide_disguised/shot_150.png: "the exposed
+# silhouette against sky reads as a sitting figure." The old west-side mound
+# chain (Haunch/Chest/Shoulder) already reads as foothills at HIS OWN base
+# (bramble.gd's own header note), but the NEW massif's base (BEAR_SHELL_
+# POSITION, further east) has nothing snuggled against it — its outline
+# floats free against the sky from most angles. Three low, half-buried,
+# rock-tinted hill masses (same _add_mound helper the Haunch/Shoulder mounds
+# already use) close that gap, kept clear of the ascent's own south-flank
+# footprint (z>=14 throughout _build_ascent()) by staying at z<=2.
+const COLOR_BASE_SKIRT: Color = Color(0.42, 0.47, 0.40) # grey-green-umber, between COLOR_MEADOW and COLOR_FUR_DARK
+const BASE_SKIRT_A: Vector3 = Vector3(26.0, -7.0, 2.0) # bridges the old Shoulder mound into the new massif
+const BASE_SKIRT_B: Vector3 = Vector3(48.0, -7.0, -2.0) # east/face-facing side — the named disguise gap
+const BASE_SKIRT_C: Vector3 = Vector3(34.0, -7.0, -10.0) # north side
+const BASE_SKIRT_RADIUS: float = 8.5
+
+
+func _build_base_skirts() -> void:
+	_add_mound("BaseSkirtA", BASE_SKIRT_A, BASE_SKIRT_RADIUS, COLOR_BASE_SKIRT)
+	_add_mound("BaseSkirtB", BASE_SKIRT_B, BASE_SKIRT_RADIUS, COLOR_BASE_SKIRT)
+	_add_mound("BaseSkirtC", BASE_SKIRT_C, BASE_SKIRT_RADIUS, COLOR_BASE_SKIRT)
+
+
 # --- D25 ascent: authored switchback path up his back to the summit --------
 # Waypoints are world-space; each ramp is a straight PrismMesh slope (same
 # primitive _add_paw_ramp already uses) between two waypoints, with a flat
@@ -335,7 +361,15 @@ const ASCENT_RAMP_WIDTH: float = 9.0
 const ASCENT_LEDGE_SIZE: Vector2 = Vector2(8.0, 8.0)
 const ASCENT_LEDGE_THICKNESS: float = 2.5
 const ASCENT_SUMMIT_SIZE: Vector2 = Vector2(9.0, 9.0)
-const COLOR_PATH_DIRT: Color = Color("8C6F52") # warm dirt-path tint, distinct from COLOR_FUR_DARK
+# D26 disguise pass (director verdict on v4_wide_disguised/shot_150.png:
+# "dark chocolate slabs reading as scaffolding, not a mountain trail"): the
+# old flat COLOR_PATH_DIRT tan is gone — ramps/ledges now carry the SAME
+# ground_patches.gdshader patchy-tint treatment the meadow already uses
+# (_ground_patch_material(), below), with a grey-umber stone pair instead of
+# a single flat brown, so the trail reads as a worn stone path rather than a
+# painted plank.
+const COLOR_PATH_STONE_A: Color = Color("8C8478") # warm grey stone
+const COLOR_PATH_STONE_B: Color = Color("6E6355") # darker grey-umber, patch B
 
 # Per-segment CameraHint yaw (degrees; same convention as _build_camera_hints:
 # 0=-Z forward, -90=+X, +90=-X), one per ramp segment below, computed from
@@ -374,10 +408,20 @@ func _build_ascent() -> void:
 		# the player has actually progressed into, not an arbitrary pick.
 		_add_camera_hint("AscentHint%d" % (i + 1), mid + Vector3(0.0, 3.0, 0.0),
 			Vector3(span.x + 6.0, 12.0, span.z + 6.0), ASCENT_HINT_YAWS[i], 2 + i, 0.9)
+	var ledges: Dictionary = {} # index -> the ledge's MeshInstance3D (for dressing/heartbeat below)
 	for i: int in range(1, waypoints.size() - 1):
-		_add_ascent_ledge("AscentLedge%d" % i, waypoints[i], ASCENT_LEDGE_SIZE)
+		ledges[i] = _add_ascent_ledge("AscentLedge%d" % i, waypoints[i], ASCENT_LEDGE_SIZE)
 	_add_ascent_ledge("SummitPlatform", ASCENT_SUMMIT, ASCENT_SUMMIT_SIZE)
 	_add_camera_hint("SummitHint", ASCENT_SUMMIT + Vector3(0.0, 4.0, 0.0), Vector3(16.0, 12.0, 16.0), 180.0, 8, 0.9)
+
+	# D26 disguise pass: rock curbs + a couple of dressed landings along the
+	# trail (item 4, "trail, not scaffolding").
+	_build_ascent_dressing(waypoints)
+	# D26 joy pass #5 (NEXT_STEPS.md §1b): the heartbeat crossing rides
+	# AscentLedge3 (ASCENT_L3, roughly mid-ascent — the 3rd of 4 switchback
+	# landings) so it lands partway up the climb, not at the very base or top.
+	if ledges.has(3) and is_instance_valid(ledges[3]):
+		_build_heartbeat_crossing(ASCENT_L3, ledges[3] as Node3D)
 
 
 ## Straight sloped ramp between two waypoints (differing only in height —
@@ -387,7 +431,7 @@ func _build_ascent() -> void:
 ## (cos(yaw), 0, -sin(yaw)) under a plain Y-rotation, so yaw =
 ## atan2(-delta.z, delta.x) points local +X at the target — confirmed
 ## against _add_paw_ramp's own zero-rotation case (delta=(RUN,0), yaw=0).
-func _add_ascent_ramp(ramp_name: String, from_point: Vector3, to_point: Vector3) -> void:
+func _add_ascent_ramp(ramp_name: String, from_point: Vector3, to_point: Vector3) -> MeshInstance3D:
 	var delta: Vector3 = to_point - from_point
 	var run: float = Vector2(delta.x, delta.z).length()
 	var rise: float = delta.y
@@ -396,9 +440,6 @@ func _add_ascent_ramp(ramp_name: String, from_point: Vector3, to_point: Vector3)
 	var mesh := PrismMesh.new()
 	mesh.size = Vector3(run, absf(rise), ASCENT_RAMP_WIDTH)
 	mesh.left_to_right = 1.0 if rise >= 0.0 else 0.0
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = COLOR_PATH_DIRT
-	mesh.material = mat
 
 	var center: Vector3 = (from_point + to_point) * 0.5
 	center.y = minf(from_point.y, to_point.y) + absf(rise) * 0.5
@@ -409,6 +450,11 @@ func _add_ascent_ramp(ramp_name: String, from_point: Vector3, to_point: Vector3)
 	visual.position = center
 	visual.rotation.y = yaw
 	add_child(visual)
+	# D26 stone retint (see COLOR_PATH_STONE_* comment above) — PrimitiveMesh
+	# only exposes one `.material` slot, so the patchy tint goes on the
+	# MeshInstance3D's surface override, same as _build_meadow()'s own Meadow
+	# slab does for the ground_patches shader.
+	visual.set_surface_override_material(0, _ground_patch_material(COLOR_PATH_STONE_A, COLOR_PATH_STONE_B))
 
 	var body := StaticBody3D.new()
 	body.name = ramp_name + "Body"
@@ -420,18 +466,18 @@ func _add_ascent_ramp(ramp_name: String, from_point: Vector3, to_point: Vector3)
 	shape.rotation.y = yaw
 	body.add_child(shape)
 	add_child(body)
+	return visual
 
 
 ## Flat landing ledge whose TOP surface sits exactly at top_point.y — matches
 ## _add_ground_slab's own top_y/thickness convention so a dreamling or the
 ## summit door can anchor directly to the waypoint constant with no extra
-## surface-height lookup.
-func _add_ascent_ledge(ledge_name: String, top_point: Vector3, size: Vector2) -> void:
+## surface-height lookup. Returns the visual MeshInstance3D so callers (the
+## heartbeat crossing, dressing) can attach to a specific ledge without a
+## second get_node_or_null lookup.
+func _add_ascent_ledge(ledge_name: String, top_point: Vector3, size: Vector2) -> MeshInstance3D:
 	var mesh := BoxMesh.new()
 	mesh.size = Vector3(size.x, ASCENT_LEDGE_THICKNESS, size.y)
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = COLOR_PATH_DIRT
-	mesh.material = mat
 
 	var center: Vector3 = Vector3(top_point.x, top_point.y - ASCENT_LEDGE_THICKNESS * 0.5, top_point.z)
 
@@ -440,6 +486,7 @@ func _add_ascent_ledge(ledge_name: String, top_point: Vector3, size: Vector2) ->
 	visual.mesh = mesh
 	visual.position = center
 	add_child(visual)
+	visual.set_surface_override_material(0, _ground_patch_material(COLOR_PATH_STONE_A, COLOR_PATH_STONE_B))
 
 	var body := StaticBody3D.new()
 	body.name = ledge_name + "Body"
@@ -452,6 +499,168 @@ func _add_ascent_ledge(ledge_name: String, top_point: Vector3, size: Vector2) ->
 	shape.position = center
 	body.add_child(shape)
 	add_child(body)
+	return visual
+
+
+# --- D26 disguise item 4 ("trail, not scaffolding") + joy pass items 5/8/9 --
+# Curb stones along the ramps' outer edges, a couple of dressed switchback
+# landings, the ascent's seed-puff toys, and the wordless trailhead sign —
+# all visual-only walk-through (the fort convention: _add_dressing_prop
+# never adds collision), so none of this can ever narrow the actual
+# ASCENT_RAMP_WIDTH a player walks on.
+const CURB_STONES_PER_SIDE: int = 3
+const CURB_OFFSET: float = ASCENT_RAMP_WIDTH * 0.5 + 1.0
+const COLOR_CURB_STONE: Color = Color(0.55, 0.58, 0.52)
+
+
+func _build_ascent_dressing(waypoints: Array[Vector3]) -> void:
+	for i: int in range(waypoints.size() - 1):
+		_add_ramp_curbs(waypoints[i], waypoints[i + 1], i)
+	# A pine and a lantern at two of the switchback landings, offset off the
+	# natural walk-through line (same convention d04/d06 already use for
+	# their own ledge offsets in _build_dreamlings()).
+	_add_dressing_prop("AscentLandingPine", "soft_pine_small", 1.8, waypoints[2] + Vector3(2.6, 0.0, -2.6),
+		_dressing_cone(0.6, 1.8, Color("7C9082")))
+	_add_dressing_prop("AscentLandingLamp", "mushroom_lamp", 0.5, waypoints[4] + Vector3(2.6, 0.0, -2.6),
+		_dressing_sphere(0.25, Color("F2C879")))
+	_build_ascent_seed_puffs(waypoints)
+	_build_trailhead_sign(waypoints[0])
+
+
+func _add_ramp_curbs(from_point: Vector3, to_point: Vector3, ramp_index: int) -> void:
+	var delta: Vector3 = to_point - from_point
+	var horizontal: Vector2 = Vector2(delta.x, delta.z)
+	if horizontal.length() < 0.01:
+		return
+	var dir: Vector2 = horizontal.normalized()
+	var perp: Vector2 = Vector2(-dir.y, dir.x)
+	var sides: Array[float] = [-1.0, 1.0]
+	for i: int in range(1, CURB_STONES_PER_SIDE + 1):
+		var t: float = float(i) / float(CURB_STONES_PER_SIDE + 1)
+		var along: Vector3 = from_point.lerp(to_point, t)
+		for side: float in sides:
+			var offset: Vector2 = perp * CURB_OFFSET * side
+			var pos: Vector3 = along + Vector3(offset.x, 0.15, offset.y)
+			_add_dressing_prop("AscentCurb%d_%d_%d" % [ramp_index, i, int(side)], "stone_soft", 0.5, pos,
+				_dressing_sphere(0.25, COLOR_CURB_STONE))
+
+
+func _build_ascent_seed_puffs(waypoints: Array[Vector3]) -> void:
+	# BUG FIX (caught live via tools/harness/scripts/bramble_disguise_joy.json:
+	# a pounding Otto teleported next to the original (waypoints[0] + (2,-2))
+	# offset slid ~40m off course instead of landing where placed). That
+	# offset's dot product with Ramp1's own travel direction ((1,1)
+	# normalized, base->L1) was POSITIVE and its perpendicular distance from
+	# the ramp centerline (2.83m) was well inside the ramp's own 4.5m
+	# half-width -- the toy (and anyone standing on it) was sitting on the
+	# SLOPED ramp surface, not flat meadow ground; Jolt + the pound's hard
+	# "committed drop" evidently turned that slope into a slide/launch.
+	# (-3,-3) has a NEGATIVE dot product with the same direction -- behind
+	# the ramp's own start edge entirely, on flat pre-climb meadow.
+	_add_seed_puff_toy("SeedPuffToyBase", waypoints[0] + Vector3(-3.0, 0.4, -3.0))
+	_add_seed_puff_toy("SeedPuffToyL2", waypoints[2] + Vector3(1.8, 0.4, 1.8))
+	_add_seed_puff_toy("SeedPuffToyL4", waypoints[4] + Vector3(-1.8, 0.4, -1.8))
+
+
+func _add_seed_puff_toy(toy_name: String, pos: Vector3) -> void:
+	var toy := SeedPuffToy.new()
+	toy.name = toy_name
+	toy.position = pos
+	add_child(toy)
+
+
+## HeartbeatCrossing rides a specific ledge (bramble.gd's own AscentLedge3,
+## ASCENT_L3 — see _build_ascent()'s wiring). ledge_top: the waypoint itself
+## (already the ledge's TOP surface y, per _add_ascent_ledge's own
+## top_point.y convention), so no thickness math needed here.
+func _build_heartbeat_crossing(ledge_top: Vector3, ledge_visual: Node3D) -> void:
+	var heartbeat := HeartbeatCrossing.new()
+	heartbeat.name = "HeartbeatCrossing"
+	# setup() BEFORE add_child() -- this file's established ordering rule.
+	heartbeat.setup(ASCENT_LEDGE_SIZE, ledge_visual)
+	heartbeat.position = ledge_top
+	add_child(heartbeat)
+
+
+## A tiny wordless trailhead sign (joy pass #9): a wooden post + flat sign
+## face bearing a crescent-moon-and-zzz icon built from primitives only (per
+## the brief: "a drawn texture is overkill"). Offset off the walkable
+## centerline so it never intrudes on the ascent's own approach.
+func _build_trailhead_sign(trailhead: Vector3) -> void:
+	var base: Vector3 = trailhead + Vector3(-3.2, 0.0, 0.6)
+
+	var post_mesh := CylinderMesh.new()
+	post_mesh.top_radius = 0.09
+	post_mesh.bottom_radius = 0.12
+	post_mesh.height = 1.6
+	var post_mat := StandardMaterial3D.new()
+	post_mat.albedo_color = COLOR_FUR_DARK
+	post_mesh.material = post_mat
+	var post := MeshInstance3D.new()
+	post.name = "TrailheadPost"
+	post.mesh = post_mesh
+	post.position = base + Vector3(0.0, 0.8, 0.0)
+	add_child(post)
+
+	var face_mesh := CylinderMesh.new()
+	face_mesh.top_radius = 0.42
+	face_mesh.bottom_radius = 0.42
+	face_mesh.height = 0.06
+	var face_color: Color = COLOR_FUR_DARK
+	var face_mat := StandardMaterial3D.new()
+	face_mat.albedo_color = face_color
+	face_mesh.material = face_mat
+	var face := MeshInstance3D.new()
+	face.name = "TrailheadSignFace"
+	face.mesh = face_mesh
+	face.position = base + Vector3(0.0, 1.55, 0.0)
+	face.rotation_degrees = Vector3(0.0, 0.0, 90.0) # disc facing outward, toward the trailhead approach
+	add_child(face)
+
+	# Crescent moon: a pale sphere with a second, sign-colored sphere offset
+	# to bite a shadow out of it -- primitive-only, no texture.
+	var moon_mesh := SphereMesh.new()
+	moon_mesh.radius = 0.14
+	moon_mesh.height = 0.28
+	var moon_mat := StandardMaterial3D.new()
+	moon_mat.albedo_color = Color("F5F2E8")
+	moon_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	moon_mesh.material = moon_mat
+	var moon := MeshInstance3D.new()
+	moon.name = "TrailheadMoon"
+	moon.mesh = moon_mesh
+	moon.position = base + Vector3(0.06, 1.6, -0.35)
+	add_child(moon)
+
+	var bite_mesh := SphereMesh.new()
+	bite_mesh.radius = 0.13
+	bite_mesh.height = 0.26
+	var bite_mat := StandardMaterial3D.new()
+	bite_mat.albedo_color = face_color
+	bite_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	bite_mesh.material = bite_mat
+	var bite := MeshInstance3D.new()
+	bite.name = "TrailheadMoonBite"
+	bite.mesh = bite_mesh
+	bite.position = base + Vector3(0.14, 1.62, -0.32)
+	add_child(bite)
+
+	# Three small "zzz" blocks, wordless sleep icon, shrinking on a diagonal.
+	var zzz_sizes: Array[float] = [0.07, 0.05, 0.035]
+	for i: int in range(zzz_sizes.size()):
+		var s: float = zzz_sizes[i]
+		var z_mesh := BoxMesh.new()
+		z_mesh.size = Vector3(s * 2.2, s * 0.5, 0.02)
+		var z_mat := StandardMaterial3D.new()
+		z_mat.albedo_color = Color("F2C879")
+		z_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		z_mesh.material = z_mat
+		var z := MeshInstance3D.new()
+		z.name = "TrailheadZ%d" % i
+		z.mesh = z_mesh
+		z.position = base + Vector3(-0.05 + float(i) * 0.09, 1.62 + float(i) * 0.11, -0.32)
+		z.rotation_degrees = Vector3(0.0, 0.0, -25.0)
+		add_child(z)
 
 
 # --- Dreamkeepers (M2, director wire-up of the dormant data file) ------------
@@ -493,6 +702,48 @@ func _spawn_dreamkeeper(entry: Dictionary) -> void:
 	keeper.face_yaw_degrees = float(entry.get("face_yaw", 0.0))
 	keeper.position = Vector3(float(pos_arr[0]), float(pos_arr[1]), float(pos_arr[2]))
 	add_child(keeper)
+
+
+## D26 joy pass #7 ("Dreamkeeper picnic"): moves the moth-shepherd
+## dreamkeeper (data/dreamkeepers/bramble.json, spawned at the old meadow
+## position by _build_dreamkeepers() above) to a mid-ascent landing, with a
+## picnic_basket prop beside it. data/** stays untouched (out of this pass's
+## territory, autoloads/data being public-API-only per the brief) -- this
+## repositions the ALREADY-SPAWNED node instead, entirely in bramble.gd.
+const DREAMKEEPER_PICNIC_ID: String = "moth_meadow_shepherd"
+const DREAMKEEPER_PICNIC_OFFSET: Vector3 = Vector3(-2.0, 0.0, 1.8) # ASCENT_L2, opposite corner from d04
+
+
+func _build_dreamkeeper_picnic() -> void:
+	var keeper: Dreamkeeper = get_node_or_null("Dreamkeeper_%s" % DREAMKEEPER_PICNIC_ID) as Dreamkeeper
+	if keeper == null:
+		return # data file missing/renamed elsewhere -- fail soft, never crash
+	var new_pos: Vector3 = ASCENT_L2 + DREAMKEEPER_PICNIC_OFFSET
+	keeper.position = new_pos
+	# Face back down the trail toward arriving climbers -- same atan2(x,z)
+	# convention dreamkeeper.gd's own _update_facing() uses to turn toward a
+	# nearby player. face_yaw_degrees is the class's public @export "resting
+	# orientation" field, so setting it (not just .rotation) keeps the new
+	# facing even after it wakes/sleeps and eases back toward "resting."
+	var to_l1: Vector3 = ASCENT_L1 - new_pos
+	keeper.face_yaw_degrees = rad_to_deg(atan2(to_l1.x, to_l1.z))
+	keeper.rotation.y = deg_to_rad(keeper.face_yaw_degrees)
+
+	_add_dressing_prop("DreamkeeperPicnicBasket", "picnic_basket", 0.4, new_pos + Vector3(0.9, 0.0, 0.6),
+		_dressing_sphere(0.2, Color("E8C97A")))
+
+
+## D26 joy pass #6: a small hush alcove near the summit/head. See worlds/
+## bramble/whisper_spot.gd for the full behavior and the territory note on
+## why "whisper_shh" isn't added to data/moon_lines.json here.
+const WHISPER_SPOT_OFFSET: Vector3 = Vector3(-3.0, 1.0, -3.0) # clear of the DreamDoor's own trigger box (3.6x4.6x3.6) and d10
+
+
+func _build_whisper_spot() -> void:
+	var spot := WhisperSpot.new()
+	spot.name = "WhisperSpot"
+	spot.position = ASCENT_SUMMIT + WHISPER_SPOT_OFFSET
+	add_child(spot)
 
 
 # --- Dressing (M2 batch-2 props; all visual-only walk-through, fort's
@@ -594,19 +845,20 @@ func _dressing_cone(radius: float, height: float, color: Color) -> Mesh:
 ## D25: the terrain-disguise registry (worlds/bramble/mountain_dressing.gd) —
 ## stones/pines/snow-caps/cloud-ring dressing the massif + ascent path, with
 ## the reveal() API the finale calls (rollover_sequence.gd, timed to the
-## "wake" keystone clip).
-const MOUNTAIN_CLOUD_RING_HEIGHT: float = 20.0 # world y — "at his shoulders" per D25
+## "wake" keystone clip). D26 disguise pass: the cloud ring now wreathes
+## BEAR_HEAD_WORLD_CENTER directly (not the shell anchor) — see mountain_
+## dressing.gd's own header for why that's what makes it read as a bank
+## hiding the head instead of a ring near the shoulders.
 
 
 func _build_mountain_dressing() -> void:
 	var dressing := MountainDressing.new()
 	dressing.name = "MountainDressing"
-	var cloud_center: Vector3 = Vector3(BEAR_SHELL_POSITION.x, MOUNTAIN_CLOUD_RING_HEIGHT, BEAR_SHELL_POSITION.z)
 	var waypoints: Array[Vector3] = [ASCENT_BASE, ASCENT_L1, ASCENT_L2, ASCENT_L3, ASCENT_L4, ASCENT_SUMMIT]
 	# setup() BEFORE add_child() — established ordering rule in this file
 	# (see _build_rollover()'s own comment: entering the tree fires _ready()
 	# synchronously, so a reversed order runs _ready() before setup() lands).
-	dressing.setup(world_id(), cloud_center, waypoints)
+	dressing.setup(self, world_id(), BEAR_HEAD_WORLD_CENTER, waypoints)
 	add_child(dressing)
 
 

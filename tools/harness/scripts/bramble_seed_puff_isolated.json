@@ -1,0 +1,11 @@
+{
+  "description": "Isolated SEED_PUFF property (worlds/bramble/seed_puff_toy.gd), separated out of bramble_disguise_joy.json after a live finding: when Pip and Otto are teleported tens of meters apart, Otto's jump+interact sequence produced a large, continuously-ACCELERATING horizontal drift (23 m/s then 37 m/s across consecutive 0.5s windows) ending suspiciously close to Pip's own position -- not consistent with try_pound()'s own velocity.x/z=0.0-every-frame DROP phase, and not reproduced here. Root cause not chased further (would touch core/movement or core/camera, out of this pass's territory) -- this script instead mirrors tools/harness/scripts/pound_bounce.json's own PROVEN-safe setup exactly (Pip and Otto teleported ~2m apart, i.e. outside carry_range 1.2m but close enough that whatever depends on their separation stays inside its safe envelope) at SeedPuffToyBase's corrected position (15,0.45,19 -- see bramble.gd _build_ascent_seed_puffs()'s own comment for why the original (20,20) offset sat on Ramp1's sloped surface). Same jump/interact timing pound_bounce.json already proved (press@60/66, interact press@80/86 relative to a teleport at frame 30, here shifted to start at frame 10). Expect POUND_START/POUND_LAND for Otto (seat 2) followed immediately by SEED_PUFF {\"event\":\"burst\"}.",
+  "events": [
+    {"frame": 10, "seat": 1, "action": "teleport", "pos": [16.5, 0.45, 20.0]},
+    {"frame": 10, "seat": 2, "action": "teleport", "pos": [15.0, 0.45, 19.0]},
+    {"frame": 40, "seat": 2, "action": "jump", "type": "press"},
+    {"frame": 46, "seat": 2, "action": "jump", "type": "release"},
+    {"frame": 60, "seat": 2, "action": "interact", "type": "press"},
+    {"frame": 66, "seat": 2, "action": "interact", "type": "release"}
+  ]
+}

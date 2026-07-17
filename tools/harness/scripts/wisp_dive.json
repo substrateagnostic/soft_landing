@@ -1,0 +1,11 @@
+{
+  "description": "Wisp THE DIVE property (--dive, --pads=1): after routes_open, teleport-assisted hops across every flood cushion to the new islet, proving the route is reachable and every landing stays safe (poslog receipts).",
+  "events": [
+    {"frame": 950, "seat": 1, "action": "teleport", "pos": [-53.0, 0.6, 12.0]},
+    {"frame": 980, "seat": 1, "action": "teleport", "pos": [-48.5, 0.6, 15.0]},
+    {"frame": 1010, "seat": 1, "action": "teleport", "pos": [-43.5, 0.6, 13.0]},
+    {"frame": 1040, "seat": 1, "action": "teleport", "pos": [-38.5, 0.6, 16.0]},
+    {"frame": 1070, "seat": 1, "action": "teleport", "pos": [-34.0, 0.6, 14.0]},
+    {"frame": 1100, "seat": 1, "action": "teleport", "pos": [-27.0, 0.6, 15.5]}
+  ]
+}

@@ -10,7 +10,18 @@ extends WorldBase
 ## routes converge -> the back-ridge mound -> the head mound -> twin ear
 ## peaks with the DreamDoor nested between them. Ten dreamlings placed per
 ## the card's d01-d10 route (see VERIFY doc for the full table). Grey-box:
-## primitive meshes, flat StandardMaterial3D colors from the card only.
+## primitive meshes, flat StandardMaterial3D colors from the card only —
+## except the giant herself (_build_cat_giant(), M3) and her dressing/nook
+## props, which use the real generated Meshy assets via ModelSlot.
+##
+## M3 (ROADMAP.md, docs/verify/marmalade-giant-VERIFY.md): the cat is now a
+## real curled-plush GLB (assets/models/meshy/generated/marmalade_cat.glb)
+## at village-dwarfing scale, with a soft collision blocker and a subtle
+## ambient breathing sine (see _process() below). At 10/10 dreamlings (or
+## the --stretch dev flag), worlds/marmalade/stretch_sequence.gd plays THE
+## STRETCH: she rises, arches, holds, and resettles while four rooftop
+## plates (RoofB0-3) permanently relocate into a new "chimney-hop" chain
+## opening a hidden attic-balcony nook.
 
 const DREAMLING_SCENE: PackedScene = preload("res://worlds/common/dreamling.tscn")
 const DREAM_DOOR_SCENE: PackedScene = preload("res://worlds/common/dream_door.tscn")
@@ -120,17 +131,41 @@ const SHELF_SIZE: Vector3 = Vector3(3.0, 0.6, 3.0)
 const RIDGE_CENTER: Vector3 = Vector3(26.0, -3.0, 0.0)
 const RIDGE_RADIUS: float = 14.0 # top height = -3 + 14 = 11.0
 
-# --- Cat silhouette (visual-only bulk, no collision — pillow_fort.gd's
-# BrambleSkylineSilhouette pattern). The camera rig's pitch is reactive
-# (biases down near gaps, base -32 deg) and has no per-world hint, so the
+# --- The giant herself (M3, ROADMAP.md "Marmalade gets the giant treatment"):
+# assets/models/meshy/generated/marmalade_cat.glb (curled sleeping plush
+# tabby, generated+refined — tools/meshy/forge_report.json id="marmalade_cat",
+# status "ok") via plain ModelSlot (quadruped — Meshy can't rig; static
+# sculpt + the procedural THE STRETCH keystone, worlds/marmalade/
+# stretch_sequence.gd). Placement reuses the exact XZ/footprint the old
+# visual-only CatSilhouette bulk it replaces already proved out by hand
+# (world-marmalade-VERIFY.md (e)): the camera rig's pitch is reactive only
+# (biases down near gaps, base -32 deg) with no per-world hint, so the
 # nearest WALKABLE cat geometry (the ridge, starting x=12) is too far/low to
-# register in the spawn establishing shot. This bulk sits in the gap between
+# register in the spawn establishing shot — this bulk sits in the gap between
 # the village (ends x=-38) and the purr thermals (x=-30) / rooftop chain
-# (starts x=-24) — footprint x=-43..-25, checked clear (>0.3 m margin) of
-# every thermal/roof/step/shelf position so it never visually buries any
-# walkable prop once a player actually climbs up there.
-const SILHOUETTE_CENTER: Vector3 = Vector3(-34.0, 6.0, 0.0)
-const SILHOUETTE_RADIUS: float = 9.0 # top height = 6 + 9 = 15.0
+# (starts x=-24), footprint x=-43..-25, checked clear (>0.3 m margin) of
+# every thermal/roof/step/shelf position. CAT_GIANT_CENTER anchors the
+# ModelSlot at ground level (she rests on the hill); CAT_COLLISION_CENTER/
+# RADIUS is the exact old silhouette sphere (same already-proven-clear
+# geometry), now real collision instead of none — "soft collision blocker so
+# players can't walk inside her," generous/not mesh-hugging per this
+# codebase's established convention (bramble.gd's torso-capsule blocker).
+const CAT_GIANT_CENTER: Vector3 = Vector3(-34.0, 0.0, 0.0)
+const CAT_GIANT_TARGET_HEIGHT: float = 18.0 # village-dwarfing: ~7x the ~2.6m house peak
+# CAT_COLLISION_* deliberately does NOT reuse the old SILHOUETTE_CENTER/RADIUS
+# (-34,6,0) r9 verbatim — that sphere was hand-verified clear of every prop's
+# BASE position only (never collidable itself), but d07 (worlds/common/
+# dreamling.gd) rides the purr thermal's TOP (world ~(-30,5.6,-6) — see
+## marmalade.gd's own _build_dreamlings()), much closer to this sphere's own
+# height than the thermal's base is. Caught live by
+# tools/props/check_placements.gd (d07 FAILED, inside_solid:true, at r9);
+# re-centered/shrunk to clear d07 (3.7m), both purr-thermal columns
+# (>2.1m), and the nearest village houses (>0.9m) — verified by hand,
+# 3D point-to-nearest-surface distance for each.
+const CAT_COLLISION_CENTER: Vector3 = Vector3(-37.0, 5.0, 0.0)
+const CAT_COLLISION_RADIUS: float = 5.5
+const CAT_BREATH_AMPLITUDE: float = 0.015 # +/-1.5% y-scale — subtle, ambient, always-on
+const CAT_BREATH_PERIOD: float = 6.0
 
 # --- Rooftop garden (d09 — hidden behind tall pots) -------------------------
 const GARDEN_ANCHOR_X: float = 22.0
@@ -188,11 +223,14 @@ var _tail_bridge: TailBridge = null
 var _thermal_a: PurrThermal = null
 var _d02_position: Vector3 = Vector3.ZERO
 var _d04_position: Vector3 = Vector3.ZERO
+var _cat_anchor: Node3D = null
+var _stretch: StretchSequence = null
+var _cat_breath_time: float = 0.0
 
 
 func _ready() -> void:
 	_build_ground()
-	_build_cat_silhouette()
+	_build_cat_giant()
 	_build_village()
 	_build_purr_thermals()
 	_build_rooftop_chain()
@@ -206,7 +244,24 @@ func _ready() -> void:
 	_build_camera_hints()
 	_build_home_door()
 	_build_dressing()
+	_build_stretch() # after the rooftop chain + cat giant: the sequence looks both up
 	super._ready()
+
+
+## THE STRETCH's ambient counterpart: a tiny, always-on y-scale breathing
+## sine on CAT_GIANT_CENTER, matching worlds/bramble/breathing_chest.gd's
+## `_rest + sin(_time * TAU / period) * amplitude` convention. Suppressed
+## while StretchSequence itself is animating the SAME anchor's scale
+## (`_stretch.playing`) so the two animations never fight over one property
+## — resumed automatically once the sequence resettles her to Vector3.ONE.
+func _process(delta: float) -> void:
+	if _cat_anchor == null:
+		return
+	if _stretch != null and _stretch.playing:
+		return
+	_cat_breath_time += delta
+	var s: float = 1.0 + sin(_cat_breath_time * TAU / CAT_BREATH_PERIOD) * CAT_BREATH_AMPLITUDE
+	_cat_anchor.scale = Vector3(1.0, s, 1.0)
 
 
 func world_id() -> String:
@@ -362,30 +417,89 @@ func _ground_patch_material(tint_a: Color, tint_b: Color) -> ShaderMaterial:
 	return mat
 
 
-## Visual-only bulk (no StaticBody3D) — see the constant's doc comment.
-## D22 graphics-v2: cast_shadow OFF. It's a huge (18 m) sphere sitting only
-## ~9-15 m from the village, and the old single flat DirectionalLight3D
-## never had real shadow casting turned on for it, so this never mattered
-## until core/env/ambience.gd's moon key light (shadow_enabled = true)
-## landed — with shadows on, this "just a distant shape, unreachable" prop
-## was blanketing the entire nearby village ground in real shadow,
-## reading as a broken near-black scene in the after-stills. A backdrop
-## silhouette shouldn't be able to shadow the gameplay area it's a
-## backdrop FOR.
-func _build_cat_silhouette() -> void:
+## M3: the real giant, via ModelSlot (D10 seam — assets/models/meshy/
+## generated/marmalade_cat.glb). Same grey-box-fallback contract as every
+## other ModelSlot prop in this file (_add_dressing_prop): a small "Primitive"
+## MeshInstance3D sibling under CatGiantAnchor keeps the exact old silhouette
+## sphere shape/color as the fallback if the GLB is ever missing, so the game
+## still works with zero GLBs on disk. D22 graphics-v2 lesson (see the const
+## block's doc comment): cast_shadow OFF on BOTH the primitive and — once it
+## swaps in synchronously inside this same function (ModelSlot._ready() fires
+## when add_child() attaches it to an already-in-tree anchor, matching this
+## file's established TailBridge-vs-thermal ordering note) — every
+## GeometryInstance3D under the real GLB too, so this huge, close-to-the-
+## village prop can never blanket the lamplit lane in real shadow.
+func _build_cat_giant() -> void:
+	var anchor := Node3D.new()
+	anchor.name = "CatGiantAnchor"
+	anchor.position = CAT_GIANT_CENTER
+	add_child(anchor)
+	_cat_anchor = anchor
+
 	var mesh := SphereMesh.new()
-	mesh.radius = SILHOUETTE_RADIUS
-	mesh.height = SILHOUETTE_RADIUS * 2.0
+	mesh.radius = CAT_GIANT_TARGET_HEIGHT * 0.5
+	mesh.height = CAT_GIANT_TARGET_HEIGHT
 	var mat := StandardMaterial3D.new()
 	mat.albedo_color = COLOR_CAT
 	mesh.material = mat
 
 	var visual := MeshInstance3D.new()
-	visual.name = "CatSilhouette"
+	visual.name = "Primitive"
 	visual.mesh = mesh
-	visual.position = SILHOUETTE_CENTER
+	visual.position = Vector3(0.0, CAT_GIANT_TARGET_HEIGHT * 0.5, 0.0)
 	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	add_child(visual)
+	anchor.add_child(visual)
+
+	var slot := ModelSlot.new()
+	slot.name = "ModelSlot"
+	slot.model_id = "marmalade_cat"
+	slot.target_height = CAT_GIANT_TARGET_HEIGHT
+	anchor.add_child(slot)
+	if slot.get_child_count() > 0:
+		_disable_shadows_recursive(slot.get_child(0))
+
+	_build_cat_collision_blocker()
+
+
+func _disable_shadows_recursive(node: Node) -> void:
+	if node is GeometryInstance3D:
+		(node as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	for child: Node in node.get_children():
+		_disable_shadows_recursive(child)
+
+
+## "Soft collision blocker so players can't walk inside her" — generous,
+## not mesh-hugging (this codebase's established convention for every giant
+## blocker: bramble.gd's torso-capsule+head-sphere stack is the precedent).
+## Reuses the exact old CatSilhouette sphere geometry (already hand-verified
+## clear of every thermal/roof/step/shelf position, world-marmalade-VERIFY.md
+## (e)) rather than re-deriving new clearance math for the real asset's
+## (visually somewhat larger) curled silhouette.
+func _build_cat_collision_blocker() -> void:
+	var body := StaticBody3D.new()
+	body.name = "CatGiantCollisionBody"
+	body.collision_layer = 1
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var sphere_shape := SphereShape3D.new()
+	sphere_shape.radius = CAT_COLLISION_RADIUS
+	shape.shape = sphere_shape
+	shape.position = CAT_COLLISION_CENTER
+	body.add_child(shape)
+	add_child(body)
+
+
+## THE STRETCH (M3 keystone, worlds/marmalade/stretch_sequence.gd) — after
+## the rooftop chain (needs RoofB0-3) and the cat giant (needs CatGiantAnchor)
+## both already exist. setup() BEFORE add_child() — established ordering rule
+## in this codebase (see bramble.gd's own _build_rollover() comment: entering
+## the tree fires _ready() synchronously, so a reversed order runs _ready()
+## before the world/anchor refs land).
+func _build_stretch() -> void:
+	_stretch = StretchSequence.new()
+	_stretch.name = "StretchSequence"
+	_stretch.setup(self, _cat_anchor)
+	add_child(_stretch)
 
 
 # --- Village -----------------------------------------------------------------

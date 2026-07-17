@@ -55,7 +55,7 @@ const GENTLE_KEYS: PackedStringArray = [
 ]
 const EXCITED_KEYS: PackedStringArray = [
 	"well_done", "world_complete", "fort_grows_5", "fort_grows_10",
-	"move_flutter_first", "move_glide_first", "move_pound_first",
+	"move_flutter_first", "move_glide_first", "move_pound_first", "whisper_shh",
 	"mission_race", "mission_duet", "rescue",
 	"bramble_d01_race", "bramble_d02_race", "bramble_d08_duet",
 	"wisp_d01_race", "marmalade_d01_race",
