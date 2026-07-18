@@ -326,7 +326,20 @@ func _add_ground_slab(slab_name: String, size: Vector2, top_y: float, thickness:
 
 
 func _build_meadow() -> void:
-	_add_ground_slab("Meadow", MEADOW_SIZE, MEADOW_TOP_Y, MEADOW_THICKNESS, COLOR_MEADOW, MEADOW_CENTER)
+	# D27 terrain v1 (bramble's template): rolling meadow heightfield. Flat
+	# discs pin the spawn/HomeDoor clearing and the WHOLE shell footprint +
+	# rim (terrace ramp feet land there — their authored y values must keep
+	# meeting true ground). NOTE: flat-disc coordinates are LOCAL to the
+	# patch node, which sits at MEADOW_CENTER — subtract it.
+	var meadow := TerrainPatch.new()
+	meadow.name = "Meadow"
+	meadow.position = Vector3(MEADOW_CENTER.x, MEADOW_TOP_Y, MEADOW_CENTER.y)
+	var flat_discs: Array[Vector3] = [
+		Vector3(SPAWN_PIP.x - MEADOW_CENTER.x, SPAWN_PIP.z - MEADOW_CENTER.y, 8.0), # spawns + HomeDoor
+		Vector3(SHELL_CENTER.x - MEADOW_CENTER.x, SHELL_CENTER.z - MEADOW_CENTER.y, SHELL_RADIUS + 3.0), # shell + rim + ramp feet
+	]
+	meadow.setup(MEADOW_SIZE, 0.35, 16.0, 5, flat_discs)
+	add_child(meadow)
 	(get_node("Meadow") as MeshInstance3D).set_surface_override_material(0, _ground_patch_material(COLOR_MEADOW, COLOR_MEADOW_TINT_B))
 
 

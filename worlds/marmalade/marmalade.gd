@@ -399,7 +399,19 @@ func _add_box_platform(platform_name: String, center: Vector3, size: Vector3, co
 
 func _build_ground() -> void:
 	_add_ground_slab("Moat", MOAT_SIZE, MOAT_TOP_Y, MOAT_THICKNESS, COLOR_MOAT)
-	_add_ground_slab("VillageGround", GROUND_SIZE, 0.0, GROUND_THICKNESS, COLOR_HILL)
+	# D27 terrain v1 (bramble's template): the village hill rolls gently.
+	# Every house from HOUSE_LAYOUT pins its own flat disc (a floating gap
+	# under a wall reads broken; the discs keep foundations true), plus the
+	# spawn/HomeDoor clearing. Patch sits at origin so local == world XZ.
+	var ground := TerrainPatch.new()
+	ground.name = "VillageGround"
+	var flat_discs: Array[Vector3] = [
+		Vector3(SPAWN_PIP.x, SPAWN_PIP.z, 8.0), # spawns + HomeDoor
+	]
+	for house: Array in HOUSE_LAYOUT:
+		flat_discs.append(Vector3(float(house[0]), float(house[1]), 3.0))
+	ground.setup(GROUND_SIZE, 0.4, 16.0, 3, flat_discs)
+	add_child(ground)
 	# ROUND 2 (director's note 2): patchy sage/warm-grey shader on the main
 	# walkable ground (the moat stays flat -- boundary void ring, not
 	# gameplay ground).

@@ -232,34 +232,29 @@ func rescue_floor_y() -> float:
 
 
 func _build_clearing() -> void:
-	var mesh := PlaneMesh.new()
-	mesh.size = CLEARING_SIZE
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = CLEARING_COLOR
-	mesh.material = mat
-
-	var visual := MeshInstance3D.new()
+	# D27 terrain v1: the clearing rolls gently now — a low "bedding drift"
+	# swell in the outer ring only (TerrainPatch, core/art/terrain_patch.gd).
+	# The fort, all four doors, and the spawn sit on pinned-flat discs; this
+	# 25×25 space is dense with authored content, so the amplitude stays a
+	# quarter meter and the wavelength tight. Node keeps the ClearingGround
+	# name (TerrainPatch IS a MeshInstance3D) so the ground-patches shader
+	# override below is unchanged.
+	var visual := TerrainPatch.new()
 	visual.name = "ClearingGround"
-	visual.mesh = mesh
+	var flat_discs: Array[Vector3] = [
+		Vector3(FORT_CENTER.x, FORT_CENTER.z, 5.5), # fort + interior + porch
+		Vector3(0.0, 3.0, 4.0), # spawn pair
+		Vector3(0.0, FORT_CENTER.z - FORT_DEPTH * 0.5 - 1.2, 3.5), # BrambleDoor
+		Vector3(9.5, -2.0, 3.5), # MarmaladeDoor
+		Vector3(-9.5, -2.0, 3.5), # WispDoor
+		Vector3(0.0, 9.2, 3.5), # TortoiseDoor
+	]
+	visual.setup(CLEARING_SIZE, 0.25, 9.0, 11, flat_discs, 5.0)
 	add_child(visual)
 	# ROUND 2 (director's note 2, "flat single-color ground kills the
 	# diorama"): patchy sage <-> lighter-sage blend on the clearing's main
-	# ground (assets/shaders/ground_patches.gdshader). Override on the
-	# MeshInstance3D, not the PlaneMesh resource, so it doesn't disturb the
-	# `mat`/`mesh.material` StandardMaterial3D wiring above.
+	# ground (assets/shaders/ground_patches.gdshader).
 	visual.set_surface_override_material(0, _ground_patch_material(CLEARING_COLOR, CLEARING_GROUND_TINT_B))
-
-	var body := StaticBody3D.new()
-	body.name = "ClearingGroundBody"
-	body.collision_layer = 1
-	body.collision_mask = 0
-	var shape := CollisionShape3D.new()
-	var box := BoxShape3D.new()
-	box.size = Vector3(CLEARING_SIZE.x, 0.2, CLEARING_SIZE.y)
-	shape.shape = box
-	shape.position = Vector3(0.0, -0.1, 0.0)
-	body.add_child(shape)
-	add_child(body)
 
 
 func _build_fort() -> void:

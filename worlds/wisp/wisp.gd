@@ -372,7 +372,21 @@ func _ground_patch_material(tint_a: Color, tint_b: Color) -> ShaderMaterial:
 
 
 func _build_shore() -> void:
-	_add_ground_slab("Shore", SHORE_SIZE, SHORE_TOP_Y, SHORE_THICKNESS, COLOR_SHORE, SHORE_CENTER)
+	# D27 terrain v1 (bramble's template): the shore rolls softly. Small,
+	# crowded space (spawns, two doors, reeds, the lily-chain start) so the
+	# amplitude stays 0.3 with pinned discs at both door clearings. The
+	# patch's own edge falloff eases to exactly y=0 at its borders, keeping
+	# the east edge flush where it meets the lake bed. Coordinates in the
+	# disc list are LOCAL to the patch node at SHORE_CENTER.
+	var shore := TerrainPatch.new()
+	shore.name = "Shore"
+	shore.position = Vector3(SHORE_CENTER.x, SHORE_TOP_Y, SHORE_CENTER.y)
+	var flat_discs: Array[Vector3] = [
+		Vector3(SPAWN_PIP.x - SHORE_CENTER.x - 3.0, 1.0, 7.0), # spawns + HomeDoor clearing
+		Vector3(STUMP_DOOR_POSITION.x - SHORE_CENTER.x, STUMP_DOOR_POSITION.z, 3.5), # stump door
+	]
+	shore.setup(SHORE_SIZE, 0.3, 11.0, 9, flat_discs, 6.0)
+	add_child(shore)
 	(get_node("Shore") as MeshInstance3D).set_surface_override_material(0, _ground_patch_material(COLOR_SHORE, GROUND_TINT_B))
 
 
