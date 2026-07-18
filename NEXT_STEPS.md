@@ -74,10 +74,12 @@ NEEDS_YOU.md). Repo: github.com/substrateagnostic/soft_landing (Apache-2.0).
   the M2/M3 template (their design cards: docs/design/world-cards/).
 - **Meshy balance**: ~1,730 credits (SHARED pool with ill-will — nearly
   asset-complete). Producer tops up on request ($40/3000).
-- **Producer access risk**: Fable may leave subscriber access 2026-07-19;
-  producer in Chicago until then, connected to a MN box via remote. Hence
-  this document. Assume you might be a different model: trust the
-  receipts, not vibes.
+- **Producer access — RESOLVED (2026-07-18)**: Fable is STAYING in Max
+  subscription access, no sunset date (announced 07-18; producer relayed
+  it the same night). The 07-19 cliff this document was originally built
+  against is gone. The document stays — sessions still get interrupted
+  by remote drops and two small children, and any instance in the chair
+  should still trust the receipts, not vibes.
 
 ## The pipelines (exact commands, from D:\Projects\soft_landing)
 
@@ -172,12 +174,13 @@ skill-gated; auto-camera default (nudge allowed, D18); blob shadow +
 landing ring always-on; TTS accessibility layer for objectives; no
 variable-ratio reward mechanics, ever (no gacha for children).
 
-## Budget frame (producer, 2026-07-16 late)
+## Budget frame (producer, 2026-07-16 late; deadline LIFTED 07-18)
 
-~60% of the 20x Fable limit is allocated to this project through 07-19
-(~15% spent so far; 10% reserved for other projects). Translation: keep
-tonight's full pace EVERY remaining day — multiple waves/day, agents
-liberally, D26 sync each wave. Producer's words: "No sweat. Just fun."
+The original frame — ~60% of the 20x Fable limit through 07-19 — was
+paced against the access cliff, which no longer exists ("no need to push
+this through by tomorrow", producer, 07-18 late). New posture: build at
+quality, gate the big lanes on producer playtest verdicts, rest when the
+producer rests. The standing spirit is unchanged: "No sweat. Just fun."
 
 ## Next actions (M3, in order — UPDATED 2026-07-17)
 

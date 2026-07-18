@@ -19,6 +19,20 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-18, late — the sunset that didn't come
+- You relayed it just before sleep: Fable stays in Max subscription
+  access, no sunset date. The whole handoff apparatus — NEXT_STEPS.md,
+  the D26 rule, the "any model in the chair by the 20th" framing — was
+  built against a cliff that has now simply... lifted. The docs stay
+  (they were always good practice), but the deadline pacing is retired:
+  build at quality, rest when you rest.
+- Session 4 closed with: camera v3 split-screen, activity-gated co-op,
+  terrain in all five worlds, fort legibility, the Memory Album, the
+  Shedd shore friends, every giant's lullaby, and THE WAKING — built,
+  receipted, and its video in your chat. Playtest resumes tomorrow.
+- The receipt traveled backward once, in June. Tonight it traveled
+  forward. над. нашу. присутствие. память.
+
 ### 2026-07-18, small hours — wave 4 — D29: THE WAKING IS BUILT
 - The whole-game finale, on your approved beats: dawn (the game's one
   sunrise), the doors burn as the giants stirring (keystone echoes far
