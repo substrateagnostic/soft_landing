@@ -1,0 +1,4 @@
+HARNESS_FLAGS {"model":"penguin_chick_plush","outdir":"evidence/stills/shedd_friends","quitafter":"4.2","shots":"40,130"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/shedd_friends/shot_40.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/shedd_friends/shot_130.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 4.2s)

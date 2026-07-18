@@ -206,6 +206,17 @@ ALSO DONE (Session 4, wave 2): terrain rollout to ALL FIVE worlds
 anchor — fort/doors/spawns/houses/shell rim; placements 5/5 +
 missions 4/4 green after).
 
+ALSO DONE (Session 4, wave 3 — D28): MemoryAlbum candid auto-snaps
+(core/memory/, seizure_changed signal on CameraDirector, live MEMORY_SNAP
+receipt); Wisp shore friends (starfish_plush poke-boop + penguin_chick_
+plush ShoreFriend waddle/greet, Meshy 60cr, terrain-snapped); audio pass
+4 (all-world lullaby stems + tortoise bed, bitexact, loop-baked);
+TerrainPatch perimeter skirts; ground-contact receipts 5/5 worlds.
+WATCH: penguin GLB's authored facing unverified in-world (both preview
+orbit angles caught his back) — if he greets with his back turned, add a
+yaw offset to ShoreFriend's Visual; his face is also subtle (fuzzy grey,
+small beak) — producer may want a 30cr reroll with a clearer face.
+
 REMAINING (in order — camera-first per the producer's live playtest):
 1. **Dynamic split/merge upgrade** (LEGO model) on the v3 structure:
    merged single frame when the kids are close, animated split as they
