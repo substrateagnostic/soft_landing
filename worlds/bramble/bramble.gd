@@ -1011,12 +1011,25 @@ func _sphere_surface_y(center: Vector3, radius: float, x: float, z: float) -> fl
 
 func _build_meadow() -> void:
 	_add_ground_slab("Moat", MOAT_SIZE, MOAT_TOP_Y, MOAT_THICKNESS, COLOR_MOAT)
-	_add_ground_slab("Meadow", MEADOW_SIZE, 0.0, 1.0, COLOR_MEADOW)
+	# D27 terrain v1 (producer: "even Mario 64 had its polygons"): the
+	# meadow is a gently ROLLING heightfield now, not a flat box — same
+	# name, same footprint, same layer-1 collision contract, borders eased
+	# to exactly y=0 so the moat ring stays flush. Flat discs pin the
+	# ground level around authored anchors (spawns, home door, ascent
+	# trailhead) so arrivals and doorways never tilt. TerrainPatch IS a
+	# MeshInstance3D, so the patchy-shader override below is unchanged.
+	var meadow := TerrainPatch.new()
+	meadow.name = "Meadow"
+	var flat_discs: Array[Vector3] = [
+		Vector3(SPAWN_PIP.x, SPAWN_PIP.z, 7.0), # arrival clearing (covers both spawns + HomeDoor)
+		Vector3(SPAWN_PIP.x - 6.0, 1.0, 5.0), # HomeDoor's own footing
+		Vector3(ASCENT_BASE.x, ASCENT_BASE.z, 6.0), # trailhead — the first ramp's seam stays true
+	]
+	meadow.setup(MEADOW_SIZE, 0.45, 18.0, 7, flat_discs)
+	add_child(meadow)
 	# ROUND 2 (director's note 2): the meadow is the world's main walkable
 	# ground -- give it the patchy sage/warm-moss shader (the moat stays
-	# flat: it's a boundary void ring, not gameplay ground). Override on the
-	# MeshInstance3D (not the BoxMesh resource): PrimitiveMesh only exposes a
-	# single `.material` property, not ArrayMesh's per-surface setter.
+	# flat: it's a boundary void ring, not gameplay ground).
 	(get_node("Meadow") as MeshInstance3D).set_surface_override_material(0, _ground_patch_material(GROUND_TINT_A, GROUND_TINT_B))
 
 

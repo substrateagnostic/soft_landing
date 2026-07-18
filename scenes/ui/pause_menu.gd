@@ -68,6 +68,7 @@ var _music_slider: HSlider = null
 var _sfx_slider: HSlider = null
 var _voice_button: Button = null
 var _voice_icon: IconDraw = null
+var _players_button: Button = null
 var _camera_toggle_button: Button = null
 var _sensitivity_slider: HSlider = null
 var _back_button: Button = null
@@ -231,6 +232,7 @@ func _build_options_panel(parent: Control) -> void:
 	_sfx_slider.value_changed.connect(_on_sfx_slider_changed)
 
 	_build_voice_row(list)
+	_build_players_row(list)
 	_build_camera_row(list)
 
 	_sensitivity_slider = _build_slider_row(
@@ -366,6 +368,32 @@ func _build_voice_row(parent: VBoxContainer) -> void:
 	row.add_child(_voice_button)
 
 
+## _build_players_row — D27: the explicit parent-facing override for the
+## activity-gated co-op join (see input_router.gd). "Two" also enables
+## pad+keyboard co-op (P2's keyboard fallback is a real second seat).
+func _build_players_row(parent: VBoxContainer) -> void:
+	var row := HBoxContainer.new()
+	row.custom_minimum_size = Vector2(0.0, ROW_HEIGHT)
+	row.add_theme_constant_override("separation", 16)
+	parent.add_child(row)
+
+	_add_row_icon(row, IconDraw.Kind.PLAY)
+	_add_row_label(row, "Players")
+
+	_players_button = Button.new()
+	_players_button.custom_minimum_size = Vector2(SLIDER_MIN_WIDTH, ROW_HEIGHT - 10.0)
+	_players_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_players_button.focus_mode = Control.FOCUS_ALL
+	_style_button(_players_button)
+	_refresh_players_text()
+	_players_button.pressed.connect(_on_players_button_pressed)
+	row.add_child(_players_button)
+
+
+func _refresh_players_text() -> void:
+	_players_button.text = "Two (split screen)" if InputRouter.is_coop() else "One (Otto follows)"
+
+
 func _build_camera_row(parent: VBoxContainer) -> void:
 	var row := HBoxContainer.new()
 	row.custom_minimum_size = Vector2(0.0, ROW_HEIGHT)
@@ -408,8 +436,8 @@ func _layout_focus_neighbors() -> void:
 	_sleep_button.focus_neighbor_left = _sleep_button.get_path_to(_photo_button)
 
 	var chain: Array[Control] = [
-		_music_slider, _sfx_slider, _voice_button, _camera_toggle_button,
-		_sensitivity_slider, _back_button,
+		_music_slider, _sfx_slider, _voice_button, _players_button,
+		_camera_toggle_button, _sensitivity_slider, _back_button,
 	]
 	for i: int in range(chain.size()):
 		if i > 0:
@@ -434,6 +462,7 @@ func open() -> void:
 	_main_row.visible = true
 	_options_panel.visible = false
 	_reset_sleep_hold()
+	_refresh_players_text() # mode may have changed via a hot-join since last open
 	_keep_playing_button.grab_focus()
 
 
@@ -517,6 +546,12 @@ func _on_voice_button_pressed() -> void:
 	_voice_button.text = VOICE_MODE_LABEL.get(next_mode, "")
 	_voice_icon.kind = VOICE_MODE_ICON.get(next_mode, IconDraw.Kind.VOICE_MOUTH)
 	_voice_icon.queue_redraw()
+	AudioManager.play_sfx("ui_select")
+
+
+func _on_players_button_pressed() -> void:
+	InputRouter.set_player_count(1 if InputRouter.is_coop() else 2)
+	_refresh_players_text()
 	AudioManager.play_sfx("ui_select")
 
 

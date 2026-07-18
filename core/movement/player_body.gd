@@ -47,6 +47,11 @@ const PLAYER_COLLISION_MASK: int = 1 # world geometry only -> no player-player c
 
 var state: State = State.GROUNDED
 
+## D27 split-screen: the camera THIS seat steers relative to, assigned by
+## CameraDirector (each kid's own half). Falls back to the viewport camera
+## when unset (solo fallback paths, harness scenes without a director).
+var control_camera: Camera3D = null
+
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _virtual_jump_requested: bool = false
@@ -235,7 +240,9 @@ func _apply_horizontal_movement(on_floor: bool, delta: float) -> void:
 
 
 func _camera_relative_dir(input_vec: Vector2) -> Vector3:
-	var camera: Camera3D = get_viewport().get_camera_3d() if get_viewport() != null else null
+	var camera: Camera3D = control_camera if is_instance_valid(control_camera) else null
+	if camera == null:
+		camera = get_viewport().get_camera_3d() if get_viewport() != null else null
 	if camera == null:
 		return Vector3(input_vec.x, 0.0, input_vec.y)
 	var forward: Vector3 = -camera.global_transform.basis.z

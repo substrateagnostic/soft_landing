@@ -267,8 +267,14 @@ func _build_fort() -> void:
 	fort.name = "Fort"
 	add_child(fort)
 
-	var wall_mat := StandardMaterial3D.new()
-	wall_mat.albedo_color = FORT_WALL_COLOR
+	# D27 legibility: the walls are BLANKETS, not drywall — a quilted
+	# two-tone shader (assets/shaders/quilted_blanket.gdshader) replaces
+	# the flat milk-white StandardMaterial3D that read as an untextured
+	# placeholder filling half the screen in the producer's playtest.
+	var wall_mat := ShaderMaterial.new()
+	wall_mat.shader = load("res://assets/shaders/quilted_blanket.gdshader")
+	wall_mat.set_shader_parameter("color_a", FORT_WALL_COLOR)
+	wall_mat.set_shader_parameter("color_b", Color("E8D8C4")) # warm sand quilt-mate
 
 	var half_w: float = FORT_WIDTH * 0.5
 	var half_d: float = FORT_DEPTH * 0.5
@@ -354,7 +360,7 @@ func _ground_patch_material(tint_a: Color, tint_b: Color) -> ShaderMaterial:
 	return mat
 
 
-func _add_fort_box(parent: Node3D, size: Vector3, box_position: Vector3, mat: StandardMaterial3D) -> void:
+func _add_fort_box(parent: Node3D, size: Vector3, box_position: Vector3, mat: Material) -> void:
 	var mesh := BoxMesh.new()
 	mesh.size = size
 	mesh.material = mat

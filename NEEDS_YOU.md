@@ -3,6 +3,50 @@
 evidence is, one cold demo command, what's unverified, and what only you
 can decide. Cold-start handoff for any instance: NEXT_STEPS.md.*
 
+## Session 4, night two — YOUR PLAYTEST REBUILT THE CAMERA (D27)
+
+Your five notes were all real, all root-caused, all fixed tonight:
+
+- **CO-OP IS SPLIT-SCREEN NOW.** Static vertical split (your call:
+  "static first, then upgrade") — each kid gets their own camera with
+  FULL 360° right-stick orbit + auto-follow when the stick is idle. Solo
+  is the same free camera fullscreen. You can finally look into rooms,
+  at doors, behind you. Cutscenes/photo mode auto-collapse to fullscreen
+  cinema and restore after (verified on the roll-over, still in
+  evidence/stills/camera_v3/). Dynamic LEGO merge/split queued as the
+  upgrade on this same structure.
+- **Your "stuck in the first zone" was a GHOST PAD.** You had ONE
+  controller; something (likely Steam Input) enumerated a second, and
+  mere enumeration used to enter co-op — statue Otto, camera dragged
+  toward him, warp loop. Now co-op only begins when the second pad shows
+  REAL input (a press) — phantoms never press. A sibling can hot-join
+  mid-game wordlessly; pause menu has a "Players" row to override both
+  ways; boot console now prints every pad's NAME (look for the impostor).
+- **The "teleport off the map" bug is dead** — the old camera-leash warp
+  aimed at "partner + 1.5m sideways" with no ground check. The leash is
+  deleted outright (split-screen makes it meaningless) and every
+  remaining warp raycasts for ground first, falls back to the partner's
+  proven footing, or skips.
+- **The clipping in your race video** — the ascent trail now TUMBLES off
+  Bramble's flank as he sits up and settles home when he flops back
+  (visuals only; collision never moves). The "flopped critter" in your
+  screenshots was Callie on her cushion / the lamb dreamkeeper — resting
+  NPCs that only read as broken next to a statue Otto.
+- **The giant white plane** was a bare fort wall — walls are quilted
+  blankets now (two-tone shader). Every door grew a tinted BEACON that
+  swells when you stand in it + a first-time Moon hint, so leaving the
+  fort is discoverable.
+- Movement untouched (you liked it): full regression pack green with
+  frame-exact timings.
+
+### ⛔ Needs your hands (tonight, you're here!)
+1. **Relaunch and try it** — same command. One pad = solo free camera;
+   press anything on pad 2 and the screen splits live.
+2. **Right-stick feel**: orbit speed 150°/s, auto-resume after 1.5s
+   idle. Tell me in feelings; both are one-line tunes.
+3. **Terrain**: "even Mario 64 had its polygons" is queued next —
+   sculpted rolling ground for Bramble first.
+
 ## Session 3, overnight waves (2026-07-17, while you slept)
 
 - **AUNT TORTOISE EXISTS.** The fourth giant world: a terraced garden

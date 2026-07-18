@@ -11,11 +11,12 @@ extends Node3D
 ## randomly across ~2.5s more, then frees.
 ##
 ## The ascent path itself (the dirt-tinted ramps/ledges bramble.gd builds in
-## _build_ascent()) is NOT part of this registry on purpose: those are real,
-## permanent collision the player is standing on mid-cutscene (everyone is
-## already bubble-lifted off the bear before reveal() ever fires, per
-## rollover_sequence.gd, but the path itself stays — a mountain that just
-## woke up keeps its ledges; only the loose disguise dressing falls away).
+## _build_ascent()) is NOT part of this registry: its keystone choreography
+## is owned by rollover_sequence.gd's D27 ascent excursion instead — the
+## trail VISUALS tumble off the bear's flank as he sits up and settle home
+## as he flops back down, while every ramp/ledge's StaticBody3D collision
+## never moves (players are bubble-lifted for the whole cine; the path is
+## back in place before control returns).
 ##
 ## Positions come from setup() (bramble.gd's own D25 constants), not
 ## re-guessed here, so a future retune of the massif doesn't silently desync

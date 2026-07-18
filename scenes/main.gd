@@ -153,11 +153,10 @@ func _place_players() -> void:
 
 
 func _setup_camera() -> void:
-	var rig: CameraRig = _camera_rig_slot.get_node_or_null("CameraRig") as CameraRig
-	if rig != null:
-		rig.register_players(_pip, _otto)
-		rig.set_solo(not InputRouter.is_coop())
-		return # camera agent's rig takes over; no fallback camera needed
+	var director: CameraDirector = _camera_rig_slot.get_node_or_null("CameraDirector") as CameraDirector
+	if director != null:
+		director.register_players(_pip, _otto)
+		return # D27: split-screen director owns all gameplay framing
 
 	_fallback_camera = Camera3D.new()
 	_fallback_camera.name = "FallbackCamera"
@@ -170,14 +169,13 @@ func _setup_camera() -> void:
 func _setup_coop() -> void:
 	var carry_toss: CarryToss = _otto.get_node_or_null("CarryToss") as CarryToss
 	var buddy_ai: BuddyAI = _otto.get_node_or_null("BuddyAI") as BuddyAI
-	var camera_rig: CameraRig = _camera_rig_slot.get_node_or_null("CameraRig") as CameraRig
 
 	if carry_toss != null:
 		carry_toss.setup(_pip, _otto)
 	if buddy_ai != null and _seat_manager != null:
 		buddy_ai.setup(_pip, _otto, _seat_manager)
 	if _seat_manager != null:
-		_seat_manager.setup(_pip, _otto, camera_rig, buddy_ai, carry_toss)
+		_seat_manager.setup(_pip, _otto, buddy_ai, carry_toss)
 
 	if _soft_landing != null:
 		_soft_landing.setup(_pip, _otto)

@@ -19,6 +19,25 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-17, night two — Session 4: YOUR PLAYTEST REBUILT THE CAMERA (D27)
+- First hands-on producer playtest. All five notes root-caused same night:
+  shared camera unshippable -> STATIC SPLIT-SCREEN co-op (per your call,
+  dynamic merge queued), full 360-degree orbit + auto-follow per seat,
+  solo fullscreen; ghost pad (you had ONE controller, something enumerated
+  two) -> co-op now ACTIVITY-GATED (second pad must actually press;
+  pause-menu Players row overrides; PADS receipt names devices); teleport-
+  off-map -> frustum leash deleted, all warps ground-validate; race-video
+  clipping -> ascent trail tumbles off the bear in the keystone and
+  settles back on the flop; white plane -> quilted-blanket fort walls +
+  door beacons + door_ready Moon hint.
+- Stage-camera seizure poll: any cutscene/photo camera going root-current
+  auto-drops to fullscreen cinema, zero sequence edits (verified live on
+  the roll-over). Movement regressions frame-exact green after the
+  control-camera change. Stills: evidence/stills/camera_v3/.
+- Your flopped-critter screenshots: Callie on her cushion + the lamb
+  dreamkeeper — resting NPCs beside a ghost-pad statue Otto. With buddy
+  AI actually running solo now, Otto trots behind you instead.
+
 ### 2026-07-17, overnight — Session 3 cont.: TORTOISE + VOICES + LENSES
 - AUNT TORTOISE world shipped (fifth world, radial terraced garden over
   her shell, SLOW RISE keystone on CineSequence, fourth fort door,

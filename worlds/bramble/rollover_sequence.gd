@@ -191,9 +191,13 @@ func _play_sequence(forced: bool) -> void:
 		# No rig clip to time against — trigger the mountain reveal here,
 		# alongside the rigid-roll fallback, instead of mid-clip.
 		_trigger_dressing_reveal()
+		_ascent_tumble_out() # D27: same excursion, timed against the rigid roll
 		_tween_shell_roll()
-		var timer: SceneTreeTimer = get_tree().create_timer(ROTATE_DURATION)
+		var timer: SceneTreeTimer = get_tree().create_timer(ROTATE_DURATION * 0.65)
 		await timer.timeout
+		_ascent_settle_back()
+		var settle_timer: SceneTreeTimer = get_tree().create_timer(ROTATE_DURATION * 0.35)
+		await settle_timer.timeout
 
 	_cine.push_to(CINE_MEADOW_POS, CINE_MEADOW_LOOK, CINE_TAIL * 0.8)
 	var tail: SceneTreeTimer = get_tree().create_timer(CINE_TAIL)
@@ -206,6 +210,26 @@ func _play_sequence(forced: bool) -> void:
 
 const KEYSTONE_CLIPS: Array[String] = ["wake", "breathe", "toss_turn"]
 const KEYSTONE_CLIP_CAP: float = 8.0 # per-clip safety net; never hang the sequence
+
+# D27 — the ascent rides the mountain (producer's race video showed the
+# trail's grey ledge stack piercing the bear's torso as he sat up). The
+# trail IS part of the mountain resting on him: when he rises it tumbles
+# outward and down off his flank (staggered, tilting), and when he flops
+# back to sleep it settles home with a soft overshoot — dream physics, the
+# path lands with him. VISUALS ONLY: every ramp/ledge keeps its separate
+# StaticBody3D exactly where collision has always been (players are
+# bubble-lifted for the whole cine, and the path must be back in place,
+# collision never having moved, when control returns).
+const ASCENT_TUMBLE_PREFIXES: Array[String] = ["AscentRamp", "AscentLedge", "SummitPlatform"]
+const ASCENT_TUMBLE_OUT_TIME: float = 1.6
+const ASCENT_SETTLE_TIME: float = 1.4
+const ASCENT_TUMBLE_DROP: float = 3.2
+const ASCENT_TUMBLE_OUTWARD: float = 4.5
+const ASCENT_TUMBLE_TILT_DEG: float = 24.0
+const ASCENT_STAGGER: float = 0.07
+
+var _ascent_visuals: Array[Node3D] = []
+var _ascent_rest: Array[Transform3D] = []
 
 
 func _find_shell_anim_player() -> AnimationPlayer:
@@ -259,11 +283,71 @@ func _play_keystone(player: AnimationPlayer) -> void:
 			# start (_trigger_breath_gust(), called right after the
 			# letterbox came in), so only the prop-fall half fires here.
 			_trigger_dressing_reveal()
+			_ascent_tumble_out() # D27: the trail tumbles off his rising flank
+		elif clip == "toss_turn":
+			_ascent_settle_back() # D27: ...and lands home as he flops back down
 		var cap: SceneTreeTimer = get_tree().create_timer(
 			minf(player.get_animation(clip).length + 0.3, KEYSTONE_CLIP_CAP))
 		await cap.timeout
 	if player.has_animation("sleep"):
 		player.play("sleep")
+
+
+# --- Ascent excursion (D27, see ASCENT_TUMBLE_* constants) --------------------
+
+func _collect_ascent_visuals() -> void:
+	if not _ascent_visuals.is_empty():
+		return
+	for child: Node in _world.get_children():
+		if not (child is Node3D):
+			continue
+		for prefix: String in ASCENT_TUMBLE_PREFIXES:
+			if String(child.name).begins_with(prefix):
+				_ascent_visuals.append(child as Node3D)
+				_ascent_rest.append((child as Node3D).transform)
+				break
+
+
+func _ascent_tumble_out() -> void:
+	_collect_ascent_visuals()
+	print("ASCENT_TUMBLE %s" % JSON.stringify({"phase": "out", "pieces": _ascent_visuals.size()}))
+	var shell: Node3D = _world.get_node_or_null("BearShellAnchor") as Node3D
+	var center: Vector3 = shell.global_position if shell != null else Vector3.ZERO
+	for i: int in range(_ascent_visuals.size()):
+		var visual: Node3D = _ascent_visuals[i]
+		if not is_instance_valid(visual):
+			continue
+		var rest: Transform3D = _ascent_rest[i]
+		var outward: Vector3 = rest.origin - center
+		outward.y = 0.0
+		outward = outward.normalized() if outward.length_squared() > 0.01 else Vector3.RIGHT
+		var side: float = 1.0 if i % 2 == 0 else -1.0
+		var tween: Tween = create_tween()
+		tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		tween.set_parallel(true)
+		tween.tween_property(visual, "position",
+			rest.origin + outward * ASCENT_TUMBLE_OUTWARD + Vector3.DOWN * ASCENT_TUMBLE_DROP,
+			ASCENT_TUMBLE_OUT_TIME).set_delay(i * ASCENT_STAGGER)
+		tween.tween_property(visual, "rotation_degrees:x",
+			visual.rotation_degrees.x + ASCENT_TUMBLE_TILT_DEG * side,
+			ASCENT_TUMBLE_OUT_TIME).set_delay(i * ASCENT_STAGGER)
+		tween.tween_property(visual, "rotation_degrees:z",
+			visual.rotation_degrees.z - ASCENT_TUMBLE_TILT_DEG * 0.6 * side,
+			ASCENT_TUMBLE_OUT_TIME).set_delay(i * ASCENT_STAGGER)
+
+
+func _ascent_settle_back() -> void:
+	print("ASCENT_TUMBLE %s" % JSON.stringify({"phase": "back", "pieces": _ascent_visuals.size()}))
+	for i: int in range(_ascent_visuals.size()):
+		var visual: Node3D = _ascent_visuals[i]
+		if not is_instance_valid(visual):
+			continue
+		var rest: Transform3D = _ascent_rest[i]
+		var tween: Tween = create_tween()
+		tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT) # tiny overshoot: it LANDS
+		tween.set_parallel(true)
+		tween.tween_property(visual, "transform", rest,
+			ASCENT_SETTLE_TIME).set_delay(i * ASCENT_STAGGER * 0.6)
 
 
 # --- Bear shell roll (optional, present once the giant model lands) ----------

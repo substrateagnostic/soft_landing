@@ -1,0 +1,8 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/camera_v3/coop","pads":"2","quitafter":"6","shots":"90,240","skipmenu":true,"world":"pillow_fort"}
+EVT {"mode":0,"mode_name":"COOP","t":1,"type":"mode_changed"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(2)
+EVT {"seat":1,"t":2,"type":"landed"}
+EVT {"seat":2,"t":2,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/camera_v3/coop/shot_90.png
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/camera_v3/coop/shot_240.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 6.0s)

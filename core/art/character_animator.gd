@@ -223,8 +223,12 @@ func _update_face_camera(delta: float) -> void:
 		return
 	if _visual == null:
 		return
-	var viewport: Viewport = get_viewport()
-	var camera: Camera3D = viewport.get_camera_3d() if viewport != null else null
+	# D27 split-screen: present to THIS seat's own camera when the director
+	# has assigned one; the root viewport's camera is a mirror of Pip's half.
+	var camera: Camera3D = _player.control_camera if is_instance_valid(_player.control_camera) else null
+	if camera == null:
+		var viewport: Viewport = get_viewport()
+		camera = viewport.get_camera_3d() if viewport != null else null
 	if camera == null:
 		return
 	var to_camera: Vector3 = camera.global_position - _visual.global_position

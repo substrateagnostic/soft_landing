@@ -1,37 +1,46 @@
 class_name SeatManager
 extends Node
 ## SeatManager — consumes InputRouter.mode_changed (COOP: both players
-## input-active; SOLO: Otto becomes buddy AI, D7) and CameraRig.leash_broken
-## (bubble-warps the stray player back beside their anchored partner).
-## Shares one bubble vocabulary (core/rescue/bubble_effect.gd) with the
-## rescue system — warp_player_to() is also called directly by buddy_ai.gd
-## for its own "left too far behind" case, so every gentle-catch in the
-## game looks the same.
+## input-active; SOLO: Otto becomes buddy AI, D7). Shares one bubble
+## vocabulary (core/rescue/bubble_effect.gd) with the rescue system —
+## warp_player_to() is called by buddy_ai.gd for its "left too far behind"
+## case, so every gentle-catch in the game looks the same.
+##
+## D27: the CameraRig frustum-leash consumption is GONE — in split-screen
+## (CameraDirector) every player is always framed by their own camera, so
+## there is no "outside the frame" state to warp anyone out of. Its warp
+## was also the producer-reported "teleport kept dropping me off the map"
+## bug: the target was partner + 1.5m sideways with NO ground check, so a
+## partner near an edge fed the warped player straight into the void, the
+## rescue floated them back, and the loop repeated. Every warp target now
+## ground-validates first (raycast down), falling back to the exact
+## partner/leader position — which is proven standable — or, failing even
+## that, skipping the warp entirely (the rescue system remains the net).
 
 const BUBBLE_SCENE: PackedScene = preload("res://core/rescue/bubble_effect.tscn")
 const WARP_SFX: String = "bubble_catch"
-const WARP_SIDE_OFFSET: float = 1.5
 const WARP_DURATION: float = 1.5
+const WORLD_GEOMETRY_MASK: int = 1
+const GROUND_PROBE_UP: float = 2.0 # probe starts this far above the target...
+const GROUND_PROBE_DOWN: float = 6.0 # ...and looks this far below it
 
 var _pip: PlayerBody = null
 var _otto: PlayerBody = null
-var _camera_rig: CameraRig = null
 var _buddy_ai: BuddyAI = null
 var _carry_toss: CarryToss = null
 var _warping: Dictionary = {} # seat:int -> bool
+var _skip_until_ms: Dictionary = {} # seat:int -> ticks_msec; rate-limits no-ground retries
+
+const SKIP_RETRY_MS: int = 1500
 
 
-func setup(pip: PlayerBody, otto: PlayerBody, camera_rig: CameraRig, buddy_ai: BuddyAI, carry_toss: CarryToss) -> void:
+func setup(pip: PlayerBody, otto: PlayerBody, buddy_ai: BuddyAI, carry_toss: CarryToss) -> void:
 	_pip = pip
 	_otto = otto
-	_camera_rig = camera_rig
 	_buddy_ai = buddy_ai
 	_carry_toss = carry_toss
 
 	InputRouter.mode_changed.connect(_on_mode_changed)
-	if _camera_rig != null:
-		_camera_rig.leash_broken.connect(_on_leash_broken)
-
 	_apply_mode(InputRouter.is_coop())
 
 
@@ -46,49 +55,51 @@ func _apply_mode(coop: bool) -> void:
 		_buddy_ai.active = not coop
 	if coop and _otto != null:
 		_otto.clear_virtual_input()
-	if _camera_rig != null:
-		_camera_rig.set_solo(not coop)
-
-
-func _on_leash_broken(player: PlayerBody) -> void:
-	var partner: PlayerBody = _otto if player == _pip else _pip
-	if partner == null:
-		return
-	# Never warp TO a partner who is mid-rescue or falling hard (they're in
-	# the void — warping beside them just feeds the second player to the
-	# same fall), and never yank a player who is themselves being rescued.
-	# The leash re-fires once everyone is settled.
-	if partner.state == PlayerBody.State.BUBBLED or player.state == PlayerBody.State.BUBBLED:
-		return
-	if partner.velocity.y < -8.0:
-		return
-	warp_player_to(player, partner.global_position + _side_offset(partner))
 
 
 ## warp_player_to — same bubble visual as the rescue system, shorter float.
 ## No-op if `player` is already mid-warp (or mid-rescue, since BubbleEffect
-## puts them in BUBBLED either way).
+## puts them in BUBBLED either way). The target is ground-validated (D27);
+## when it hangs over nothing, the warp lands on the partner's own proven
+## footing instead, and if even that fails the warp is skipped.
 func warp_player_to(player: PlayerBody, target_position: Vector3) -> void:
 	if player == null:
 		return
 	var seat: int = player.seat
 	if _warping.get(seat, false) or player.state == PlayerBody.State.BUBBLED:
 		return
+
+	if Time.get_ticks_msec() < int(_skip_until_ms.get(seat, 0)):
+		return # a recent no-ground skip; don't re-probe every frame (buddy AI retries continuously)
+
+	var partner: PlayerBody = _otto if player == _pip else _pip
+	var validated: Vector3 = target_position
+	if not _has_ground_under(player, target_position):
+		if partner != null and _has_ground_under(player, partner.global_position):
+			validated = partner.global_position
+		else:
+			_skip_until_ms[seat] = Time.get_ticks_msec() + SKIP_RETRY_MS
+			print("WARP_SKIPPED %s" % JSON.stringify({"seat": seat, "reason": "no_ground"}))
+			return
+
 	_warping[seat] = true
 	print("WARP %s" % JSON.stringify({"seat": seat}))
 
 	var bubble: BubbleEffect = BUBBLE_SCENE.instantiate()
 	get_tree().current_scene.add_child(bubble)
 	bubble.finished.connect(_on_warp_finished.bind(seat))
-	bubble.play(player, target_position, WARP_SFX, WARP_DURATION)
+	bubble.play(player, validated, WARP_SFX, WARP_DURATION)
 
 
 func _on_warp_finished(seat: int) -> void:
 	_warping[seat] = false
 
 
-func _side_offset(partner: PlayerBody) -> Vector3:
-	var visual: Node3D = partner.get_node_or_null("Visual") as Node3D
-	var yaw: float = visual.rotation.y if visual != null else 0.0
-	var right: Vector3 = Vector3(cos(yaw), 0.0, -sin(yaw))
-	return right * WARP_SIDE_OFFSET
+func _has_ground_under(player: PlayerBody, point: Vector3) -> bool:
+	var space_state: PhysicsDirectSpaceState3D = player.get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(
+		point + Vector3.UP * GROUND_PROBE_UP,
+		point + Vector3.DOWN * GROUND_PROBE_DOWN
+	)
+	query.collision_mask = WORLD_GEOMETRY_MASK
+	return not space_state.intersect_ray(query).is_empty()

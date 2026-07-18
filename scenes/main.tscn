@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/main.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/players/pip.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/players/otto.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://core/camera/camera_rig.tscn" id="4"]
+[ext_resource type="Script" path="res://core/camera/camera_director.gd" id="4"]
 [ext_resource type="Script" path="res://core/coop/seat_manager.gd" id="5"]
 [ext_resource type="Script" path="res://core/rescue/soft_landing.gd" id="6"]
 [ext_resource type="PackedScene" path="res://scenes/ui/game_ui.tscn" id="7"]
@@ -45,7 +45,8 @@ environment = SubResource("Environment_dusk")
 
 [node name="CameraRigSlot" type="Node3D" parent="."]
 
-[node name="CameraRig" parent="CameraRigSlot" instance=ExtResource("4")]
+[node name="CameraDirector" type="Node3D" parent="CameraRigSlot"]
+script = ExtResource("4")
 
 [node name="SeatManager" type="Node" parent="."]
 script = ExtResource("5")

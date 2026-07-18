@@ -77,6 +77,14 @@ template and the vertical slice is honest.
 producer + kids. This is the gate where "fun for a real child" gets its
 first honest receipt.
 
+## M3.5 — CAMERA V3 (D27, shipped 7/17 night two, producer playtest)
+
+Static vertical split-screen co-op + full-orbit solo camera + activity-
+gated join replaced the shared rig outright (docs/DECISIONS.md D27).
+Remaining in this lane: dynamic LEGO-style merge/split upgrade; terrain
+v1 (sculpted ground, Bramble first) rides with it as the other playtest
+headline.
+
 ## M3 — THE MOUNTAIN IS THE BEAR + THE OTHER GIANTS (started 7/16, D25)
 
 - **Headline card — D25 (producer direction):** Bramble scales to ~42 m

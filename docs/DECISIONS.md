@@ -171,3 +171,37 @@ because nobody told him he can't; his pound-bounce is the toddler
 cannonball, true to life. Heights: Pip 0.9 m, Otto 0.8 m. Likeness comes
 from photo-informed *prompts* (hair/face/palette), never photo geometry —
 the kids stay soft toys. The reference photo stays local, out of the repo.
+
+**D27 — Split-screen co-op + full-orbit cameras + activity-gated join
+(producer's FIRST HANDS-ON PLAYTEST, 2026-07-17 night).** The playtest
+falsified three v2 assumptions at once. (1) A single shared camera
+framing two free 3D players is unshippable — the ±60° nudge couldn't
+look into rooms or find doors, and no shipped couch co-op does it this
+way (It Takes Two/LEGO split; Mario 3D World corridors). Co-op is now
+STATIC VERTICAL SPLIT-SCREEN — one OrbitCameraRig per seat, full 360°
+right-stick orbit with lakitu-style auto-follow (hints > velocity leash >
+hold), rendered through shared-world SubViewports below all UI; solo is
+the same rig fullscreen. Dynamic LEGO-style merge/split is the planned v2
+upgrade on this exact structure (producer: "static split first, then
+upgrade"). A root-viewport STAGE CAMERA holds `current` so every
+cutscene/photo/establishing camera that seizes the root viewport
+auto-drops the game to fullscreen cinematic via the director's poll —
+zero sequence-code changes. (2) Pad ENUMERATION lies: a phantom device
+(Steam Input et al.) trapped the producer in co-op with a statue Otto.
+Co-op now requires the second pad to show REAL input (button, or stick
+past 0.6 — never triggers, which idle at -1) before joining; ghost pads
+never press anything. Wordless hot-join; pause-menu "Players" row is the
+explicit override both ways (incl. pad+keyboard). PADS receipt logs
+device names for phantom forensics. (3) The frustum leash + its
+bubble-warp are DELETED — with per-player cameras nobody is ever
+off-frame, and its unvalidated warp target (partner + 1.5m sideways, no
+ground check) was the producer's "teleport kept dropping me off the map"
+loop. Every remaining warp (buddy AI) ground-validates first, falls back
+to the partner's proven footing, or skips (rescue remains the net).
+Corollaries: each PlayerBody steers relative to ITS OWN half's camera
+(control_camera); the ascent trail now tumbles off Bramble's flank
+during the sit-up and settles home on the flop (visuals only, collision
+never moves) — the producer's race video showed the ledge stack piercing
+his torso; fort walls get the quilted-blanket shader (the "giant white
+plane" was a bare wall); every WorldDoor gets a tinted beacon + occupied
+glow + a first-entry Moon hint ("couldn't figure out how to leave").

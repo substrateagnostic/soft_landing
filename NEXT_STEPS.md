@@ -19,13 +19,41 @@ NEEDS_YOU.md). Repo: github.com/substrateagnostic/soft_landing (Apache-2.0).
 
 1. This file, fully.
 2. NEEDS_YOU.md — producer-facing state + pending decisions.
-3. DIRECTION_V2.md + docs/DECISIONS.md (D1–D26) — what's law and why.
+3. DIRECTION_V2.md + docs/DECISIONS.md (D1–D27) — what's law and why.
 4. ROADMAP.md — M1–M5; M1+M2 are DONE, M3 is IN PROGRESS.
 5. AGENTS.md — conventions, agent-brief rules, verify pattern.
 6. docs/research/v2/ — the six research lanes informing everything.
 7. docs/verify/ — receipts for every shipped system.
 
-## Current state (2026-07-16 late)
+## Current state (2026-07-17 night two — updated after the producer's
+## first hands-on playtest, which drove D27)
+
+- **CAMERA V3 / D27 (Session 4, replaces the D4/D5/D18 shared rig)**:
+  co-op = STATIC VERTICAL SPLIT-SCREEN; solo = fullscreen. One
+  `core/camera/orbit_camera_rig.gd` per seat (full 360° right-stick
+  orbit, auto-follow via hints > velocity-leash > hold when idle),
+  composed by `core/camera/camera_director.gd`: gameplay renders through
+  shared-world SubViewports on CanvasLayer -5 (below all UI); a STAGE
+  CAMERA holds `current` in the root viewport, and the director's poll
+  drops to fullscreen the moment ANY cine/photo/establishing camera
+  seizes the root viewport (zero sequence-code changes — do not add
+  special cases, it is automatic). Each PlayerBody steers relative to
+  its own half via `control_camera`. The frustum leash + bubble-warp are
+  DELETED. Co-op join is ACTIVITY-GATED (input_router.gd): the seat-2
+  device must actually press something — enumeration alone is a ghost
+  (Steam Input trapped the producer). Pause menu "Players" row overrides
+  both ways. `PADS` receipt lists device names at every enumeration.
+  Old camera_rig.gd/tscn are deleted; CAMERA_RIG_READY now prints per
+  seat, CAMERA_DIRECTOR prints mode + seizure transitions.
+- **D27 legibility/clipping corollaries**: quilted-blanket shader on fort
+  walls (assets/shaders/quilted_blanket.gdshader); WorldDoor beacons
+  (tinted light column, occupied swell, one-per-session "door_ready"
+  Moon hint); Bramble's ascent trail tumbles off him during the keystone
+  sit-up and settles home on the flop (rollover_sequence.gd, visuals
+  only — collision NEVER moves); buddy-AI warps ground-validate via
+  seat_manager.warp_player_to (WARP_SKIPPED receipt when refused).
+
+## Prior state (2026-07-16 late)
 
 - **Shipped and pushed**: 4 worlds boot clean, placements 4/4 green
   (`tools/props/check_placements.gd`). Kids rigged+animated (11 clips
@@ -126,6 +154,15 @@ NEEDS_YOU.md). Repo: github.com/substrateagnostic/soft_landing (Apache-2.0).
     harness scripts must teleport both seats together.
 16. Camera forward is -Z: velocity-heading yaw is atan2(-vx, -vz);
     atan2(vx, vz) faces exactly backward (cost us the ascent walk).
+17. A new `class_name` script parses as "could not find type" everywhere
+    until `--headless --import` rebuilds the global class cache (same
+    pass Gotcha 3 needs for GLBs).
+18. D27: making any Camera3D `current` in the ROOT viewport IS the
+    fullscreen-cinematic signal (CameraDirector polls it). Cutscenes get
+    this for free — never hand-hide the split UI, and never park a
+    gameplay camera as root-current outside camera_director.gd.
+19. D27: real co-op on hardware needs the second pad to PRESS something
+    (activity gate); harness runs still use --pads=2 (force_mode pins).
 
 ## The design floor (never moves, any model in the chair)
 
@@ -156,21 +193,40 @@ camera-drift = leash-warp as designed (closed); AUNT TORTOISE world +
 THE SLOW RISE (fifth world; placements 5/5 green); fourth fort door;
 resident cap 38. All giants forged: bear/whale/cat/tortoise.
 
-REMAINING (in order):
-1. **The Waking finale** (M4 headline): when ALL FOUR worlds are
+ALSO DONE (Session 4, night two — D27, producer playtest response):
+camera v3 (split-screen co-op + full-orbit solo + stage-camera seizure
+poll), activity-gated co-op join + Players row + PADS forensics, leash
+warp deleted + ground-validated warps, quilted fort walls, door beacons
++ door_ready Moon hint, ascent tumble excursion during the keystone.
+Movement regression pack rerun GREEN with frame-exact timings
+(scratchpad log; stills in evidence/stills/camera_v3/).
+
+REMAINING (in order — camera-first per the producer's live playtest):
+1. **Terrain v1** (producer: "even Mario 64 had its polygons"): sculpted
+   rolling ground replacing the flat plates, Bramble's meadow first —
+   heightmap ArrayMesh + painterly blend + exact collision; keep
+   placements green; then the other worlds.
+2. **Dynamic split/merge upgrade** (LEGO model) on the v3 structure:
+   merged single frame when the kids are close, animated split as they
+   separate. Producer approved static-first-then-upgrade.
+3. **The Waking finale** (M4 headline): when ALL FOUR worlds are
    complete — dawn comes; a whole-game ending sequence (CineSequence),
    the giants stir together, the kids carried home to bed, credits over
    the fort at sunrise. Persistence + a post-game "quiet morning" fort
    state (dawn palette) would be extraordinary if cheap.
-2. Polish queue: tortoise ambience bed + world stems (audio pass 4);
-   terrace art-blend (tortoise ramps read plank-like); Wisp establishing
-   framing; whale-tail teal plank; buddy-AI wading on lily route;
-   Otto-targeting for photo mode.
-3. Narration completeness pass: every world_complete/keystone has lines;
-   the Waking needs its script (bible voice, budget 900 — at 575).
-4. M5 per ROADMAP: perf receipts on real hardware, input remap,
-   photosensitivity/colorblind review, Steam export presets, capsule
-   art, trailer cut from receipts, store copy, demo build.
+4. Polish queue: right-stick feel tuning from producer hands (orbit
+   150°/s, resume 1.5s — both one-line); tortoise ambience bed + world
+   stems (audio pass 4); terrace art-blend (tortoise ramps read
+   plank-like); Wisp establishing framing; whale-tail teal plank;
+   buddy-AI wading on lily route; Otto-targeting for photo mode; a
+   "players" IconDraw glyph (row reuses PLAY); Callie guide-to-door
+   behavior on first play (beacons may suffice — watch the playtest).
+5. Narration completeness pass: every world_complete/keystone has lines;
+   the Waking needs its script (bible voice, budget 900 — at 578).
+6. M5 per ROADMAP: perf receipts on real hardware (SPLIT MODE DOUBLES
+   RENDER COST — receipt both modes), input remap, photosensitivity/
+   colorblind review, Steam export presets, capsule art, trailer,
+   store copy, demo build.
 
 ## Original next-actions list (superseded, kept for context)
 
