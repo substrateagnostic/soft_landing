@@ -217,15 +217,22 @@ orbit angles caught his back) — if he greets with his back turned, add a
 yaw offset to ShoreFriend's Visual; his face is also subtle (fuzzy grey,
 small beak) — producer may want a 30cr reroll with a clearer face.
 
+ALSO DONE (Session 4, wave 4 — D29): **THE WAKING IS BUILT** — worlds/
+pillow_fort/waking_sequence.gd (trigger: fort arrival + 4/4 worlds
+complete, or --waking, which never persists waking_seen), Ambience.
+begin_dawn (the game's one sunrise), WorldDoor.shine (giants stir as
+doors + per-giant keystone echo sfx), bubble-carry to the cushions +
+sleep clips, photo credits (photo_* first, memory_* filling to 14,
+taken-order) + goodnight card + fade to title. Headless phase receipts
+green incl. the zero-photo path; the forced verify run's waking_seen
+save contamination was caught and scrubbed (Gotcha #10 strikes again).
+
 REMAINING (in order — camera-first per the producer's live playtest):
 1. **Dynamic split/merge upgrade** (LEGO model) on the v3 structure:
    merged single frame when the kids are close, animated split as they
    separate. Producer approved static-first-then-upgrade.
-3. **The Waking finale** (M4 headline): when ALL FOUR worlds are
-   complete — dawn comes; a whole-game ending sequence (CineSequence),
-   the giants stir together, the kids carried home to bed, credits over
-   the fort at sunrise. Persistence + a post-game "quiet morning" fort
-   state (dawn palette) would be extraordinary if cheap.
+3. **Waking polish** after producer verdicts (NEEDS_YOU: pacing
+   constants, closing-card text, title-vs-dawn-fort seam).
 4. Polish queue: right-stick feel tuning from producer hands (orbit
    150°/s, resume 1.5s — both one-line); tortoise ambience bed + world
    stems (audio pass 4); terrace art-blend (tortoise ramps read

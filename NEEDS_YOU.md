@@ -3,6 +3,28 @@
 evidence is, one cold demo command, what's unverified, and what only you
 can decide. Cold-start handoff for any instance: NEXT_STEPS.md.*
 
+## Session 4, night two, wave 4 — THE WAKING EXISTS (D29)
+
+The finale is built and receipted (video in chat when the render lands):
+
+- First arrival home with ALL FOUR worlds complete: dawn breaks over the
+  fort (the game's one sunrise), each door burns once in its giant's
+  color while that giant's keystone echoes far away, bubbles carry the
+  kids to the cushions, they curl up (the rigs' own sleep clip), and the
+  credits roll over the sunrise — YOUR family's photos, deliberate shots
+  first, candids filling in, "the night you had" → "THE BIG NAP / for
+  Ezra & Caleb / the nap holds — goodnight" → title.
+- The giants are never on screen and never wake. The thesis holds.
+- Preview any time: `--waking` on the fort (previews never mark it seen).
+
+### ⛔ New decisions pending (the Waking)
+1. **Pacing + beats order** — watch the video: dawn 16s, four door-beats
+   ~2.4s apart, bed-carry 3.2s, ~3s per credit photo. All constants.
+2. **Post-credits** (still held): straight to title (current) vs one
+   "quiet morning" dawn-fort visit before night returns.
+3. **The closing card text** — "for Ezra & Caleb / the nap holds —
+   goodnight". Veto/reword freely; it's one string.
+
 ## Session 4, night two, wave 3 — MEMORIES + THE SHEDD + LULLABIES (D28)
 
 While you playtested:

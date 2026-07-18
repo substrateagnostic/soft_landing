@@ -95,6 +95,32 @@ func _ready() -> void:
 	_build_dressing()
 	_build_fort_residents()
 	super._ready()
+	_maybe_begin_waking()
+
+
+## THE WAKING (M4 headline, D28 beats — worlds/pillow_fort/waking_sequence
+## .gd): plays ONCE, on the first arrival home after all four giant worlds
+## are complete. --waking forces it any time (preview/verify). The short
+## delay is an arrival breath — let the fort render, the residents settle,
+## and the ambience bed land before the letterbox comes in.
+const WAKING_WORLD_IDS: Array[String] = ["bramble", "wisp", "marmalade", "tortoise"]
+const WAKING_ARRIVAL_DELAY: float = 2.0
+
+
+func _maybe_begin_waking() -> void:
+	var forced: bool = Harness.flag("waking", false)
+	if not forced:
+		if bool(GameState.get_setting("waking_seen")):
+			return
+		for world_id: String in WAKING_WORLD_IDS:
+			if not GameState.is_world_completed(world_id):
+				return
+	var sequence := WakingSequence.new()
+	sequence.name = "WakingSequence"
+	sequence.setup(self)
+	add_child(sequence)
+	var timer: SceneTreeTimer = get_tree().create_timer(WAKING_ARRIVAL_DELAY)
+	timer.timeout.connect(func() -> void: sequence.begin(forced))
 
 
 ## The fort remembers (D14): every growth stage adds something warm.

@@ -329,3 +329,47 @@ func _apply_particles(cfg: Dictionary) -> void:
 	# Mist drifts near-weightless; leaves/pollen actually fall.
 	leaf_pm.gravity = Vector3(0.0, -0.05, 0.0) if leaf_flavor == "mist" else Vector3(0.0, -0.35, 0.0)
 	ParticlePresets.retint_ambient(_falling_bits, leaf_color)
+
+
+# --- THE WAKING (D28) --------------------------------------------------------
+
+## begin_dawn — the game's one and only sunrise. Tweens the live sky
+## shader, fog, ambient and the moon key light from wherever the current
+## world's dusk left them toward a soft pre-dawn gold over `duration`
+## seconds. One-way by design: the Waking ends in the title screen, and a
+## fresh boot rebuilds the night — dawn never needs undoing in-scene.
+## Called by worlds/pillow_fort/waking_sequence.gd (duck-typed).
+
+const DAWN_ZENITH: Color = Color("8B93BE") # lightening periwinkle
+const DAWN_HORIZON: Color = Color("F2C9A0") # warm gold-rose, the sun almost here
+const DAWN_GROUND: Color = Color("C9A89A")
+const DAWN_MOON_TINT: Color = Color("F5EAD0") # the moon going pale and gentle
+const DAWN_LIGHT_COLOR: Color = Color("FFE3BD")
+const DAWN_LIGHT_ENERGY: float = 1.15
+const DAWN_FOG_COLOR: Color = Color("E8C9AE")
+const DAWN_AMBIENT_ENERGY: float = 1.6
+
+
+func begin_dawn(duration: float) -> void:
+	if not _is_setup:
+		return
+	var tween: Tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.set_parallel(true)
+	_tween_sky_color(tween, "zenith_color", DAWN_ZENITH, duration)
+	_tween_sky_color(tween, "horizon_color", DAWN_HORIZON, duration)
+	_tween_sky_color(tween, "ground_color", DAWN_GROUND, duration)
+	_tween_sky_color(tween, "moon_color", DAWN_MOON_TINT, duration)
+	tween.tween_property(_moon, "light_color", DAWN_LIGHT_COLOR, duration)
+	tween.tween_property(_moon, "light_energy", DAWN_LIGHT_ENERGY, duration)
+	tween.tween_property(_environment, "fog_light_color", DAWN_FOG_COLOR, duration)
+	tween.tween_property(_environment, "ambient_light_energy", DAWN_AMBIENT_ENERGY, duration)
+	print("DAWN %s" % JSON.stringify({"duration": duration}))
+
+
+func _tween_sky_color(tween: Tween, param: String, target: Color, duration: float) -> void:
+	var from: Color = _sky_material.get_shader_parameter(param)
+	tween.tween_method(
+		func(c: Color) -> void: _sky_material.set_shader_parameter(param, c),
+		from, target, duration
+	)

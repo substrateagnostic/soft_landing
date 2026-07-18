@@ -224,3 +224,21 @@ giant has a lullaby now: audio pass 4 stems (wisp F-major glissandi,
 marmalade G-major pizzicato-forward, tortoise C-major slowest) + the
 tortoise ambience bed. TerrainPatch grew perimeter skirts (a bare
 heightfield rim read as a floating slab on wisp's establishing shot).
+
+**D29 — THE WAKING is BUILT (director, night two, while the producer
+handled a Caleb wakeup).** The M4 headline finale, on the D28-approved
+beats: first arrival home with all four giants' worlds complete →
+letterboxed cine; DAWN over the fort (Ambience.begin_dawn — the game's
+one sunrise: sky shader, fog, ambient and the moon key light all tween
+to pre-dawn gold); the GIANTS STIR AS DOORS — each fort door burns once
+in its giant's color (WorldDoor.shine) while that giant's keystone sound
+echoes far away (yawn / water shimmer / roof-slide / deep rumble); the
+KIDS' OWN BEDTIME — bubbles carry both to the fort cushions, the rigs
+play their sleep clip; CREDITS OVER SUNRISE from the family's own
+photos (deliberate photo_*.png first-class, MemoryAlbum candids filling
+to 14, in the order they were taken), captioned "the night you had",
+closing card "THE BIG NAP / for Ezra & Caleb / the nap holds —
+goodnight", fade to title (the held decision's safe default; dawn-fort
+visit remains an open seam). waking_seen persists ONLY on unforced runs
+(--waking previews never eat the family's real first Waking). Giants
+never on screen and never awake — the thesis holds to the last frame.

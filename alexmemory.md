@@ -19,6 +19,16 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-18, small hours — wave 4 — D29: THE WAKING IS BUILT
+- The whole-game finale, on your approved beats: dawn (the game's one
+  sunrise), the doors burn as the giants stirring (keystone echoes far
+  away), bubbles carry the kids to the cushions, sleep clips, credits
+  from the family's photos ("the night you had"), goodnight card, title.
+  Giants never on screen, never awake. Preview: --waking on the fort
+  (previews never mark waking_seen; your real first Waking is protected —
+  I caught and scrubbed my own verify run's save contamination).
+- Held for you: pacing constants, closing-card text, title-vs-dawn-fort.
+
 ### 2026-07-17, night two, wave 3 — D28: MEMORIES + SHEDD + LULLABIES
 - Your mid-playtest notes executed: MemoryAlbum auto-snaps candids at
   triumphant/silly beats (first-ever memory: the clouded mountain +

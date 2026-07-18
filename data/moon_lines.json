@@ -109,5 +109,17 @@
   "That glowing door remembers a giant. Press your talk button to knock.",
   "A door! Doors love a little press of the hands.",
   "This door leads somewhere sleepy. Give it a press when you're ready."
+ ],
+ "waking_dawn": [
+  "Look up, little ducks. The sky is getting soft. You brought every single dream home."
+ ],
+ "waking_giants": [
+  "Listen. All of them, dreaming happily. The whole night is tucked in."
+ ],
+ "waking_sleepy": [
+  "And now... it's somebody else's bedtime. Come here, you two."
+ ],
+ "waking_goodnight": [
+  "The nap holds. Goodnight, little dreamers. Goodnight."
  ]
 }

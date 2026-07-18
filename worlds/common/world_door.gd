@@ -39,6 +39,14 @@ var _bodies_inside: Array[PlayerBody] = []
 var _glow: OmniLight3D = null
 var _beacon_mat: StandardMaterial3D = null
 var _pulse_time: float = 0.0
+var _shine_timer: float = 0.0 # D28 Waking: while positive, the beacon burns bright
+
+
+## shine — D28, the Waking's "giants stir" beat: this door burns bright in
+## its giant's color for `duration` seconds (the door IS the giant's
+## presence in the fort), then eases back to the idle pulse.
+func shine(duration: float = 2.0) -> void:
+	_shine_timer = duration
 
 
 func _ready() -> void:
@@ -150,10 +158,13 @@ func _update_beacon(delta: float) -> void:
 	if _glow == null:
 		return
 	_pulse_time += delta
+	_shine_timer = maxf(_shine_timer - delta, 0.0)
 	var wave: float = 0.5 + 0.5 * sin(_pulse_time * TAU / GLOW_PULSE_PERIOD)
 	var target: float = lerpf(GLOW_IDLE_MIN, GLOW_IDLE_MAX, wave)
 	if not _bodies_inside.is_empty():
 		target = GLOW_OCCUPIED
+	if _shine_timer > 0.0:
+		target = GLOW_OCCUPIED * 1.8 # the Waking's stir — brighter than any idle state
 	_glow.light_energy = move_toward(_glow.light_energy, target, GLOW_EASE_RATE * delta)
 	if _beacon_mat != null:
 		var alpha: float = BEACON_ALPHA * (1.6 if not _bodies_inside.is_empty() else 0.75 + 0.5 * wave)
