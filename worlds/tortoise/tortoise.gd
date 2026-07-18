@@ -338,7 +338,7 @@ func _build_meadow() -> void:
 		Vector3(SPAWN_PIP.x - MEADOW_CENTER.x, SPAWN_PIP.z - MEADOW_CENTER.y, 8.0), # spawns + HomeDoor
 		Vector3(SHELL_CENTER.x - MEADOW_CENTER.x, SHELL_CENTER.z - MEADOW_CENTER.y, SHELL_RADIUS + 3.0), # shell + rim + ramp feet
 	]
-	meadow.setup(MEADOW_SIZE, 0.35, 16.0, 5, flat_discs)
+	meadow.setup(MEADOW_SIZE, 0.35, 16.0, 5, flat_discs, 8.0, TerrainPatch.DEFAULT_RESOLUTION, 9.5)
 	add_child(meadow)
 	(get_node("Meadow") as MeshInstance3D).set_surface_override_material(0, _ground_patch_material(COLOR_MEADOW, COLOR_MEADOW_TINT_B))
 

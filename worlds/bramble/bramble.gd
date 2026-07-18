@@ -1025,7 +1025,7 @@ func _build_meadow() -> void:
 		Vector3(SPAWN_PIP.x - 6.0, 1.0, 5.0), # HomeDoor's own footing
 		Vector3(ASCENT_BASE.x, ASCENT_BASE.z, 6.0), # trailhead — the first ramp's seam stays true
 	]
-	meadow.setup(MEADOW_SIZE, 0.45, 18.0, 7, flat_discs)
+	meadow.setup(MEADOW_SIZE, 0.45, 18.0, 7, flat_discs, 8.0, TerrainPatch.DEFAULT_RESOLUTION, 9.5)
 	add_child(meadow)
 	# ROUND 2 (director's note 2): the meadow is the world's main walkable
 	# ground -- give it the patchy sage/warm-moss shader (the moat stays

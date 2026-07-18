@@ -205,3 +205,22 @@ never moves) — the producer's race video showed the ledge stack piercing
 his torso; fort walls get the quilted-blanket shader (the "giant white
 plane" was a bare wall); every WorldDoor gets a tinted beacon + occupied
 glow + a first-entry Moon hint ("couldn't figure out how to leave").
+
+**D28 — Memories are automatic; the Waking is approved (producer, night
+two, mid-playtest).** The Waking finale ships with: giants NEVER wake
+(the nap holding IS the win), bubble-carry home, and credits built from
+the family's own photos. To guarantee credits material, the game now
+AUTO-SNAPS candid screenshots (MemoryAlbum, core/memory/memory_album.gd)
+at triumphant beats (dream returns, every cinematic seizure) and silly
+ones (bubble rescues, tosses, pound-launches) — UI and subtitles left in
+on purpose (candids, not compositions), rate-limited (25 s min gap, 40/
+session), pruned oldest-first past 80, saved as user://photos/memory_N.png
+beside photo mode's photo_N.png which are never pruned. Held for later:
+end-to-title vs a post-game dawn fort visit. Also D28: Ezra's Shedd
+Aquarium favorites join Wisp's shore — a plush starfish (waterline,
+poke-boop) and a penguin chick (waddle patrol; greets kids at the glass
+instead of fleeing, like the real ones did that afternoon). And every
+giant has a lullaby now: audio pass 4 stems (wisp F-major glissandi,
+marmalade G-major pizzicato-forward, tortoise C-major slowest) + the
+tortoise ambience bed. TerrainPatch grew perimeter skirts (a bare
+heightfield rim read as a floating slab on wisp's establishing shot).

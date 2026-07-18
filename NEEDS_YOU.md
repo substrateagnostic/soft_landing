@@ -3,6 +3,27 @@
 evidence is, one cold demo command, what's unverified, and what only you
 can decide. Cold-start handoff for any instance: NEXT_STEPS.md.*
 
+## Session 4, night two, wave 3 — MEMORIES + THE SHEDD + LULLABIES (D28)
+
+While you playtested:
+
+- **The game takes its own photos now** (your note, verified live): candid
+  auto-snaps at dream returns, keystone cinematics, bubble rescues,
+  tosses and pound-launches — UI and all, 25s apart, capped and pruned,
+  saved beside your photo-mode shots. The first one it ever took was the
+  cloud-wreathed mountain with "This whole place is dreaming happily
+  now, because of you." on screen. The Waking credits will never be empty.
+- **Starfish and penguin are IN** — plush Meshy models (60cr) on Wisp's
+  shore: the starfish squash-boops when poked at the waterline; the
+  penguin chick waddles a little patrol and comes TO the kids with two
+  excited bounces when they get close (like the real ones at the glass).
+- **Every giant has a lullaby**: wisp (F major, slow underwater
+  glissandi), marmalade (G major, playful pizzicato), tortoise (C major,
+  the slowest — whole-note melody, downbeat steps) + the missing tortoise
+  night-garden ambience bed. Same 32s/4-layer viola-ready contract.
+- Terrain got perimeter skirts (rims read solid, not paper-thin).
+- Credits: ~1,520. Ground-contact receipts green in all five worlds.
+
 ## Session 4, night two — YOUR PLAYTEST REBUILT THE CAMERA (D27)
 
 Your five notes were all real, all root-caused, all fixed tonight:

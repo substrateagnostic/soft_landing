@@ -410,7 +410,7 @@ func _build_ground() -> void:
 	]
 	for house: Array in HOUSE_LAYOUT:
 		flat_discs.append(Vector3(float(house[0]), float(house[1]), 3.0))
-	ground.setup(GROUND_SIZE, 0.4, 16.0, 3, flat_discs)
+	ground.setup(GROUND_SIZE, 0.4, 16.0, 3, flat_discs, 8.0, TerrainPatch.DEFAULT_RESOLUTION, 9.5)
 	add_child(ground)
 	# ROUND 2 (director's note 2): patchy sage/warm-grey shader on the main
 	# walkable ground (the moat stays flat -- boundary void ring, not

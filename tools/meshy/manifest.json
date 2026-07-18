@@ -1,190 +1,202 @@
 [
-  {
-    "id": "pip",
-    "category": "character",
-    "prompt": "small toddler child wearing a duck onesie pajama costume, onesie hood with cartoon duck bill and eyes on top of head, yolk yellow onesie with cream belly panel, mitten hands, rounded chubby single-mass body, short legs, standing with arms slightly out, no separate fingers, cozy sleepy expression",
-    "target_height_hint": 0.9
-  },
-  {
-    "id": "lantern",
-    "category": "prop",
-    "prompt": "small round paper lantern glowing warm honey from within, soft visible inner light, hanging from a short curved dark wooden post on a round wooden base",
-    "target_height_hint": 0.5,
-    "style": "soft toy low poly, rounded chunky toddler-toy proportions, painted toy look, warm emissive glow, matte wood, game asset, clean silhouette, single object, gentle and friendly",
-    "enable_pbr": true
-  },
-  {
-    "id": "firefly_jar",
-    "category": "prop",
-    "prompt": "round glass mason jar with cork lid, filled with tiny glowing golden fireflies, soft warm glow, slightly oversized cute proportions",
-    "target_height_hint": 0.35
-  },
-  {
-    "id": "cushion",
-    "category": "prop",
-    "prompt": "big round floor cushion pillow, plush and squishy, slightly squashed from being sat on, soft fabric folds, blush pink",
-    "target_height_hint": 0.4
-  },
-  {
-    "id": "otto",
-    "category": "character",
-    "prompt": "child wearing a bear onesie pajama costume, onesie hood with two round bear ears on top of head, cocoa brown onesie with cream belly panel, mitten hands, rounded chubby single-mass body, slightly tall and round proportions, standing with arms relaxed at sides, no separate fingers, calm cozy sleepy expression",
-    "target_height_hint": 1.3
-  },
-  {
-    "id": "callie",
-    "category": "character",
-    "prompt": "beanie baby style stuffed calico cat toy lying down flat and floppy, understuffed beanbag plush, warm tan brown head with black patch over one side of face, black back and body, white chest belly and paws, white tipped tail, small triangular ears, tiny amber eyes, pink nose, cute sleepy face",
-    "target_height_hint": 0.18
-  },
-  {
-    "id": "pip_v2",
-    "category": "character",
-    "prompt": "small 4 year old boy wearing a honey yellow duck onesie pajama costume, onesie hood up shaped like a soft round duck head with a small flat duck beak above his forehead like a cap brim, his face fully visible and uncovered, short tousled blond hair peeking out of the hood, big blue grey eyes, round rosy cheeks, gentle happy expression, cream colored belly panel, tiny duck tail on the back, footed pajama feet, standing upright in T pose with arms out",
-    "target_height_hint": 0.9
-  },
-  {
-    "id": "otto_v2",
-    "category": "character",
-    "prompt": "chubby round faced 2 year old toddler boy wearing a soft light grey bear onesie pajama, onesie hood up with two tiny round bear ears, his face fully visible and uncovered, wispy light blond baby hair, very round rosy cheeks, calm sleepy unbothered expression, white chest panel with tiny scattered pastel animal doodle prints, small round bear tail, footed pajama feet, standing upright in T pose with arms out",
-    "target_height_hint": 0.8
-  },
-  {
-    "id": "lamb_keeper",
-    "category": "character",
-    "prompt": "sleepy lamb dreamkeeper, small chubby biped plush lamb child standing upright on two legs, wooly cream fleece like footed pajamas, droopy sleepy eyes, tiny nub horns, gentle smile, standing in T pose with arms out",
-    "target_height_hint": 0.85
-  },
-  {
-    "id": "moth_shepherd",
-    "category": "character",
-    "prompt": "gentle moth shepherd dreamkeeper, small chubby biped plush moth child standing upright on two legs, big soft feathery antennae, folded pale dusty-blue wings draped like a cape, softly glowing cream belly like a lantern, sleepy kind face, standing in T pose with arms out",
-    "target_height_hint": 1.0,
-    "enable_pbr": true
-  },
-  {
-    "id": "soft_pine",
-    "category": "prop",
-    "prompt": "big rounded plush pine tree, stacked soft cushion tiers of muted sage green, chunky rounded trunk",
-    "target_height_hint": 3.0
-  },
-  {
-    "id": "soft_pine_small",
-    "category": "prop",
-    "prompt": "small rounded plush pine tree, three soft cushion tiers of muted sage green, stubby rounded trunk",
-    "target_height_hint": 1.8
-  },
-  {
-    "id": "clover_tuft",
-    "category": "prop",
-    "prompt": "small tuft of chunky rounded clover leaves, soft sage green, three fat stems",
-    "target_height_hint": 0.3
-  },
-  {
-    "id": "moon_daisy",
-    "category": "prop",
-    "prompt": "single glowing white daisy flower with soft cream petals and warm golden center, chunky rounded stem and two fat leaves",
-    "target_height_hint": 0.4,
-    "enable_pbr": true
-  },
-  {
-    "id": "mushroom_lamp",
-    "category": "prop",
-    "prompt": "squat rounded mushroom with warm honey glowing spotted cap, chunky cream stem, cozy night-light",
-    "target_height_hint": 0.5,
-    "enable_pbr": true
-  },
-  {
-    "id": "berry_bush",
-    "category": "prop",
-    "prompt": "rounded soft bush of muted sage green with plump glowing honey-gold berries",
-    "target_height_hint": 0.9,
-    "enable_pbr": true
-  },
-  {
-    "id": "stone_soft",
-    "category": "prop",
-    "prompt": "rounded soft mossy boulder, smooth grey-green with sage moss cap",
-    "target_height_hint": 0.7
-  },
-  {
-    "id": "stump_door",
-    "category": "prop",
-    "prompt": "cozy tree stump with a tiny round wooden door and little round window glowing warm from inside",
-    "target_height_hint": 0.8,
-    "enable_pbr": true
-  },
-  {
-    "id": "seed_puff",
-    "category": "prop",
-    "prompt": "fluffy round dandelion seed puff on a short curved stem, soft cream white, dreamy",
-    "target_height_hint": 0.35
-  },
-  {
-    "id": "picnic_basket",
-    "category": "prop",
-    "prompt": "woven picnic basket with folded blanket corner peeking from under the lid, warm browns and cream",
-    "target_height_hint": 0.4
-  },
-  {
-    "id": "birdhouse_lantern",
-    "category": "prop",
-    "prompt": "small wooden birdhouse on a short post with warm light glowing from its round hole, cozy",
-    "target_height_hint": 0.6,
-    "enable_pbr": true
-  },
-  {
-    "id": "haystack_pillow",
-    "category": "prop",
-    "prompt": "small rounded haystack that looks like a plump pillow, soft warm straw yellow",
-    "target_height_hint": 0.8
-  },
-  {
-    "id": "moth_small",
-    "category": "prop",
-    "prompt": "tiny plush moth with round fuzzy body and big soft pale wings, cream and dusty blue, cute",
-    "target_height_hint": 0.25
-  },
-  {
-    "id": "bramble_bear_a",
-    "category": "giant",
-    "prompt": "enormous sleeping bear plush toy lying stretched out on its side, full body seen from above, fast asleep with closed eyes and gentle smile, head at one end with one round ear up, big soft chest, huge round haunch hip at the other end, stubby paws tucked, warm umber brown fur with cream muzzle and belly, giant stuffed animal",
-    "target_height_hint": 12.0
-  },
-  {
-    "id": "bramble_bear_b",
-    "category": "giant",
-    "prompt": "giant sleeping teddy bear lying on its side curled slightly, viewed in profile, deeply asleep, closed sleepy eyes, round soft head with small round ears, plump chest and big rounded hip, short plush limbs resting, chunky soft toy proportions, warm brown with lighter snout and tummy patch",
-    "target_height_hint": 12.0
-  },
-  {
-    "id": "bramble_bear_rig",
-    "category": "giant",
-    "prompt": "giant plush teddy bear standing upright in T pose with arms straight out, chunky rounded soft toy proportions, thick body and short legs, warm umber brown fur, cream muzzle and round belly patch, small round ears, sleepy closed eyes, gentle peaceful smile, huggable stuffed animal",
-    "target_height_hint": 1.8
-  },
-  {
-    "id": "wisp_whale",
-    "category": "giant",
-    "prompt": "enormous sleeping plush whale floating gently, seen in profile, soft rounded chunky toy proportions, closed sleepy eyes and gentle smiling mouth line, pale moonlit blue grey body with cream white belly, big soft rounded tail flukes, small fins tucked, dreamy stuffed animal",
-    "target_height_hint": 14.0
-  },
-  {
-    "id": "wisp_whale_b",
-    "category": "giant",
-    "prompt": "long sleeping plush whale in full side profile, streamlined gentle body three times longer than tall, big soft rounded tail flukes lifted slightly, closed sleepy eye and calm smiling mouth line, small tucked side fin, pale moonlit blue grey with cream white belly grooves, soft chunky stuffed animal",
-    "target_height_hint": 14.0
-  },
-  {
-    "id": "marmalade_cat",
-    "category": "giant",
-    "prompt": "enormous sleeping plush cat lying stretched out on its side in full profile, long soft body, closed sleepy eyes and tiny smiling mouth, orange marmalade tabby with cream chest and paws, long tail curled around, small triangular ears, rounded chunky stuffed animal, deeply asleep",
-    "target_height_hint": 10.0
-  },
-  {
-    "id": "tortoise_giant",
-    "category": "giant",
-    "prompt": "enormous sleeping plush tortoise with a huge rounded dome shell, head and stubby legs tucked halfway in, closed sleepy eyes and gentle smile, moss green shell with big soft rounded scute bumps, warm sandy skin, chunky rounded stuffed animal, deeply asleep",
-    "target_height_hint": 12.0
-  }
+ {
+  "id": "pip",
+  "category": "character",
+  "prompt": "small toddler child wearing a duck onesie pajama costume, onesie hood with cartoon duck bill and eyes on top of head, yolk yellow onesie with cream belly panel, mitten hands, rounded chubby single-mass body, short legs, standing with arms slightly out, no separate fingers, cozy sleepy expression",
+  "target_height_hint": 0.9
+ },
+ {
+  "id": "lantern",
+  "category": "prop",
+  "prompt": "small round paper lantern glowing warm honey from within, soft visible inner light, hanging from a short curved dark wooden post on a round wooden base",
+  "target_height_hint": 0.5,
+  "style": "soft toy low poly, rounded chunky toddler-toy proportions, painted toy look, warm emissive glow, matte wood, game asset, clean silhouette, single object, gentle and friendly",
+  "enable_pbr": true
+ },
+ {
+  "id": "firefly_jar",
+  "category": "prop",
+  "prompt": "round glass mason jar with cork lid, filled with tiny glowing golden fireflies, soft warm glow, slightly oversized cute proportions",
+  "target_height_hint": 0.35
+ },
+ {
+  "id": "cushion",
+  "category": "prop",
+  "prompt": "big round floor cushion pillow, plush and squishy, slightly squashed from being sat on, soft fabric folds, blush pink",
+  "target_height_hint": 0.4
+ },
+ {
+  "id": "otto",
+  "category": "character",
+  "prompt": "child wearing a bear onesie pajama costume, onesie hood with two round bear ears on top of head, cocoa brown onesie with cream belly panel, mitten hands, rounded chubby single-mass body, slightly tall and round proportions, standing with arms relaxed at sides, no separate fingers, calm cozy sleepy expression",
+  "target_height_hint": 1.3
+ },
+ {
+  "id": "callie",
+  "category": "character",
+  "prompt": "beanie baby style stuffed calico cat toy lying down flat and floppy, understuffed beanbag plush, warm tan brown head with black patch over one side of face, black back and body, white chest belly and paws, white tipped tail, small triangular ears, tiny amber eyes, pink nose, cute sleepy face",
+  "target_height_hint": 0.18
+ },
+ {
+  "id": "pip_v2",
+  "category": "character",
+  "prompt": "small 4 year old boy wearing a honey yellow duck onesie pajama costume, onesie hood up shaped like a soft round duck head with a small flat duck beak above his forehead like a cap brim, his face fully visible and uncovered, short tousled blond hair peeking out of the hood, big blue grey eyes, round rosy cheeks, gentle happy expression, cream colored belly panel, tiny duck tail on the back, footed pajama feet, standing upright in T pose with arms out",
+  "target_height_hint": 0.9
+ },
+ {
+  "id": "otto_v2",
+  "category": "character",
+  "prompt": "chubby round faced 2 year old toddler boy wearing a soft light grey bear onesie pajama, onesie hood up with two tiny round bear ears, his face fully visible and uncovered, wispy light blond baby hair, very round rosy cheeks, calm sleepy unbothered expression, white chest panel with tiny scattered pastel animal doodle prints, small round bear tail, footed pajama feet, standing upright in T pose with arms out",
+  "target_height_hint": 0.8
+ },
+ {
+  "id": "lamb_keeper",
+  "category": "character",
+  "prompt": "sleepy lamb dreamkeeper, small chubby biped plush lamb child standing upright on two legs, wooly cream fleece like footed pajamas, droopy sleepy eyes, tiny nub horns, gentle smile, standing in T pose with arms out",
+  "target_height_hint": 0.85
+ },
+ {
+  "id": "moth_shepherd",
+  "category": "character",
+  "prompt": "gentle moth shepherd dreamkeeper, small chubby biped plush moth child standing upright on two legs, big soft feathery antennae, folded pale dusty-blue wings draped like a cape, softly glowing cream belly like a lantern, sleepy kind face, standing in T pose with arms out",
+  "target_height_hint": 1.0,
+  "enable_pbr": true
+ },
+ {
+  "id": "soft_pine",
+  "category": "prop",
+  "prompt": "big rounded plush pine tree, stacked soft cushion tiers of muted sage green, chunky rounded trunk",
+  "target_height_hint": 3.0
+ },
+ {
+  "id": "soft_pine_small",
+  "category": "prop",
+  "prompt": "small rounded plush pine tree, three soft cushion tiers of muted sage green, stubby rounded trunk",
+  "target_height_hint": 1.8
+ },
+ {
+  "id": "clover_tuft",
+  "category": "prop",
+  "prompt": "small tuft of chunky rounded clover leaves, soft sage green, three fat stems",
+  "target_height_hint": 0.3
+ },
+ {
+  "id": "moon_daisy",
+  "category": "prop",
+  "prompt": "single glowing white daisy flower with soft cream petals and warm golden center, chunky rounded stem and two fat leaves",
+  "target_height_hint": 0.4,
+  "enable_pbr": true
+ },
+ {
+  "id": "mushroom_lamp",
+  "category": "prop",
+  "prompt": "squat rounded mushroom with warm honey glowing spotted cap, chunky cream stem, cozy night-light",
+  "target_height_hint": 0.5,
+  "enable_pbr": true
+ },
+ {
+  "id": "berry_bush",
+  "category": "prop",
+  "prompt": "rounded soft bush of muted sage green with plump glowing honey-gold berries",
+  "target_height_hint": 0.9,
+  "enable_pbr": true
+ },
+ {
+  "id": "stone_soft",
+  "category": "prop",
+  "prompt": "rounded soft mossy boulder, smooth grey-green with sage moss cap",
+  "target_height_hint": 0.7
+ },
+ {
+  "id": "stump_door",
+  "category": "prop",
+  "prompt": "cozy tree stump with a tiny round wooden door and little round window glowing warm from inside",
+  "target_height_hint": 0.8,
+  "enable_pbr": true
+ },
+ {
+  "id": "seed_puff",
+  "category": "prop",
+  "prompt": "fluffy round dandelion seed puff on a short curved stem, soft cream white, dreamy",
+  "target_height_hint": 0.35
+ },
+ {
+  "id": "picnic_basket",
+  "category": "prop",
+  "prompt": "woven picnic basket with folded blanket corner peeking from under the lid, warm browns and cream",
+  "target_height_hint": 0.4
+ },
+ {
+  "id": "birdhouse_lantern",
+  "category": "prop",
+  "prompt": "small wooden birdhouse on a short post with warm light glowing from its round hole, cozy",
+  "target_height_hint": 0.6,
+  "enable_pbr": true
+ },
+ {
+  "id": "haystack_pillow",
+  "category": "prop",
+  "prompt": "small rounded haystack that looks like a plump pillow, soft warm straw yellow",
+  "target_height_hint": 0.8
+ },
+ {
+  "id": "moth_small",
+  "category": "prop",
+  "prompt": "tiny plush moth with round fuzzy body and big soft pale wings, cream and dusty blue, cute",
+  "target_height_hint": 0.25
+ },
+ {
+  "id": "bramble_bear_a",
+  "category": "giant",
+  "prompt": "enormous sleeping bear plush toy lying stretched out on its side, full body seen from above, fast asleep with closed eyes and gentle smile, head at one end with one round ear up, big soft chest, huge round haunch hip at the other end, stubby paws tucked, warm umber brown fur with cream muzzle and belly, giant stuffed animal",
+  "target_height_hint": 12.0
+ },
+ {
+  "id": "bramble_bear_b",
+  "category": "giant",
+  "prompt": "giant sleeping teddy bear lying on its side curled slightly, viewed in profile, deeply asleep, closed sleepy eyes, round soft head with small round ears, plump chest and big rounded hip, short plush limbs resting, chunky soft toy proportions, warm brown with lighter snout and tummy patch",
+  "target_height_hint": 12.0
+ },
+ {
+  "id": "bramble_bear_rig",
+  "category": "giant",
+  "prompt": "giant plush teddy bear standing upright in T pose with arms straight out, chunky rounded soft toy proportions, thick body and short legs, warm umber brown fur, cream muzzle and round belly patch, small round ears, sleepy closed eyes, gentle peaceful smile, huggable stuffed animal",
+  "target_height_hint": 1.8
+ },
+ {
+  "id": "wisp_whale",
+  "category": "giant",
+  "prompt": "enormous sleeping plush whale floating gently, seen in profile, soft rounded chunky toy proportions, closed sleepy eyes and gentle smiling mouth line, pale moonlit blue grey body with cream white belly, big soft rounded tail flukes, small fins tucked, dreamy stuffed animal",
+  "target_height_hint": 14.0
+ },
+ {
+  "id": "wisp_whale_b",
+  "category": "giant",
+  "prompt": "long sleeping plush whale in full side profile, streamlined gentle body three times longer than tall, big soft rounded tail flukes lifted slightly, closed sleepy eye and calm smiling mouth line, small tucked side fin, pale moonlit blue grey with cream white belly grooves, soft chunky stuffed animal",
+  "target_height_hint": 14.0
+ },
+ {
+  "id": "marmalade_cat",
+  "category": "giant",
+  "prompt": "enormous sleeping plush cat lying stretched out on its side in full profile, long soft body, closed sleepy eyes and tiny smiling mouth, orange marmalade tabby with cream chest and paws, long tail curled around, small triangular ears, rounded chunky stuffed animal, deeply asleep",
+  "target_height_hint": 10.0
+ },
+ {
+  "id": "tortoise_giant",
+  "category": "giant",
+  "prompt": "enormous sleeping plush tortoise with a huge rounded dome shell, head and stubby legs tucked halfway in, closed sleepy eyes and gentle smile, moss green shell with big soft rounded scute bumps, warm sandy skin, chunky rounded stuffed animal, deeply asleep",
+  "target_height_hint": 12.0
+ },
+ {
+  "id": "starfish_plush",
+  "category": "prop",
+  "prompt": "cute plush starfish toy, five chunky rounded arms, soft coral pink fabric with tiny pale stitched dots, two small sleepy embroidered eyes and a tiny smile on the center, lying flat, chunky rounded stuffed animal, soft and squashy",
+  "target_height_hint": 0.35
+ },
+ {
+  "id": "penguin_chick_plush",
+  "category": "prop",
+  "prompt": "cute plush baby penguin chick toy standing upright, round fluffy grey body with white belly, tiny stubby wings, small orange beak and feet, big sleepy friendly eyes, chunky rounded stuffed animal, soft huggable toy",
+  "target_height_hint": 0.55
+ }
 ]

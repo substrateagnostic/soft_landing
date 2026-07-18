@@ -19,6 +19,15 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## LOG
 
+### 2026-07-17, night two, wave 3 — D28: MEMORIES + SHEDD + LULLABIES
+- Your mid-playtest notes executed: MemoryAlbum auto-snaps candids at
+  triumphant/silly beats (first-ever memory: the clouded mountain +
+  "because of you" — verified live); Waking approved (giants asleep,
+  bubble-carry, photo credits; title-vs-dawn-fort held).
+- Starfish + penguin chick (plush, 60cr) live on Wisp's shore — the
+  penguin greets like the Shedd ones did. Audio pass 4: all giants have
+  lullabies + tortoise bed. TerrainPatch skirts. Ground receipts 5/5.
+
 ### 2026-07-17, night two — Session 4: YOUR PLAYTEST REBUILT THE CAMERA (D27)
 - First hands-on producer playtest. All five notes root-caused same night:
   shared camera unshippable -> STATIC SPLIT-SCREEN co-op (per your call,

@@ -1,0 +1,6 @@
+HARNESS_FLAGS {"outdir":"evidence/stills/shore_friends","pads":"1","quitafter":"5","shots":"140","skipmenu":true,"world":"wisp"}
+HARNESS_NOTE pads override applied via InputRouter.force_mode(1)
+EVT {"seat":1,"t":5,"type":"landed"}
+EVT {"seat":2,"t":7,"type":"landed"}
+HARNESS_NOTE screenshot saved D:/Projects/soft_landing/evidence/stills/shore_friends/shot_140.png
+HARNESS_NOTE quitafter fallback fired (harness-level timer, 5.0s)

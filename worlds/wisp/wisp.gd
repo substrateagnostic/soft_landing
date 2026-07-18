@@ -252,6 +252,7 @@ func _ready() -> void:
 	_build_ambient_lighting()
 	_build_dreamkeepers()
 	_build_dressing()
+	_build_shore_friends() # D28: the Shedd winners (after _build_shore -- terrain-snaps to it)
 	_build_dive() # ROADMAP M3 wisp-giant: THE DIVE, looks up _whale/LakeSurface -- after both exist
 	_build_dev_camera()
 	super._ready()
@@ -293,6 +294,76 @@ func rescue_floor_y() -> float:
 
 ## The way home: a doorframe at the shore edge behind spawn, facing the
 ## lake/whale, so leaving is always one interact away (worlds are never
+## D28 — the Shedd winners ("starfish and penguins", producer, the night
+## after the aquarium trip). Two shore friends for Ezra: a plush starfish
+## at the waterline that squash-boops when poked (TouchReact via the
+## "poke" group — zero bespoke reaction code), and a penguin chick that
+## waddles a small patrol and greets kids who come close (ShoreFriend,
+## worlds/wisp/shore_friend.gd). Both terrain-snapped to the Shore
+## heightfield and swapped to their plush GLBs via ModelSlot.
+const STARFISH_POSITION_XZ: Vector2 = Vector2(-57.5, 5.0) # waterline, south of the lily route
+const PENGUIN_PATROL_A_XZ: Vector2 = Vector2(-61.0, -6.0)
+const PENGUIN_PATROL_B_XZ: Vector2 = Vector2(-65.0, -10.0)
+
+
+func _build_shore_friends() -> void:
+	var starfish_pos: Vector3 = _on_shore(STARFISH_POSITION_XZ)
+	var starfish := Node3D.new()
+	starfish.name = "StarfishVisual"
+	starfish.position = starfish_pos
+	add_child(starfish)
+
+	# Placeholder: five flattened coral arms + a center dome, replaced by
+	# the plush GLB (starfish_plush) the moment ModelSlot resolves it.
+	var arm_mat := StandardMaterial3D.new()
+	arm_mat.albedo_color = Color("E8917C") # soft coral
+	for i: int in range(5):
+		var arm := MeshInstance3D.new()
+		arm.name = "StarfishArm%d" % i
+		var arm_mesh := CapsuleMesh.new()
+		arm_mesh.radius = 0.05
+		arm_mesh.height = 0.3
+		arm_mesh.material = arm_mat
+		arm.mesh = arm_mesh
+		var angle: float = TAU * float(i) / 5.0
+		arm.position = Vector3(sin(angle) * 0.12, 0.05, cos(angle) * 0.12)
+		arm.rotation_degrees = Vector3(90.0, rad_to_deg(angle), 0.0)
+		starfish.add_child(arm)
+	var center := MeshInstance3D.new()
+	center.name = "StarfishCenter"
+	var center_mesh := SphereMesh.new()
+	center_mesh.radius = 0.09
+	center_mesh.height = 0.12
+	center_mesh.material = arm_mat
+	center.mesh = center_mesh
+	center.position = Vector3(0.0, 0.06, 0.0)
+	starfish.add_child(center)
+
+	var starfish_slot := ModelSlot.new()
+	starfish_slot.name = "StarfishModelSlot"
+	starfish_slot.model_id = "starfish_plush"
+	starfish_slot.target_height = 0.35
+	starfish.add_child(starfish_slot)
+	starfish.add_to_group("poke") # world_base auto-attaches TouchReact: squash + boop
+
+	var penguin := ShoreFriend.new()
+	penguin.name = "PenguinChick"
+	penguin.setup(_on_shore(PENGUIN_PATROL_A_XZ), _on_shore(PENGUIN_PATROL_B_XZ))
+	add_child(penguin)
+
+
+## _on_shore — world position snapped to the Shore heightfield (D27
+## terrain), so the friends sit ON the rolling ground, never in or above
+## it. Falls back to y=0 if the Shore isn't a TerrainPatch (older saves,
+## test scenes).
+func _on_shore(xz: Vector2) -> Vector3:
+	var y: float = 0.0
+	var shore: Node = get_node_or_null("Shore")
+	if shore is TerrainPatch:
+		y = (shore as TerrainPatch).sample_height(xz.x - SHORE_CENTER.x, xz.y - SHORE_CENTER.y)
+	return Vector3(xz.x, y, xz.y)
+
+
 ## gated). Mirrors bramble.gd's HomeDoor exactly.
 func _build_home_door() -> void:
 	var door := WorldDoor.new()
@@ -385,7 +456,7 @@ func _build_shore() -> void:
 		Vector3(SPAWN_PIP.x - SHORE_CENTER.x - 3.0, 1.0, 7.0), # spawns + HomeDoor clearing
 		Vector3(STUMP_DOOR_POSITION.x - SHORE_CENTER.x, STUMP_DOOR_POSITION.z, 3.5), # stump door
 	]
-	shore.setup(SHORE_SIZE, 0.3, 11.0, 9, flat_discs, 6.0)
+	shore.setup(SHORE_SIZE, 0.3, 11.0, 9, flat_discs, 6.0, TerrainPatch.DEFAULT_RESOLUTION, 9.5)
 	add_child(shore)
 	(get_node("Shore") as MeshInstance3D).set_surface_override_material(0, _ground_patch_material(COLOR_SHORE, GROUND_TINT_B))
 

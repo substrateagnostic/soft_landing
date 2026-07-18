@@ -29,6 +29,10 @@ extends Node3D
 ## Co-op join is activity-based (see InputRouter D27): the split slides in
 ## on mode_changed the moment the second pad shows real input.
 
+## Fired on every fullscreen-cinematic transition (a camera seizing /
+## releasing the root viewport). MemoryAlbum snaps keystone beats off it.
+signal seizure_changed(seized: bool)
+
 const SPLIT_LAYER_INDEX: int = -5
 const DIVIDER_WIDTH: float = 4.0
 const DIVIDER_COLOR: Color = Color(0.05, 0.06, 0.12, 1.0) # near-black dusk (letterbox bar color)
@@ -174,6 +178,7 @@ func _process(_delta: float) -> void:
 		_seized = seized
 		_split_layer.visible = not seized
 		get_viewport().disable_3d = not seized
+		seizure_changed.emit(seized)
 		print("CAMERA_DIRECTOR %s" % JSON.stringify({"seized": seized}))
 
 	# Mirror Pip's live camera so the root viewport's audio listener (and

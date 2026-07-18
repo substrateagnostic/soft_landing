@@ -31,6 +31,7 @@ var _seed: int = 7
 var _flat_discs: Array[Vector3] = [] # (x, z, radius); feather = radius * 0.7 beyond
 var _edge_margin: float = 8.0
 var _resolution: int = DEFAULT_RESOLUTION
+var _skirt_depth: float = 2.5
 
 var _noise: FastNoiseLite = null
 
@@ -38,7 +39,7 @@ var _noise: FastNoiseLite = null
 func setup(
 	size: Vector2, amplitude: float, wavelength: float, noise_seed: int,
 	flat_discs: Array[Vector3] = [], edge_margin: float = 8.0,
-	resolution: int = DEFAULT_RESOLUTION
+	resolution: int = DEFAULT_RESOLUTION, skirt_depth: float = 2.5
 ) -> void:
 	_size = size
 	_amplitude = amplitude
@@ -47,6 +48,7 @@ func setup(
 	_flat_discs = flat_discs
 	_edge_margin = edge_margin
 	_resolution = resolution
+	_skirt_depth = skirt_depth
 
 
 func _ready() -> void:
@@ -108,9 +110,39 @@ func _build_mesh() -> void:
 			st.add_vertex(p01)
 			st.add_vertex(p11)
 
+	# SKIRT — the flat boxes this class replaces had visible SIDE faces;
+	# a bare heightfield sheet viewed edge-on shows the void between its
+	# rim and the moat below (caught live on wisp's establishing shot:
+	# "floating slab over a black gap"). Perimeter quads drop skirt_depth
+	# below the border verts, both windings so every side reads solid
+	# from any angle without per-side case analysis.
+	if _skirt_depth > 0.0:
+		_add_skirt(st, half, step_x, step_z)
+
 	st.index()
 	st.generate_normals()
 	mesh = st.commit()
+
+
+func _add_skirt(st: SurfaceTool, half: Vector2, step_x: float, step_z: float) -> void:
+	var drop := Vector3(0.0, -_skirt_depth, 0.0)
+	for i: int in range(_resolution - 1):
+		var x0: float = -half.x + i * step_x
+		var x1: float = x0 + step_x
+		var z0: float = -half.y + i * step_z
+		var z1: float = z0 + step_z
+		var edges: Array = [
+			[Vector3(x0, sample_height(x0, -half.y), -half.y), Vector3(x1, sample_height(x1, -half.y), -half.y)],
+			[Vector3(x1, sample_height(x1, half.y), half.y), Vector3(x0, sample_height(x0, half.y), half.y)],
+			[Vector3(-half.x, sample_height(-half.x, z1), z1), Vector3(-half.x, sample_height(-half.x, z0), z0)],
+			[Vector3(half.x, sample_height(half.x, z0), z0), Vector3(half.x, sample_height(half.x, z1), z1)],
+		]
+		for edge: Array in edges:
+			var a: Vector3 = edge[0]
+			var b: Vector3 = edge[1]
+			for winding: Array in [[a, b, a + drop, b, b + drop, a + drop], [b, a, a + drop, b, a + drop, b + drop]]:
+				for v: Vector3 in winding:
+					st.add_vertex(v)
 
 
 func _build_collision() -> void:

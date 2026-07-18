@@ -1,32 +1,48 @@
 {
-  "generated_at": "2026-07-17T00:31:58.6672288-05:00",
+  "generated_at": "2026-07-17T23:40:28.8438891-05:00",
   "model_requested": "meshy-6",
   "preview_only": false,
   "batch_size": 5,
   "items": [
     {
-      "id": "tortoise_giant",
-      "category": "giant",
-      "prompt": "enormous sleeping plush tortoise with a huge rounded dome shell, head and stubby legs tucked halfway in, closed sleepy eyes and gentle smile, moss green shell with big soft rounded scute bumps, warm sandy skin, chunky rounded stuffed animal, deeply asleep",
-      "full_prompt": "enormous sleeping plush tortoise with a huge rounded dome shell, head and stubby legs tucked halfway in, closed sleepy eyes and gentle smile, moss green shell with big soft rounded scute bumps, warm sandy skin, chunky rounded stuffed animal, deeply asleep, soft plush low poly, rounded chunky toddler-toy proportions, flat colors, matte, no textures needed, game asset, clean silhouette, single object, gentle and friendly, Kenney/KayKit style",
+      "id": "starfish_plush",
+      "category": "prop",
+      "prompt": "cute plush starfish toy, five chunky rounded arms, soft coral pink fabric with tiny pale stitched dots, two small sleepy embroidered eyes and a tiny smile on the center, lying flat, chunky rounded stuffed animal, soft and squashy",
+      "full_prompt": "cute plush starfish toy, five chunky rounded arms, soft coral pink fabric with tiny pale stitched dots, two small sleepy embroidered eyes and a tiny smile on the center, lying flat, chunky rounded stuffed animal, soft and squashy, soft plush low poly, rounded chunky toddler-toy proportions, flat colors, matte, no textures needed, game asset, clean silhouette, single object, gentle and friendly, Kenney/KayKit style",
       "status": "ok",
-      "preview_task": "019f6e8c-a037-760a-8af6-e14efeed8c1f",
+      "preview_task": "019f7382-f0cd-75cc-a237-c7f354391f75",
       "preview_status": "SUCCEEDED",
-      "refine_task": "019f6e8e-7e2e-7a49-b1c6-73d6c1909870",
+      "refine_task": "019f7385-a7b8-763f-9068-01be70078ca4",
       "refine_status": "SUCCEEDED",
       "credits": 30,
       "served_model": "meshy-6",
       "served_model_source": "not_reported_by_api_echoing_requested",
-      "glb_path": "D:\\Projects\\soft_landing\\assets\\models\\meshy\\generated\\tortoise_giant.glb",
+      "glb_path": "D:\\Projects\\soft_landing\\assets\\models\\meshy\\generated\\starfish_plush.glb",
+      "error": null
+    },
+    {
+      "id": "penguin_chick_plush",
+      "category": "prop",
+      "prompt": "cute plush baby penguin chick toy standing upright, round fluffy grey body with white belly, tiny stubby wings, small orange beak and feet, big sleepy friendly eyes, chunky rounded stuffed animal, soft huggable toy",
+      "full_prompt": "cute plush baby penguin chick toy standing upright, round fluffy grey body with white belly, tiny stubby wings, small orange beak and feet, big sleepy friendly eyes, chunky rounded stuffed animal, soft huggable toy, soft plush low poly, rounded chunky toddler-toy proportions, flat colors, matte, no textures needed, game asset, clean silhouette, single object, gentle and friendly, Kenney/KayKit style",
+      "status": "ok",
+      "preview_task": "019f7382-fa78-7a54-b2b1-7879fcb34b0e",
+      "preview_status": "SUCCEEDED",
+      "refine_task": "019f7385-aab8-7986-a1db-88ffc6be9f93",
+      "refine_status": "SUCCEEDED",
+      "credits": 30,
+      "served_model": "meshy-6",
+      "served_model_source": "not_reported_by_api_echoing_requested",
+      "glb_path": "D:\\Projects\\soft_landing\\assets\\models\\meshy\\generated\\penguin_chick_plush.glb",
       "error": null
     }
   ],
   "summary": {
-    "total": 1,
-    "ok": 1,
+    "total": 2,
+    "ok": 2,
     "preview_only": 0,
     "failed": 0,
     "resumed_skip": 0,
-    "total_credits": 30.0
+    "total_credits": 60.0
   }
 }

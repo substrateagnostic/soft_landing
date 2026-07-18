@@ -35,6 +35,7 @@ func _ready() -> void:
 	_place_players()
 	_setup_camera()
 	_setup_coop()
+	_setup_memory_album()
 	_setup_quitafter()
 	_update_stems()
 	# Layer unlocks land the moment a dream comes home, not on next visit.
@@ -184,6 +185,16 @@ func _setup_coop() -> void:
 			_soft_landing.rescue_floor_y = _world.rescue_floor_y()
 		else:
 			_soft_landing.rescue_floor_y = FALLBACK_RESCUE_FLOOR_Y
+
+
+## D28: candid auto-snaps for the Waking's photo credits (producer note:
+## "if no one used the photo mode there's still memories").
+func _setup_memory_album() -> void:
+	var album := MemoryAlbum.new()
+	album.name = "MemoryAlbum"
+	add_child(album)
+	var director: CameraDirector = _camera_rig_slot.get_node_or_null("CameraDirector") as CameraDirector
+	album.setup(_pip, _otto, _soft_landing, director)
 
 
 func _physics_process(delta: float) -> void:
