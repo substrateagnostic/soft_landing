@@ -44,8 +44,9 @@ Your five notes were all real, all root-caused, all fixed tonight:
    press anything on pad 2 and the screen splits live.
 2. **Right-stick feel**: orbit speed 150°/s, auto-resume after 1.5s
    idle. Tell me in feelings; both are one-line tunes.
-3. **Terrain**: "even Mario 64 had its polygons" is queued next —
-   sculpted rolling ground for Bramble first.
+3. **Terrain is IN (wave 2)** — all five worlds' ground gently rolls
+   now (flat pinned under fort/doors/spawns/houses). Tell me if the
+   roll reads, and whether anything floats or sinks where it shouldn't.
 
 ## Session 3, overnight waves (2026-07-17, while you slept)
 

@@ -201,12 +201,13 @@ warp deleted + ground-validated warps, quilted fort walls, door beacons
 Movement regression pack rerun GREEN with frame-exact timings
 (scratchpad log; stills in evidence/stills/camera_v3/).
 
+ALSO DONE (Session 4, wave 2): terrain rollout to ALL FIVE worlds
+(TerrainPatch heightfields with pinned flat discs at every authored
+anchor — fort/doors/spawns/houses/shell rim; placements 5/5 +
+missions 4/4 green after).
+
 REMAINING (in order — camera-first per the producer's live playtest):
-1. **Terrain v1** (producer: "even Mario 64 had its polygons"): sculpted
-   rolling ground replacing the flat plates, Bramble's meadow first —
-   heightmap ArrayMesh + painterly blend + exact collision; keep
-   placements green; then the other worlds.
-2. **Dynamic split/merge upgrade** (LEGO model) on the v3 structure:
+1. **Dynamic split/merge upgrade** (LEGO model) on the v3 structure:
    merged single frame when the kids are close, animated split as they
    separate. Producer approved static-first-then-upgrade.
 3. **The Waking finale** (M4 headline): when ALL FOUR worlds are
