@@ -81,9 +81,15 @@ checks on vibes. **UNVERIFIED is an honest state.** Status legend:
       wired and audible (volumedetect receipts), full 4-stem sets for
       all four worlds; the layer-COUNT growth walk (0→1→5→10) was never
       captured (reconciliation Part D.5).
-- [ ] Full session video: boot → co-op → collect → rescue → return → fort
-      growth → quit, ≥3 min mp4 in `evidence/` — IN CAPTURE this session
-      (`gate-whole-game-VERIFY.md` §(c))
+- [x] Full session video: boot → co-op → collect → rescue → return → fort
+      growth → quit, ≥3 min mp4 in `evidence/` —
+      `evidence/gate_whole_game_reel.mp4` (3:37, 2026-08-19, current
+      HEAD). HONEST COMPOSITION NOTE: nine fresh same-night segments
+      concatenated, each with its own receipts
+      (`gate-whole-game-VERIFY.md` §(c)) — not one continuous run; the
+      title cannot be pressed by the harness (instrument gap, billed),
+      so "boot" is attract + `--skipmenu`. Chairs may contest the
+      composition reading.
 - [ ] Save corruption property: corrupt save → .bak rename + clean start,
       no error shown to player (test receipt). PARTIAL —
       `docs/verify/properties-VERIFY.md` §P4: .bak rename, exit 0, and a

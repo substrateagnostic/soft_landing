@@ -44,16 +44,51 @@ New defects surfaced by the reconciliation (bench-billable):
 
 ## (c) The gate reel — full-session evidence on current HEAD
 
-PENDING — capture running. Contract: eight fresh windowed segments,
-`--write-movie --fixed-fps 60`, concatenated to
-`evidence/gate_whole_game_reel.mp4` (target ≥3 min, closing the Gate-4
-"full session video" line): title attract → co-op fort→bramble
-collect (finale_home) → collect-return-fort-growth (gate2_return) →
-rescue net (prop_switch_rescue) → seeded hub population
-(fort_population) → THE ROLL-OVER (--rollover) → THE SLOW RISE (--rise)
-→ THE WAKING (--waking). Save hygiene per Gotcha 10 (real save backed
-up/restored; fresh save for the session arc; seed only for seg5).
-Volumedetect + frame-grab eyes-pass required before the reel is cited.
+DONE — `evidence/gate_whole_game_reel.mp4`: **3:37**, 1920×1080
+(instrument note: the `--resolution 1280x720` flag is overridden by the
+project window settings in windowed mode — all segs consistent, concat
+safe), mean −16.7 dB / **max −0.5 dB (near-clipping transient —
+flagged for the lullaby lane)**. Frame battery (72 frames @ 1/3s):
+`evidence/_scratch/gate_reel/battery/`. Save hygiene held throughout
+(real save verified restored, 304 bytes, byte-content re-checked).
+
+Segment record (all fresh, HEAD 4705718-era, windowed, --fixed-fps 60;
+receipts in `evidence/_scratch/gate_reel/segN*.stdout.log` + per-seg
+events.jsonl):
+
+| seg | content | receipts | exit |
+|---|---|---|---|
+| 1 title | attract, Moon welcome, "press Ⓐ" | eyes-pass PNG | 0 |
+| 2b door+collect | fort → DEV-teleport into BrambleDoor → interact → bramble; walk toward d01 | DOOR bramble · WORLD_READY bramble · **d01 is a RACE — race primed, Moon race line; no collect (see note)** | 139 |
+| 2c co-op | live split-screen, both seats walk+jump | force_mode(2) COOP · 4 jumped EVTs | 0 |
+| 3b return | DEV-teleport to D25 summit door | **collected d10 + dream_returned d10 + MOON dream_home** (d10 is open-archetype) | 139 |
+| 4 rescue | door switch + 2 falls | RESCUE ×2, correct fort placement | 139 |
+| 5 fort | seeded save, populated fort | FORT_RESIDENT_SPAWNED ×6 + greets | 0 |
+| 6 roll-over | --rollover keystone | full chain: gust→wake→22 clouds→20 tumble pieces | 139 |
+| 7 rise | --rise keystone | full chain: reward_ground_solid→petals→risen→settled | 139 |
+| 8 waking | --waking finale | all phases; credits photos:8; closing card on screen (eyes-pass) | 139 |
+
+Route-rot finding (paid): the July scripts finale_home.json and
+gate2_return.json no longer reproduce on current HEAD (terrain rollout
++ camera-v3 steering moved choreography ground truth; gate2_return
+teleports to the pre-D25 ear). Fix: three NEW scripts
+(`gate_reel_{door_collect,coop,summit_return}.json`) — the July scripts
+stay frozen as their own eras' receipts. seg2b's "collected d01"
+expectation was authored wrong (d01 is a race archetype whose mission
+suppresses magnetism — the footage of the race PRIMING is honest
+gameplay); the collect beat is receipted in seg3b instead.
+
+**THE TEARDOWN SEGFAULT (real, repro'd, bench-billable):** 6 of 11
+windowed runs exited 139 (SIGSEGV) at engine teardown, ALWAYS after
+content completed and movies finalized (seg4's AVI verified complete
+1200/1200 frames). Probes (same rescue script, no Movie Maker):
+headless → **exit 0**; windowed → **exit 139**. So: display-driver
+teardown crash, not movie-specific — a real player on this machine
+quitting after such a session sees a crash-on-exit. Pattern: crashing
+runs all loaded a giant world and/or ran bubble/keystone work; fort-only
+and title-only runs exit clean. Root cause not chased tonight (quit-time
+only, zero gameplay harm) — priced by the bench, owner assignment in the
+verdict. Not yet known whether golem reproduces.
 
 **Teardown segfaults (new, real):** seg4 (rescue property) and seg6
 (roll-over keystone) both exited 139 (SIGSEGV) AFTER finalizing their
