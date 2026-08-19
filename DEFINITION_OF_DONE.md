@@ -51,23 +51,39 @@ checks on vibes. **UNVERIFIED is an honest state.** Status legend:
       re-tune pass is expected post-art, post-couch — logged in NEEDS_YOU.
 
 ## Gate 3 — art pipeline proof (producer sign-off)
-- [ ] Meshy→GLB→Godot seam per D10: manifest-driven, source-swappable
-      (receipt: forge report JSON + import log)
-- [ ] 1 character (Pip) + 3 props in-engine per ART_BIBLE (stills in
-      `evidence/`, palette + silhouette review against bible)
-- [ ] Procedural squash-stretch on the Meshy Pip (video clip)
-- [ ] served_model / credits logged per external call (forge report)
+- [x] Meshy→GLB→Godot seam per D10: manifest-driven, source-swappable —
+      `docs/verify/art-pipeline-VERIFY.md` (incl. the zero-GLB fallback
+      test: source renamed away, grey-box survives, restored
+      byte-identical). Reconciled 2026-08-19,
+      `docs/verify/gate-dod-reconciliation.md`.
+- [U] 1 character (Pip) + 3 props in-engine per ART_BIBLE — stills exist
+      (`evidence/stills/art/`), MODEL_SWAP receipts green; the named
+      palette+silhouette review AGAINST the bible was never written
+      (reconciliation, Part D.1).
+- [U] Procedural squash-stretch on the Meshy Pip — mechanism proven
+      composing with skeletal animation (`characters-v2-VERIFY.md`,
+      stills); the literal video clip is still owed (Part D.2).
+- [x] served_model / credits logged per external call —
+      `tools/meshy/forge_report.json`: all 4 assets carry
+      credits+served_model+source, 120/120 reconciled.
 - [ ] ⛔ Producer art sign-off
 
 ## Gate 4 — v0.1 accept
-- [ ] Bramble: 10 dreamlings per D12 cadence, all reachable on the input
-      floor alone (property: harness completes world using only
-      stick+jump+interact — event log)
-- [ ] Fort growth 3 stages, persistent across restart (save round-trip receipt)
-- [ ] Lullaby stem seam: layers audibly add per dreams returned (video +
-      AudioManager log); placeholder stems in `assets/audio/stems/bramble/`
+- [U] Bramble: 10 dreamlings per D12 cadence, all reachable on the input
+      floor alone — every archetype individually live-verified
+      (`missions-m2-VERIFY.md`) but no single floor-only end-to-end run
+      with an event log exists (reconciliation Part D.3; the ascent
+      camera-yaw gap in `mountain-m3-VERIFY.md` blocks it).
+- [U] Fort growth 3 stages, persistent across restart — stage 1 fully
+      receipted (`gate2-slice-VERIFY.md`); stage 2 by mechanism only;
+      stage 3 has never been booted (reconciliation Part D.4).
+- [U] Lullaby stem seam: layers audibly add per dreams returned — stems
+      wired and audible (volumedetect receipts), full 4-stem sets for
+      all four worlds; the layer-COUNT growth walk (0→1→5→10) was never
+      captured (reconciliation Part D.5).
 - [ ] Full session video: boot → co-op → collect → rescue → return → fort
-      growth → quit, ≥3 min mp4 in `evidence/`
+      growth → quit, ≥3 min mp4 in `evidence/` — IN CAPTURE this session
+      (`gate-whole-game-VERIFY.md` §(c))
 - [ ] Save corruption property: corrupt save → .bak rename + clean start,
       no error shown to player (test receipt). PARTIAL —
       `docs/verify/properties-VERIFY.md` §P4: .bak rename, exit 0, and a
@@ -90,16 +106,23 @@ checks on vibes. **UNVERIFIED is an honest state.** Status legend:
       this automated/remote session's window presentation, confirmed via a
       trivial-scene control run showing the same number; left unchecked
       pending a re-run on the golem's actual interactive Windows session.
-- [ ] Playtest-observation checklist for Ezra's first session written into
-      NEEDS_YOU.md
+- [U] Playtest-observation checklist for Ezra's first session written into
+      NEEDS_YOU.md — full draft exists (`docs/design/playtest-checklist.md`)
+      but was never transplanted into NEEDS_YOU.md; the B12 couch question
+      (`gate-whole-game-VERIFY.md` §(e)) must be merged with it, not left
+      competing (reconciliation Part E.2).
 - [ ] ⛔ Producer v0.1 accept
 
 ## Standing properties (re-verified at every gate)
-- [ ] No fail state exists: grep + design review — no health, damage, timer,
-      score, game-over symbols anywhere (receipt: grep output)
-- [ ] Input floor sufficiency: every objective completable with
-      stick+jump+interact only (harness property run)
-- [ ] Worlds never skill-gated: all world doors open from a fresh save
-      (harness receipt)
-- [ ] Never writes to Garden_Train / un_party_game (property: no paths
-      outside repo in code — grep receipt)
+- [x] No fail state exists — fresh grep 2026-08-19, all hits benign
+      (`gate-dod-reconciliation.md` Part B(c)); re-verify at next gate.
+- [U] Input floor sufficiency: every objective completable with
+      stick+jump+interact only — mechanism-verified piecewise everywhere;
+      no single continuous floor-only harness run exists (Part D.9, same
+      closer as the bramble full-collect line).
+- [x] Worlds never skill-gated — door construction is unconditional
+      (`pillow_fort.gd`, zero gates by code-read) + 4 individually
+      receipted door round-trips (Part A, standing table).
+- [x] Never writes to Garden_Train / un_party_game — fresh grep
+      2026-08-19, both WRITE call sites confirmed `user://` /
+      repo-relative (Part B(e)); re-verify at next gate.
