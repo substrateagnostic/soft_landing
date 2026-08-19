@@ -6,18 +6,33 @@ always current. Skim top-down; nothing below the fold is urgent.*
 
 ## NEEDS YOU (current)
 
-- **🔑 Meshy key** (needed by Phase 4, not before): the `.env` lives at
-  `~/projects/Dead_Attestation/.env` on the Pop!_OS side — not synced to this
-  Windows partition. Drop the file onto D:, or paste `MESHY_API_KEY=...` into
-  `D:\Projects\soft_landing\.env` (gitignored).
-- **🔐 gh auth** (needed at Gate 1 push): GitHub CLI is being installed; it has
-  no credentials on this partition. `gh auth login` in any terminal, or paste a
-  token. Until then the repo stays local.
-- **⛔ GATE 1 pending**: pitch packet lands in chat this session.
+- **⛔ Morning decision menu** in NEEDS_YOU.md (round-2 lane order,
+  couch timing, teardown-crash strategy). Defaults marked; silence =
+  defaults run.
+- **📱 Gate reel on your phone** (3:37) — the whole game, fresh
+  captures, current HEAD.
 
 ---
 
 ## LOG
+
+## 2026-08-19 overnight (Session 5, dev laptop) — THE FIRST BENCH
+
+D30 rulings (your live calls): Waking as-is · golem = couch box · B12
+first. The whole-game gate ran its full round-1 loop: DoD reconciled
+line-by-line (Sonnet lane), 3:37 nine-segment reel shot fresh on this
+laptop, two chairs sat (Opus game-feel: BELOW, mostly the instrument;
+Fable child-readability: MEETS), all 13 S bills PAID the same night,
+M items banked with owners (docs/LEDGER.md founded). The catch of the
+night: THE WAKING's natural trigger had crashed silently since D29 —
+your family's real finale could never fire; only dev force-runs were
+ever tested. Fixed, receipted unforced end-to-end. Also: the Moon now
+speaks when a kid is rescued (line existed since D20, unwired), home
+greets as home, praise lands on the keystone payoff, the goodnight
+card is never cropped. Real crash-on-quit found + probed
+(windowed-only; golem repro unknown; banked L1). Round 2 waits on the
+harness walk_to instrument + the PLAYED reel. Eleven commits, session
+flat.
 
 ### 2026-07-18, late — the sunset that didn't come
 - You relayed it just before sleep: Fable stays in Max subscription

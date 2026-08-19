@@ -215,3 +215,51 @@ NEEDS_YOU's COUCH GATE section updated to match at session close.
 
 Round 2: after payment, both chairs re-sit on the played reel +
 payment receipts. Court-dress (S only) after that. 3-round cap holds.
+
+## (g) Round-1 payment record (same night, commit 24a12ad)
+
+PAID: P1 (blob shadow normal_fade 0.6) · P2 (rescue Moon line +
+1200-frame cooldown; receipt: headless smoke shows RESCUE→MOON_SAID
+rescue, second rescue silent) · P3 (ribbon layer 95, pause 100, HUD
+hidden via seizure_changed→GameUI.set_cinematic) · P4 (TheMoon.hush()
+at credits start; CREDITS_LAYER 96) · P5 (all four keystones praise at
+phase=end; rollover speaks keystone_rollover telegraph at start) · P6
+(fort_home key + _say_arrival routing; receipt: fort boot says "There's
+the fort…") · P7 (press invitation appended to welcome ×3; wordmark
+shared 2.6s period + amplitude 2.0) · P9 (bubbled snap armed at BUBBLED,
+fired at landed; luma floor peak≥0.33/mean≥0.10 with slot refund +
+MEMORY_SNAP_SKIPPED receipt). Moon word budget after additions: ~721/900.
+
+RESOLVED NO-CHANGE (evidence): P8/C2-S6 — fort residents are already
+0.105-radius honey-gold emissive orbs (fort_resident.gd:68-103, visible
+as such in battery frame_024); the "Otto-clones" in frame are the LAMB
+dreamkeeper + buddy Otto (D27 precedent: resting NPCs misread next to
+each other). Folded into L4's identity-affordance scope.
+
+DECLINED AS RULED: C2-M1's credits-ordering half — taken-order is
+D29-authored and D30-approved ("ships as-is"); reopening needs a
+cosign. The capture-time luma floor addresses the root cause.
+
+BONUS CATCH (not billed by either chair — found by the payment lane's
+own smoke test): pillow_fort.gd:113 `bool(null)` crash killed the
+NATURAL Waking trigger on every unforced fort boot since D29; only
+--waking force-runs (which skip the branch) were ever receipted.
+FIXED (== true comparison). Receipt: seeded 4/4-complete save, unforced
+boot → WAKING forced:false, all phases, photos:0 path held,
+waking_seen persisted, second boot silent.
+
+## (h) Round-2 open contracts (the morning lane)
+
+1. Harness `walk_to` action — camera-relative blind route authoring
+   fails (receipt: gate_reel_played.json trail, Pip wall-grinds at
+   z=-3.47; fort spawn is INSIDE, doors outside around the flank).
+2. The PLAYED reel: walked door entry → traverse → running jump →
+   stick collect (open archetype) → NATURAL fall → catch on screen →
+   return; --poslog on (walk-speed/accel receipts — partial trail
+   already captured tonight, 81 PLAYER_POS lines).
+3. Wisp segment + worlds-covered denominator print (C2-S7).
+4. Waking door-stir battery at 1s cadence (C2-S8).
+5. Race-complete clip (C2 unknown 4); live pad-join clip when the
+   title-press seam lands (C2 unknown 5, B10 instrument).
+6. Golem: perf watchline (B9) + teardown-segfault repro + natural-fall
+   rescue crash check (C1 unknown 7).

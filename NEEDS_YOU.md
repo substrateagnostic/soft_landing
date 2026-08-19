@@ -3,6 +3,46 @@
 evidence is, one cold demo command, what's unverified, and what only you
 can decide. Cold-start handoff for any instance: NEXT_STEPS.md.*
 
+## Session 5 (2026-08-19, dev laptop, overnight) — THE FIRST BENCH SAT
+
+The BENCH BOOK went live: B12 whole-game gate, two chairs, full loop.
+Your phone has the 3:37 gate reel. Verdicts: Child-Readability MEETS,
+Game-Feel BELOW (the instrument, not the game — the reel had almost no
+actual play in it; feel itself measured EXCEEDS: 1-frame input latency,
+jump matches spec to 0.01s). All S bills PAID tonight (13 items — see
+docs/verify/gate-whole-game-VERIFY.md §(f)); M items banked with owners
+in docs/LEDGER.md (new file).
+
+**The gate's biggest catch — your family's real finale was broken:**
+a one-line crash (shipped with D29) meant THE WAKING could only ever
+fire via the dev force-flag; the NATURAL trigger — the kids actually
+finishing all four worlds — crashed silently on every fort boot. Fixed
+and receipted end-to-end tonight (fires unforced, plays once,
+remembers). Also fixed while paying bills: the Moon now actually SPEAKS
+when a kid is rescued (the line existed since D20, nothing ever said
+it); the fort greets you as HOME; keystone praise lands on the payoff;
+the finale's goodnight is never cropped by the letterbox again.
+
+**Also real:** a crash-on-quit on this laptop (windowed only, after
+rescue/keystone sessions; headless never) — banked to the camera lane;
+unknown whether golem reproduces. And the July harness routes have
+rotted vs current terrain — new current-HEAD scripts committed.
+
+### ⛔ Morning decision menu (defaults marked, all vetoable)
+1. **Round-2 lane order (default: instrument first)** — build the
+   harness `walk_to` action, shoot the PLAYED reel (walked door entry,
+   natural fall, stick collect), then both chairs re-sit. Alternatives:
+   couch-first (B10/B5 prep now, round 2 after) or golem-first (perf
+   watchline + segfault repro).
+2. **Couch timing** — the S-bill fixes are in and the finale trigger
+   works; the game is honestly couch-ready for a FIRST look whenever
+   you want Ezra on it. Default: after round 2 closes (one more polish
+   turn). Your call entirely — the couch outranks the bench.
+3. **The teardown crash-on-quit** — default: golem repro test before
+   any fix (it may be laptop-driver-specific). Alternative: chase it
+   now on the laptop.
+4. **Meshy top-up** — none needed this wave (0 credits spent tonight).
+
 ## THE COUCH GATE — Ezra's first session (observation sheet, B12/D30)
 
 *Transplanted from docs/design/playtest-checklist.md per Gate 4's own
@@ -15,6 +55,17 @@ and collect one dream within his first five minutes, and what exactly
 is the FIRST moment he asks for help, looks at you, or puts the pad
 down? (Timestamp + what was on screen. Everything the benches will fix
 traces back to that moment.)
+
+**Bench refinements (B12, both chairs — adopted):**
+- **The first fall:** what do his face and hands do in the two seconds
+  after the screen goes dark? (If he looks away, the rescue-camera bank
+  item is an L in disguise.)
+- **Which one is him:** does he ever push the stick and watch the wrong
+  plush? (Otto, the lamb, and Callie all share the screen.)
+- **Circle-one stall card** — the bench pre-registers its three likeliest
+  stall screens; circle whichever happens first so the couch can falsify
+  us: (a) title "press Ⓐ" · (b) bramble d01 race dash-away · (c) fort
+  interior / how-to-leave.
 
 ### Setup (before he's in the room)
 - Two pads connected, charged; game already on the title screen.

@@ -1,0 +1,18 @@
+{
+  "description": "B12 round-2 PLAYED segment (pillow_fort boot, --pads=1, --poslog=30, current HEAD): no teleports before the door. Camera settle 4s, then Pip WALKS from spawn (1.5,0.1,3.0) forward (-Z, the CameraHint faces the doors) ~12m to the BrambleDoor (0,0,-9.45), small left correction, interact -> walked DOOR transit. In bramble: settle, then a running traverse (+X toward the bear) with a RUNNING JUMP mid-stride, a turn toward d01's meadow (+Z), and a standing jump. Expected receipts: DOOR bramble + WORLD_READY bramble with ZERO prior HARNESS_TELEPORT lines, jumped/landed EVT pairs (one running, one standing), PLAYER_POS trail for walk-speed/accel measurement (C1 unknown #1, M5 instrument). Natural-fall + stick-collect remain OPEN round-2 contracts pending geometry recon.",
+  "events": [
+    {"frame": 240, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 420, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 440, "seat": 1, "action": "move", "vec": [-1.0, 0.0]},
+    {"frame": 485, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 510, "seat": 1, "action": "interact", "type": "press"},
+    {"frame": 516, "seat": 1, "action": "interact", "type": "release"},
+    {"frame": 700, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 760, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 766, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 900, "seat": 1, "action": "move", "vec": [1.0, 0.0]},
+    {"frame": 960, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 990, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 996, "seat": 1, "action": "jump", "type": "release"}
+  ]
+}

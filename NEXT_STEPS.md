@@ -25,7 +25,42 @@ NEEDS_YOU.md). Repo: github.com/substrateagnostic/soft_landing (Apache-2.0).
 6. docs/research/v2/ — the six research lanes informing everything.
 7. docs/verify/ — receipts for every shipped system.
 
-## Current state (2026-07-17 night two — updated after the producer's
+## Current state (2026-08-19 overnight, Session 5, DEV LAPTOP — the
+## first bench sat; read this block first)
+
+- **Machine**: dev laptop, repo at C:\Users\agall\projects\soft_landing
+  (Syncthing share with golem; the D:\ paths below are golem's). Full
+  toolchain receipted in evidence/toolchain.md addendum (winget Godot
+  4.6.2 console binary, ffmpeg, gh). D30: GOLEM IS THE COUCH BOX —
+  laptop perf numbers are advisory-only.
+- **D30 rulings** (producer, live): Waking ships as-is; golem couch box;
+  BENCH BOOK live with B12 first.
+- **B12 WHOLE-GAME GATE ran its full round 1** (docs/verify/
+  gate-whole-game-VERIFY.md is the packet: DoD reconciled line-by-line
+  + 3:37 nine-segment reel + verdicts + payment record). Chairs:
+  Child-Readability MEETS, Game-Feel BELOW (instrument-driven). ALL S
+  BILLS PAID (13); M items banked in docs/LEDGER.md (NEW FILE — the
+  banked ledger, owners named). Producer morning menu in NEEDS_YOU.
+- **Gate catches that matter**: (1) pillow_fort.gd bool(null) crash =
+  the NATURAL Waking trigger never fired — only --waking force-runs
+  were ever green (vacuous-pass disease in the finale). FIXED +
+  receipted unforced end-to-end. (2) Moon rescue line authored since
+  D20 but never spoken — wired. (3) July harness routes ROTTED vs
+  current terrain/camera (finale_home, gate2_return) — frozen as era
+  receipts; new gate_reel_*.json scripts are current-HEAD. (4) REAL
+  windowed-only crash-on-quit after bubble/keystone/world runs
+  (headless clean; probes receipted) — banked L1, golem repro unknown.
+- **Round 2 contracts open**: harness `walk_to` action (camera-relative
+  route authoring keeps failing blind — fort spawn is INSIDE the fort,
+  doors outside around the flank; poslog trail receipted the wall-grind
+  at z=-3.47), then the PLAYED reel (walked door entry, natural fall,
+  stick collect, race-complete, live pad join), wisp coverage +
+  denominator, waking door-stir at 1s cadence, then both chairs re-sit.
+  3-round cap has one round left after that; court-dress closes.
+- Movement untouched by all fixes; placements 5/5 + missions 4/4 green
+  on this machine at HEAD.
+
+## Prior state (2026-07-17 night two — the producer's
 ## first hands-on playtest, which drove D27)
 
 - **CAMERA V3 / D27 (Session 4, replaces the D4/D5/D18 shared rig)**:
