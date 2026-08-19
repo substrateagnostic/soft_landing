@@ -180,7 +180,7 @@ func _play_sequence(forced: bool) -> void:
 	print("DIVE %s" % JSON.stringify({"phase": "start", "forced": forced}))
 	dive_started.emit()
 	AudioManager.play_sfx_overlay("giant_rumble") # audio pass 3: the ground remembering it's alive -- overlay so bubble_catch (fired moments later, same frame) doesn't cut it off
-	TheMoon.say("world_complete") # same generic key rollover_sequence.gd reuses for its own set-piece beat
+	# Praise moved to phase=end — it lands on the payoff, not the windup (B12: C1-S3).
 
 	_cine.begin(CINE_WIDE_POS, CINE_WIDE_LOOK)
 	_cine.dolly_to(CINE_DESCEND_POS, CINE_DESCEND_LOOK, WHALE_DESCEND_DURATION)
@@ -205,6 +205,7 @@ func _play_sequence(forced: bool) -> void:
 	await tail_timer.timeout
 	_cine.end()
 
+	TheMoon.say("world_complete") # praise lands on the payoff (B12: C1-S3)
 	print("DIVE %s" % JSON.stringify({"phase": "end", "forced": forced}))
 	dive_finished.emit()
 

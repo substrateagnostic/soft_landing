@@ -172,6 +172,15 @@ func _on_dream_returned(_world_id: String, _id: String) -> void:
 ## caller's own receipt-grepping works the instant it calls this, exactly
 ## like before), then queue the spoken/captioned playback. Unknown keys
 ## fall back to printing the raw key as its own text (unchanged contract).
+## hush — retire the on-screen line and drop anything queued (B12 gate,
+## C2-S3/C1-S4: the Waking's credits caption collided with a still-live
+## subtitle). Audio mid-note finishes naturally; only the text yields.
+func hush() -> void:
+	_queue.clear()
+	if _subtitle != null:
+		_subtitle.clear()
+
+
 func say(text_key: String) -> void:
 	var text: String = _resolve_text(text_key)
 	var voice_mode: String = _resolve_voice_mode()

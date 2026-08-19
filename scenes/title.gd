@@ -26,8 +26,7 @@ const PULSE_MIN_ALPHA: float = 0.5
 
 const TITLE_TEXT: String = "THE BIG NAP"
 const LETTER_FONT_SIZE: int = 64
-const LETTER_BOB_PERIOD_MIN: float = 2.0
-const LETTER_BOB_PERIOD_MAX: float = 3.0
+const LETTER_BOB_PERIOD: float = 2.6 # shared by every glyph (B12, C1-S6)
 
 const COLOR_TEXT: Color = Color(0.960784, 0.94902, 0.909804, 1.0) # milk white
 
@@ -70,7 +69,10 @@ func _build_title_row() -> void:
 		var ch: String = TITLE_TEXT[i]
 		var letter := FloatingLetter.new()
 		letter.text = ch if ch != " " else " " # keep spaces as real gaps, not collapsed
-		letter.bob_period = lerpf(LETTER_BOB_PERIOD_MIN, LETTER_BOB_PERIOD_MAX, float(i % 5) / 4.0)
+		# One shared period + a small progressive phase = a gentle wave
+		# traveling through the word. Mixed per-letter periods drifted the
+		# glyphs into reading as mixed case — "THe BIg NAp" (B12, C1-S6).
+		letter.bob_period = LETTER_BOB_PERIOD
 		letter.phase = float(i) * 0.35
 		letter.add_theme_font_override("font", heavy)
 		letter.add_theme_font_size_override("font_size", LETTER_FONT_SIZE)

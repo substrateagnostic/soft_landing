@@ -40,7 +40,16 @@ func _ready() -> void:
 	_update_stems()
 	# Layer unlocks land the moment a dream comes home, not on next visit.
 	GameState.dream_returned.connect(func(_w: String, _id: String) -> void: _update_stems())
-	TheMoon.say("new_area")
+	_say_arrival()
+
+
+## Home greets as home; everywhere else is an adventure (B12 gate, C2-S5:
+## the fort said "somewhere new" every single boot).
+func _say_arrival() -> void:
+	if GameState.current_world_id == "pillow_fort":
+		TheMoon.say("fort_home")
+	else:
+		TheMoon.say("new_area")
 
 
 func _load_world(world_id: String) -> void:
@@ -195,6 +204,8 @@ func _setup_memory_album() -> void:
 	add_child(album)
 	var director: CameraDirector = _camera_rig_slot.get_node_or_null("CameraDirector") as CameraDirector
 	album.setup(_pip, _otto, _soft_landing, director)
+	if director != null:
+		director.seizure_changed.connect(_game_ui.set_cinematic)
 
 
 func _physics_process(delta: float) -> void:
@@ -247,4 +258,4 @@ func _switch_world(world_id: String) -> void:
 		else:
 			_soft_landing.rescue_floor_y = FALLBACK_RESCUE_FLOOR_Y
 	_update_stems()
-	TheMoon.say("new_area")
+	_say_arrival()

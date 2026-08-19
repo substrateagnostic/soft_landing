@@ -18,6 +18,13 @@ extends CanvasLayer
 var _photo_mode: PhotoMode = null
 
 
+## Cinematic seizures hide the HUD outright (B12 gate, C1-S5: the dream
+## pill bled through the letterbox bar). Photo mode's own hide/show is
+## compatible: its rig seizes the root viewport, so this fires there too.
+func set_cinematic(seized: bool) -> void:
+	_hud.visible = not seized
+
+
 func _ready() -> void:
 	_photo_mode = PhotoMode.new()
 	_photo_mode.name = "PhotoMode"

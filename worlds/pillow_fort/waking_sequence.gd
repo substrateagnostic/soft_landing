@@ -53,7 +53,7 @@ const CINE_SUNRISE_LOOK: Vector3 = Vector3(0.0, 2.2, -6.0)
 const BUBBLE_SCENE: PackedScene = preload("res://core/rescue/bubble_effect.tscn")
 const SLEEP_SPOTS: Array = [Vector3(0.75, 0.15, -5.4), Vector3(-0.75, 0.15, -6.4)] # inside the fort, on the rug
 
-const CREDITS_LAYER: int = 95 # above the letterbox (90)
+const CREDITS_LAYER: int = 96 # above letterbox (90) AND the ribbon (95)
 const PHOTO_SECONDS: float = 2.8
 const MAX_PHOTOS: int = 14
 const PHOTOS_DIR: String = "user://photos"
@@ -115,6 +115,7 @@ func begin(forced: bool) -> void:
 	await _wait(SLEEP_SETTLE_TIME)
 
 	# Credits over the sunrise — the night they actually had.
+	TheMoon.hush() # the caption owns the screen now (B12: C2-S3/C1-S4)
 	print("WAKING %s" % JSON.stringify({"phase": "credits"}))
 	_cine.push_to(CINE_SUNRISE_POS, CINE_SUNRISE_LOOK, 6.0)
 	var photo_count: int = await _run_credits()

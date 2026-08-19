@@ -17,12 +17,15 @@ const BUBBLE_SCENE: PackedScene = preload("res://core/rescue/bubble_effect.tscn"
 const HISTORY_SIZE: int = 24
 const SAMPLE_INTERVAL: float = 0.5
 const RESCUE_SFX: String = "bubble_catch"
+const RESCUE_LINE_COOLDOWN_FRAMES: int = 1200 # 20s @60: two rapid falls, one line
 const TEST_FALL_DELAY: float = 1.0
 const TEST_FALL_POSITION: Vector3 = Vector3(0.0, -30.0, 0.0)
 
 signal player_rescued(seat: int)
 
 @export var rescue_floor_y: float = -10.0
+
+var _last_rescue_line_frame: int = -RESCUE_LINE_COOLDOWN_FRAMES
 
 var _pip: PlayerBody = null
 var _otto: PlayerBody = null
@@ -122,6 +125,15 @@ func _rescue(player: PlayerBody, history: Array[Vector3], is_pip: bool) -> void:
 		_otto_rescuing = true
 
 	print("RESCUE %s" % JSON.stringify({"seat": player.seat}))
+
+	# The bubble shows "caught"; the Moon's voice is what says "not in
+	# trouble" (B12 gate, C2-S1 — line was authored + cataloged but never
+	# spoken). Physics-frame cooldown so a quick second fall doesn't
+	# double-speak; frames, not wall-clock, to stay fixed-fps deterministic.
+	var now_frame: int = Engine.get_physics_frames()
+	if now_frame - _last_rescue_line_frame >= RESCUE_LINE_COOLDOWN_FRAMES:
+		_last_rescue_line_frame = now_frame
+		TheMoon.say("rescue")
 
 	# Not the NEWEST sample: that can be the very lip the player just walked
 	# off (grounded on the corner pixel), and setting them back there re-drops

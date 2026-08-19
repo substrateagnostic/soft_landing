@@ -12,7 +12,7 @@ extends Label
 ## this label out yet at `_ready()` time — capturing too early would bob
 ## around (0,0) for one frame, then visibly snap.
 
-const BOB_AMPLITUDE: float = 5.0
+const BOB_AMPLITUDE: float = 2.0 # was 5.0 — kept subtle so the caps line never breaks (B12, C1-S6)
 @export var bob_period: float = 2.4
 @export var phase: float = 0.0
 

@@ -155,7 +155,10 @@ func _play_sequence(forced: bool) -> void:
 	print("ROLLOVER %s" % JSON.stringify({"phase": "start", "forced": forced}))
 	rollover_started.emit()
 	AudioManager.play_sfx_overlay("giant_rumble") # audio pass 3: the ground remembering it's alive -- overlay so bubble_catch/gust_breath (fired moments later, same frame) don't cut it off
-	TheMoon.say("world_complete")
+	# Telegraph, not praise: the one moment a giant visibly moves must say
+	# "still asleep, not waking" BEFORE the movement (B12: C2-M3 narration
+	# half). Praise moved to phase=end where the payoff is (C1-S3).
+	TheMoon.say("keystone_rollover")
 
 	# Ground goes solid FIRST, immediately -- caught live (see
 	# docs/verify/bramble-setpieces-VERIFY.md): gating the far meadow's
@@ -204,6 +207,7 @@ func _play_sequence(forced: bool) -> void:
 	await tail.timeout
 	_cine.end()
 
+	TheMoon.say("world_complete") # praise lands ON the flop, not before it (C1-S3)
 	print("ROLLOVER %s" % JSON.stringify({"phase": "end", "forced": forced}))
 	rollover_finished.emit()
 

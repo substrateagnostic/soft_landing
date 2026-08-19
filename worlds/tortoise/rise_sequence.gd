@@ -153,7 +153,7 @@ func _play_sequence(forced: bool) -> void:
 	print("RISE %s" % JSON.stringify({"phase": "start", "forced": forced}))
 	rise_started.emit()
 	AudioManager.play_sfx_overlay("giant_rumble") # audio pass note: no dedicated tortoise stems yet -- reused, fails soft (see VERIFY doc)
-	TheMoon.say("world_complete") # same generic set-piece key every other keystone reuses
+	# Praise moved to phase=end — it lands on the payoff, not the windup (B12: C1-S3).
 
 	_reveal_reward_ground() # ground solid FIRST, before any camera/tween work -- the established lesson
 	_cine.begin(CINE_WIDE_POS, CINE_WIDE_LOOK)
@@ -180,6 +180,7 @@ func _play_sequence(forced: bool) -> void:
 	_cine.end()
 
 	playing = false
+	TheMoon.say("world_complete") # praise lands on the payoff (B12: C1-S3)
 	print("RISE %s" % JSON.stringify({"phase": "end", "forced": forced}))
 	rise_finished.emit()
 

@@ -34,7 +34,10 @@ var _tween: Tween = null
 
 
 func _ready() -> void:
-	layer = 6 # above HUD (5), below PauseMenu (10) — never blocks the pause UI
+	# Above the letterbox (90): during cinematics the ribbon carries the
+	# lines a parent reads aloud — the bars were cropping them (B12 gate,
+	# C2-S2). Still below PauseMenu (100) — never blocks the pause UI.
+	layer = 95
 	_build_ui()
 
 
@@ -81,6 +84,15 @@ func _build_ui() -> void:
 ## arriving before the previous line finished simply restarts the cycle
 ## with the new text (defensive; TheMoon's job queue already serializes
 ## calls, so overlap shouldn't normally happen).
+## Immediately retires whatever line is up (B12 gate, C2-S3/C1-S4: the
+## credits caption rendered through a still-fading Moon line).
+func clear() -> void:
+	if _tween != null and _tween.is_valid():
+		_tween.kill()
+	_panel.modulate.a = 0.0
+	_label.text = ""
+
+
 func show_line(text: String, duration: float) -> void:
 	_label.text = text
 	if _tween != null and _tween.is_valid():

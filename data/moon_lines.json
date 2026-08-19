@@ -1,25 +1,25 @@
 {
  "welcome": [
-  "Hello, little duck. The giants are sleeping. Let's find their dreams.",
-  "Shh. Everyone's asleep but us. Ready to go dream-hunting?",
-  "Welcome back, little duck. The night is soft and waiting."
+  "Hello, little duck. The giants are sleeping. Let's find their dreams. Press any button when you\u2019re ready.",
+  "Shh. Everyone's asleep but us. Ready to go dream-hunting? Press any button when you\u2019re ready.",
+  "Welcome back, little duck. The night is soft and waiting. Press any button when you\u2019re ready."
  ],
  "find_dreamling": "A dream is glowing nearby. Can you go touch it?",
  "dream_home": [
   "Home again. The giant sighs, warm and glad.",
-  "Look at that — safe and snug. One more dream tucked in.",
+  "Look at that \u2014 safe and snug. One more dream tucked in.",
   "There. The fort glows a little brighter now.",
   "Well carried, little duck. That dream is home."
  ],
  "well_done": [
   "You found them all. The giant smiles in their sleep.",
-  "Every dream is home. Listen — can you hear it purring?",
+  "Every dream is home. Listen \u2014 can you hear it purring?",
   "All tucked in. This whole place is glad you came."
  ],
  "new_area": [
   "A new place to explore. Let's see what's waiting.",
   "Ooh. Somewhere new. Stay close, and let's look around.",
-  "Here we are. Quiet now — someone big is sleeping here."
+  "Here we are. Quiet now \u2014 someone big is sleeping here."
  ],
  "paused": [
   "Taking a little rest. I'll wait right here.",
@@ -48,11 +48,11 @@
  ],
  "mission_shy": [
   "This one's shy. Go slow, and let it come to you.",
-  "Careful now — soft steps. Shy dreams startle easy."
+  "Careful now \u2014 soft steps. Shy dreams startle easy."
  ],
  "mission_duet": [
   "This dream needs two. Lucky you brought a friend.",
-  "Together now — one of you won't be enough for this."
+  "Together now \u2014 one of you won't be enough for this."
  ],
  "move_flutter_first": [
   "Ooh! Your onesie catches the air. Try that again.",
@@ -60,18 +60,18 @@
  ],
  "move_glide_first": [
   "Now you're gliding. Slow and soft, like a falling leaf.",
-  "Arms out — there you go. That's flying, almost."
+  "Arms out \u2014 there you go. That's flying, almost."
  ],
  "move_pound_first": [
   "What a thump! Did you feel that bounce?",
-  "Down you go — and up someone else pops. Nicely done."
+  "Down you go \u2014 and up someone else pops. Nicely done."
  ],
  "world_complete": [
   "This whole place is dreaming happily now, because of you.",
   "Everything here is settled and sound. You did that."
  ],
  "fort_grows_5": [
-  "Five dreams home now. Listen — the fort is humming.",
+  "Five dreams home now. Listen \u2014 the fort is humming.",
   "The fort's getting fuller. Can you feel it glowing?"
  ],
  "fort_grows_10": [
@@ -79,29 +79,29 @@
   "Look how big it's grown. All because you kept going."
  ],
  "rescue": [
-  "Whoops — up you float. Falling's just another way to land.",
+  "Whoops \u2014 up you float. Falling's just another way to land.",
   "Gotcha. Soft as a pillow, safe as anything.",
   "No trouble at all, little duck. Up and onward."
  ],
  "bramble_d01_race": "Ready, little duck? This one loves a good chase.",
- "bramble_d02_race": "Another quick one — keep up if you can.",
+ "bramble_d02_race": "Another quick one \u2014 keep up if you can.",
  "bramble_d03_ride": "Hold tight. This one likes slow, lazy loops.",
  "bramble_d04_open": "This one's happy right where it is.",
- "bramble_d05_ride": "Climb on, little duck — this dream loves to drift.",
- "bramble_d06_open": "Look — it naps on the bear's own breath.",
- "bramble_d07_geyser": "Careful — this dream rides the bear's own snore.",
+ "bramble_d05_ride": "Climb on, little duck \u2014 this dream loves to drift.",
+ "bramble_d06_open": "Look \u2014 it naps on the bear's own breath.",
+ "bramble_d07_geyser": "Careful \u2014 this dream rides the bear's own snore.",
  "bramble_d08_duet": "This dream needs two, little duck. Bring your friend.",
- "bramble_d09_shy": "Shh — go slow. This one startles easily.",
+ "bramble_d09_shy": "Shh \u2014 go slow. This one startles easily.",
  "bramble_d10_open": "Tucked in close, right by the door home.",
  "wisp_d01_race": "This dream loves to race along the shore.",
- "wisp_d09_shy": "Slow down, little duck — this reed-dream is shy.",
+ "wisp_d09_shy": "Slow down, little duck \u2014 this reed-dream is shy.",
  "marmalade_d01_race": "Someone's quick today, right through the village square.",
- "marmalade_d09_shy": "Careful now — this one hides among the pots.",
+ "marmalade_d09_shy": "Careful now \u2014 this one hides among the pots.",
  "tortoise_d01_race": "Ready, little duck? This dream loves a slow, sunny chase.",
- "tortoise_d04_ride": "Climb aboard — this one drifts like pollen on the breeze.",
+ "tortoise_d04_ride": "Climb aboard \u2014 this one drifts like pollen on the breeze.",
  "tortoise_d05_duet": "This dream needs two, right here in her garden.",
- "tortoise_d07_bloom": "Careful — this dream naps right on her slow breath.",
- "tortoise_d08_shy": "Shh — go slow. This one hides among the clover.",
+ "tortoise_d07_bloom": "Careful \u2014 this dream naps right on her slow breath.",
+ "tortoise_d08_shy": "Shh \u2014 go slow. This one hides among the clover.",
  "whisper_shh": [
   "Shhh."
  ],
@@ -121,5 +121,11 @@
  ],
  "waking_goodnight": [
   "The nap holds. Goodnight, little dreamers. Goodnight."
- ]
+ ],
+ "fort_home": [
+  "Back at the fort, little duck. Everyone kept your spot warm.",
+  "Home again. The blankets missed you.",
+  "There's the fort. Softest place in the whole night."
+ ],
+ "keystone_rollover": "Shhh. Just rolling over. Still fast asleep."
 }

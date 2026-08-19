@@ -24,6 +24,10 @@ func _ready() -> void:
 	cull_mask = 1
 	upper_fade = 0.0
 	lower_fade = 0.3
+	# Ground only: without this a Decal paints every surface in its 20m
+	# column — a full-strength black smear on any wall the character jumps
+	# beside (B12 gate, C1-S1). The shadow means "the ground is HERE."
+	normal_fade = 0.6
 
 
 func _make_circle_texture() -> ImageTexture:

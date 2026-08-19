@@ -28,8 +28,14 @@ const POOL_CAP: int = 80 # memory_*.png kept on disk, oldest pruned
 const DREAM_RETURN_DELAY: float = 0.55 # the cheer gesture has started by then
 const SEIZURE_DELAY: float = 2.5 # mid-keystone beat, past the letterbox fade
 const TOSS_DELAY: float = 0.3
-const BUBBLE_DELAY: float = 0.6
+const BUBBLE_LAND_DELAY: float = 0.4 # after set-down: kid + ground + partner in frame
 const POUND_DELAY: float = 0.4
+# Candid floor (B12 gate, C2-M1): the game is night — a rescue over the
+# void is a black card. If nothing in frame clears PEAK_LUMA_FLOOR (or the
+# whole frame is near-black), skip and refund the session slot. The void
+# rescues measured peak ~0.28; every keeper measured ≥0.35.
+const PEAK_LUMA_FLOOR: float = 0.33
+const MEAN_LUMA_FLOOR: float = 0.10
 
 var _pip: PlayerBody = null
 var _otto: PlayerBody = null
@@ -37,6 +43,10 @@ var _otto: PlayerBody = null
 var _last_snap_ms: int = -1000000
 var _session_count: int = 0
 var _next_index: int = -1 # lazy disk scan, photo_mode.gd's own idiom
+# Seats armed by a BUBBLED entry, snapped on the LANDED that ends the ride
+# (B12 gate, C1-S2: mid-void bubble shots were empty black cards; the
+# set-down — kid, ground, partner — is the picture worth keeping).
+var _bubble_snap_armed: Dictionary = {}
 
 
 func setup(pip: PlayerBody, otto: PlayerBody, soft_landing: SoftLanding, director: Node) -> void:
@@ -52,18 +62,25 @@ func setup(pip: PlayerBody, otto: PlayerBody, soft_landing: SoftLanding, directo
 	for player: PlayerBody in [pip, otto]:
 		if player == null:
 			continue
-		player.state_changed.connect(_on_player_state_changed)
+		player.state_changed.connect(_on_player_state_changed.bind(player))
+		player.landed.connect(_on_player_landed.bind(player))
 		player.pound_landed.connect(func(_pos: Vector3) -> void:
 			_queue_snap("pound_bounce", POUND_DELAY))
 	if director != null and director.has_signal("seizure_changed"):
 		director.connect("seizure_changed", _on_seizure_changed)
 
 
-func _on_player_state_changed(new_state: int) -> void:
+func _on_player_state_changed(new_state: int, player: PlayerBody) -> void:
 	if new_state == PlayerBody.State.BUBBLED:
-		_queue_snap("bubbled", BUBBLE_DELAY)
+		_bubble_snap_armed[player.seat] = true # snap on the set-down, not the void
 	elif new_state == PlayerBody.State.TOSSED:
 		_queue_snap("tossed", TOSS_DELAY)
+
+
+func _on_player_landed(player: PlayerBody) -> void:
+	if _bubble_snap_armed.get(player.seat, false):
+		_bubble_snap_armed[player.seat] = false
+		_queue_snap("bubbled", BUBBLE_LAND_DELAY)
 
 
 func _on_seizure_changed(seized: bool) -> void:
@@ -90,6 +107,10 @@ func _capture(trigger: String) -> void:
 	var image: Image = get_viewport().get_texture().get_image()
 	if image == null:
 		return
+	if not _bright_enough(image):
+		_session_count = maxi(_session_count - 1, 0) # refund the slot
+		print("MEMORY_SNAP_SKIPPED %s" % JSON.stringify({"trigger": trigger, "reason": "luma_floor"}))
+		return
 	var index: int = _reserve_next_index()
 	var path: String = "%s/memory_%d.png" % [PHOTOS_DIR, index]
 	WorkerThreadPool.add_task(func() -> void:
@@ -98,6 +119,23 @@ func _capture(trigger: String) -> void:
 			print("MEMORY_SNAP %s" % JSON.stringify({"trigger": trigger, "path": path}))
 	)
 	_prune_pool()
+
+
+## A keepsake must contain something to see: probe a 32x18 downsample and
+## require one genuinely lit region (peak) and a non-black frame (mean).
+func _bright_enough(image: Image) -> bool:
+	var probe: Image = image.duplicate()
+	probe.resize(32, 18, Image.INTERPOLATE_BILINEAR)
+	var peak: float = 0.0
+	var total: float = 0.0
+	for y: int in range(probe.get_height()):
+		for x: int in range(probe.get_width()):
+			var c: Color = probe.get_pixel(x, y)
+			var luma: float = 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b
+			peak = maxf(peak, luma)
+			total += luma
+	var mean: float = total / float(probe.get_width() * probe.get_height())
+	return peak >= PEAK_LUMA_FLOOR and mean >= MEAN_LUMA_FLOOR
 
 
 func _reserve_next_index() -> int:

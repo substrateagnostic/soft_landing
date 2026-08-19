@@ -110,7 +110,12 @@ const WAKING_ARRIVAL_DELAY: float = 2.0
 func _maybe_begin_waking() -> void:
 	var forced: bool = Harness.flag("waking", false)
 	if not forced:
-		if bool(GameState.get_setting("waking_seen")):
+		# == true, not bool(): get_setting returns null for a never-set key
+		# and GDScript's bool() has no null/String constructor — the old
+		# call CRASHED here on every natural fort boot, so the family's
+		# real first Waking could never fire; only --waking force-runs
+		# (which skip this branch) were ever receipted (B12 gate catch).
+		if GameState.get_setting("waking_seen") == true:
 			return
 		for world_id: String in WAKING_WORLD_IDS:
 			if not GameState.is_world_completed(world_id):

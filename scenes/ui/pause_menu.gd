@@ -79,7 +79,7 @@ var _sleep_mouse_held: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_WHEN_PAUSED
-	layer = 10 # above the HUD (layer 5) and subtitle ribbon (layer 6)
+	layer = 100 # above HUD (5), letterbox (90) and subtitle ribbon (95)
 	visible = false
 	_build_ui()
 	_keep_playing_button.pressed.connect(_on_keep_playing_pressed)
