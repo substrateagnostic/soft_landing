@@ -44,7 +44,10 @@ kin), **(b)** frozen exit records and their receipts, **(c)** the banked M/L
 ledger with owners. They are told: *do not re-litigate ruled law or re-bill
 banked/routed items; DO bill new defects freely.* Open taste contests are
 summarized as "contested, unruled" WITHOUT the prior chair's argument — precedent
-prevents re-fighting settled ground; it must not anchor fresh eyes. This clause
+prevents re-fighting settled ground; it must not anchor fresh eyes. **The reopen
+key:** a chair MAY move to reopen a settled ruling — only with a COSIGN from the
+co-judge or the director, stating what new evidence the ruling lacked; a
+cosigned reopen is a sanctioned re-freeze, a lone one is void. This clause
 exists because two ILL WILL benches fought over surfaces a sibling lane had
 already certified (a teach lantern billed as a value leak; a fog floor
 re-litigated twice).
