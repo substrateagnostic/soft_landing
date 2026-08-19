@@ -136,8 +136,82 @@ bill traces back to it. Secondary watches, only if easy: does he notice
 the door beacons; does he understand the split when a second pad joins;
 does any Moon line make him look up.
 
-## (f) Verdicts
+## (f) Verdicts — ROUND 1 (2026-08-19, ~02:30)
 
-PENDING — two chairs (Opus xhigh + Fable) sit after (b) and (c) land.
-Loop: build → two chairs → full fix (S+M) → re-judge → court-dress
-(S only), 3-round cap, director tiebreak, producer live for rulings.
+**Chair 1 (Game-Feel, Opus): BELOW.** Feel itself EXCEEDS where
+measurable — input→jump latency 1 physics frame 5/5 (receipts:
+seg2b/seg2c stdout, press-frame vs EVT jumped); jump airtime 0.90s
+reconciles with D2's derived spec to ~0.01s (NEW frozen number). Ruled
+BELOW on: (a) rescue reads as deletion-then-restoration — camera
+follows the body below the world, catch never framed (measured: 38% and
+74% of the 3.10s beat below the readability floor, 2× variance);
+(b) blob shadow paints vertical faces at full strength
+(blob_shadow.gd:22, normal_fade never set); (c) INSTRUMENT: the reel
+contains 12.4s input-driven motion of 217s (5.7%), 5 jump presses, zero
+platforming, zero natural falls, zero camera input — a feel chair
+cannot certify from it. Full verdict: chair transcript (session task
+record); bill merged below.
+
+**Chair 2 (Child-Readability, Fable): MEETS.** Wayfinding, bubble
+read, tortoise-rise staging, and THE WAKING's wordless arc exceed
+comps; held from EXCEEDS by finale text-layer defects, the unwired
+rescue Moon line, the unnarrated/occluded roll-over, and night-dark
+credits candids.
+
+**MERGED BILL — payment plan (director ruling, round 1):**
+
+PAY NOW (all S, both chairs, deduped):
+- P1 blob shadow normal_fade (C1-S1, blob_shadow.gd)
+- P2 Moon rescue line wired + rate-limited (C2-S1, soft_landing.gd;
+  line exists in moon_lines.json)
+- P3 subtitle ribbon renders ABOVE letterbox; HUD fully hidden during
+  cinematic seizure (C2-S2 + C1-S5, camera_director/game_ui layers)
+- P4 credits caption vs live subtitle collision — ribbon force-cleared
+  at credits start (C2-S3 == C1-S4, waking_sequence.gd)
+- P5 keystone world_complete praise moved to phase=end; roll-over gains
+  its "shh — just rolling over" telegraph line at start (C1-S3 +
+  narration half of C2-M3)
+- P6 fort arrival says HOME, not "somewhere new" (C2-S5, data + wiring)
+- P7 title: spoken press invitation appended to welcome (C2-S4) +
+  wordmark float phase-locked so caps never break line (C1-S6)
+- P8 fort residents get a dream-glow tint so Otto is unmistakable
+  (C2-S6)
+- P9 memory album: "bubbled" snap fires at landed, not in the void
+  (C1-S2) + luma floor on candid selection + credits ordering biased
+  bright (C2-M1 — paid now, contained in one file)
+- P10 INSTRUMENT: round-2 reel contract = ONE CONTINUOUS PLAYED segment
+  (walk to door under stick → enter → traverse → jump → collect →
+  natural fall → caught → return) with --poslog on (C1-M4 + C1-M5),
+  wisp coverage + denominator print (C2-S7), 1s battery cadence over
+  the waking door-stir (C2-S8)
+
+BANKED (docs/LEDGER.md founded this gate, named owners):
+- L1 rescue camera authored recovery (C1-M1) — owner: B6 camera bench,
+  AFTER the played reel provides natural-fall evidence (chair's own
+  caveat). The teardown segfault rides with this owner (same
+  bubble_effect lifetime territory).
+- L2 door-arrival + summit-ear framing (C1-M2 == C2-M4) — owner: B6.
+- L3 keystone mid-sequence cut-to-kids + static-tail trim (C1-M3) +
+  roll-over staging past the tumble stack (C2-M3 camera half) —
+  owner: set-piece lane.
+- L4 split-screen seat-ownership cue (C2-M2) + solo "which one is me"
+  affordance (C1-M6) — RULED AN ENTRY BAR for the B6+B2 dynamic
+  split/merge build brief, per Chair 2, with Chair 1's solo extension.
+- L5 race-start wordless telegraph (C2-M5) — owner: missions/juice
+  lane.
+
+**FIRING ORDER — reconciled (C1 dissent adopted in substance):**
+pay S+cheap-M → shoot the PLAYED reel → B6 (camera) in PARALLEL with
+B10+B5, all three reading the same new reel → B2 → B9 on golem → B1
+parked until movement changes. C2's entry-bar annotation folded into
+L4.
+
+**COUCH QUESTION — final form (both chairs' refinements adopted):**
+the §(e) watch + C1's first-fall clause ("what do his face and hands do
+in the two seconds after the screen goes dark") + C1's "which one is
+him" secondary + C2's circle-one stall-card (title Ⓐ / race dash-away /
+fort-door interior) pre-registering the bench's predictions.
+NEEDS_YOU's COUCH GATE section updated to match at session close.
+
+Round 2: after payment, both chairs re-sit on the played reel +
+payment receipts. Court-dress (S only) after that. 3-round cap holds.
