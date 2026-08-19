@@ -1,6 +1,8 @@
 # First Session with Ezra — Observation Checklist
-*Draft (final version lands in NEEDS_YOU.md at Gate 4). You are not testing
-Ezra; the game is being tested. Anything he does "wrong" is data about us.*
+*SHIPPED: the living version is NEEDS_YOU.md §"THE COUCH GATE"
+(transplanted 2026-08-19, B12/D30 — merged with the couch question,
+reconciled to camera v3). This file stays as the source draft; edit the
+NEEDS_YOU copy, not this one.*
 
 ## Setup (before he's in the room)
 - [ ] Two pads connected, charged; game already on the title screen.

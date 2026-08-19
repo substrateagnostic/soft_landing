@@ -3,6 +3,63 @@
 evidence is, one cold demo command, what's unverified, and what only you
 can decide. Cold-start handoff for any instance: NEXT_STEPS.md.*
 
+## THE COUCH GATE — Ezra's first session (observation sheet, B12/D30)
+
+*Transplanted from docs/design/playtest-checklist.md per Gate 4's own
+line, reconciled to camera v3. You are not testing Ezra; the game is
+being tested. Anything he does "wrong" is data about us.*
+
+**THE ONE WATCH (if you only keep one thing):** from the title screen
+with no help — does Ezra get through a fort door into a giant's world
+and collect one dream within his first five minutes, and what exactly
+is the FIRST moment he asks for help, looks at you, or puts the pad
+down? (Timestamp + what was on screen. Everything the benches will fix
+traces back to that moment.)
+
+### Setup (before he's in the room)
+- Two pads connected, charged; game already on the title screen.
+- TV volume LOW (the whole game is quiet on purpose — resist turning it up).
+- Know your exit: session ends at the FIRST sign of tired/frustrated,
+  mid-anything. The world remembers; leaving costs nothing.
+
+### Watch for (movement — the product)
+- First 60 seconds of pure stick-wandering: does he laugh, or fight the
+  camera? (Any camera fighting = my bug, note when it happened.)
+- Jumping: does he jump "for no reason" (= joy) or only when needed
+  (= it's not fun enough yet)?
+- Does he ever look confused about WHERE his character is? (readability
+  kit failing — note the scene.)
+- The first accidental fall: does the bubble read as being caught
+  (delight/relief) or as being punished (frustration)? His face, not
+  his words.
+
+### Watch for (the fiction)
+- What does he call the dreamlings unprompted? (His word becomes the word.)
+- Does he count them out loud?
+- Reaction to the Moon's voice: attends / ignores / annoyed?
+- Does he want to climb the mountain "because it's a mountain" — and
+  does he ever suspect the bear?
+- Does he notice the door beacons on his own?
+
+### Watch for (co-op)
+- First toss: his reaction is the whole Gate. (Ask "again?" — if he says
+  yes three times, the verb ships everywhere.)
+- When the screen splits as a second pad joins: does he understand his
+  half is HIS? (Split-screen replaced the leash — forgetting where you
+  are is harmless now; confusion about WHICH half is his is the bug.)
+- Any moment he tells YOU what to do = the co-op is working.
+
+### Hard data (jot, don't measure)
+- Session length before he chose something else: ______
+- Dreams collected/returned: ______ / ______
+- Rescues (his): ______  — any tears? Y/N
+- The one thing he kept coming back to: ______
+- The one thing he never touched: ______
+
+### After
+- Ask exactly one question: "what was your favorite part?" Then stop asking.
+- If he asks to play again tomorrow: Gate 4's real acceptance criterion, met.
+
 ## Session 4, night two, wave 4 — THE WAKING EXISTS (D29)
 
 The finale is built and receipted (video in chat when the render lands):

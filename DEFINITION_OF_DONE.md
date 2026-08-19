@@ -106,11 +106,11 @@ checks on vibes. **UNVERIFIED is an honest state.** Status legend:
       this automated/remote session's window presentation, confirmed via a
       trivial-scene control run showing the same number; left unchecked
       pending a re-run on the golem's actual interactive Windows session.
-- [U] Playtest-observation checklist for Ezra's first session written into
-      NEEDS_YOU.md — full draft exists (`docs/design/playtest-checklist.md`)
-      but was never transplanted into NEEDS_YOU.md; the B12 couch question
-      (`gate-whole-game-VERIFY.md` §(e)) must be merged with it, not left
-      competing (reconciliation Part E.2).
+- [x] Playtest-observation checklist for Ezra's first session written into
+      NEEDS_YOU.md — transplanted 2026-08-19 as "THE COUCH GATE" section,
+      merged with the B12 couch question and reconciled to camera v3
+      (leash-warp watch replaced by split-screen watch). Source draft:
+      `docs/design/playtest-checklist.md`.
 - [ ] ⛔ Producer v0.1 accept
 
 ## Standing properties (re-verified at every gate)
