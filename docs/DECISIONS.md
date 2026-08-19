@@ -242,3 +242,20 @@ goodnight", fade to title (the held decision's safe default; dawn-fort
 visit remains an open seam). waking_seen persists ONLY on unforced runs
 (--waking previews never eat the family's real first Waking). Giants
 never on screen and never awake — the thesis holds to the last frame.
+
+**D30 — The gate rulings (producer, live, 2026-08-19, dev-laptop
+session).** Three rulings from the producer in the chair. (1) THE WAKING
+SHIPS AS-IS: the D29 build's pacing (dawn 16 s, door-beats ~2.4 s apart,
+bed-carry 3.2 s, ~3 s per credit photo), the closing card ("for Ezra &
+Caleb / the nap holds — goodnight"), and straight-to-title are all
+APPROVED; the "quiet morning" post-credits visit is declined-for-now — a
+closed seam, not a debt. (2) THE COUCH BOX IS GOLEM (Windows partition):
+any perf number captured on the dev laptop is ADVISORY-ONLY and must be
+labeled so in its receipt; the B9 watchline freezes only on golem
+hardware. (3) THE BENCH BOOK GOES LIVE, B12 FIRST: the book's printed
+firing order was authored against stale state ("D25 next") — the true
+state is end-to-end complete through D29, so the first bench is the
+WHOLE-GAME gate (B12: DoD reconciled line by line, full-playthrough
+reel, register delta), and the firing order is re-derived as part of its
+verdict. Chairs per the book; the judged loop runs build → two chairs →
+full fix (S+M) → re-judge → court-dress (S only), 3-round cap.
