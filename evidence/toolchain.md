@@ -43,3 +43,20 @@ background jobs were killed. **Fallback: direct downloads to `D:\Tools\`**
   `D:\Tools\ffmpeg\ffmpeg-8.1.2-essentials_build\bin`.
 - `gh auth status` → "You are not logged into any GitHub hosts." → logged in
   NEEDS_YOU.md; building local until producer auths (per GOAL).
+
+## Dev-laptop addendum (2026-08-19, D30 session)
+
+The D:\ paths above live on GOLEM's Windows partition. This session runs
+on the DEV LAPTOP; the repo is the same Syncthing share at
+`C:\Users\agall\projects\soft_landing`. Producer ruling (D30): golem is
+the couch box — perf numbers from this laptop are ADVISORY-ONLY.
+
+| Tool | Path (laptop) | Verified |
+|---|---|---|
+| Godot 4.6.2 console | `C:\Users\agall\AppData\Local\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\Godot_v4.6.2-stable_win64_console.exe` | `--version` → `4.6.2.stable.official.71f334935` |
+| godot (GUI shim) | `C:\Users\agall\AppData\Local\Microsoft\WinGet\Links\godot.exe` | same version |
+| ffmpeg | `C:\Users\agall\AppData\Local\Microsoft\WinGet\Links\ffmpeg.exe` | present |
+| gh | `C:\Program Files\GitHub CLI\gh.exe` | present |
+
+Canary: `check_placements.gd --world=bramble` →
+`PLACEMENT_SUMMARY {"any_fail":false}` on this machine, this HEAD.

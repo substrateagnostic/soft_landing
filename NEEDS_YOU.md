@@ -17,13 +17,13 @@ The finale is built and receipted (video in chat when the render lands):
 - The giants are never on screen and never wake. The thesis holds.
 - Preview any time: `--waking` on the fort (previews never mark it seen).
 
-### ⛔ New decisions pending (the Waking)
-1. **Pacing + beats order** — watch the video: dawn 16s, four door-beats
-   ~2.4s apart, bed-carry 3.2s, ~3s per credit photo. All constants.
-2. **Post-credits** (still held): straight to title (current) vs one
-   "quiet morning" dawn-fort visit before night returns.
-3. **The closing card text** — "for Ezra & Caleb / the nap holds —
-   goodnight". Veto/reword freely; it's one string.
+### ✅ Waking decisions RULED (D30, 2026-08-19, you, live)
+1. **Pacing + beats order** — SHIPS AS-IS (dawn 16s, door-beats ~2.4s,
+   bed-carry 3.2s, ~3s/photo).
+2. **Post-credits** — straight to title, ruled. The "quiet morning"
+   visit is a closed seam, not a debt.
+3. **Closing card** — "for Ezra & Caleb / the nap holds — goodnight"
+   approved verbatim.
 
 ## Session 4, night two, wave 3 — MEMORIES + THE SHEDD + LULLABIES (D28)
 
