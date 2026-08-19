@@ -1,0 +1,14 @@
+{
+  "description": "B12 gate reel seg2b (pillow_fort boot, --pads=1, current HEAD 2026-08-19): camera settle, DEV TELEPORT into the BrambleDoor trigger (0,0.6,-9.45), interact -> DOOR bramble + WORLD_READY bramble; settle in bramble, then PURE-AXIS stick walk from SPAWN_PIP (-55,0.5,0) forward (+X, camera faces the bear) ~8m then camera-right (+Z) ~4m, passing within magnetism of d01 at (-48,0.55,3). Expected receipts: HARNESS_TELEPORT, DOOR bramble, WORLD_READY bramble, collected d01. Replaces finale_home.json's rotted route for the gate reel only; that script stays frozen as its own era's receipt.",
+  "events": [
+    {"frame": 240, "seat": 1, "action": "teleport", "pos": [0.0, 0.6, -9.45]},
+    {"frame": 300, "seat": 1, "action": "interact", "type": "press"},
+    {"frame": 306, "seat": 1, "action": "interact", "type": "release"},
+    {"frame": 540, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 620, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 640, "seat": 1, "action": "move", "vec": [1.0, 0.0]},
+    {"frame": 690, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 720, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 726, "seat": 1, "action": "jump", "type": "release"}
+  ]
+}

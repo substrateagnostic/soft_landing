@@ -1,0 +1,7 @@
+{
+  "description": "B12 gate reel seg3b (bramble boot, --pads=1, current HEAD 2026-08-19): camera settle, then DEV TELEPORT Pip onto the D25 summit platform inside the DreamDoor trigger and within magnetism of d10 -- door at ASCENT_SUMMIT (44,32,14), d10 at (46.3,32.55,14), Pip lands at (45.2,32.6,14). Magnetism hands him d10 while he stands in the door; the polled door releases it home. Expected receipts: HARNESS_TELEPORT, collected d10, dream_returned d10, MOON dream_home, save mutation. Replaces gate2_return.json's pre-D25 coordinates for the gate reel only; that script stays frozen as the Gate-2 era receipt.",
+  "events": [
+    {"frame": 240, "seat": 1, "action": "teleport", "pos": [45.2, 32.6, 14.0]},
+    {"frame": 480, "seat": 1, "action": "move", "vec": [0.0, 0.0]}
+  ]
+}

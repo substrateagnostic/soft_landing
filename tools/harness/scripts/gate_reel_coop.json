@@ -1,0 +1,19 @@
+{
+  "description": "B12 gate reel seg2c (pillow_fort boot, --pads=2, current HEAD 2026-08-19): live split-screen co-op beat -- both seats settle, then walk and jump simultaneously in the fort (pure-axis legs). Proves both halves render, both kids steer relative to their own cameras (D27), both are alive on screen at once. Expected receipts: HARNESS_EVENT streams for both seats, jumped/landed EVT lines for seats 1 and 2.",
+  "events": [
+    {"frame": 240, "seat": 1, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 240, "seat": 2, "action": "move", "vec": [0.0, -1.0]},
+    {"frame": 330, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 336, "seat": 1, "action": "jump", "type": "release"},
+    {"frame": 360, "seat": 2, "action": "jump", "type": "press"},
+    {"frame": 366, "seat": 2, "action": "jump", "type": "release"},
+    {"frame": 420, "seat": 1, "action": "move", "vec": [1.0, 0.0]},
+    {"frame": 420, "seat": 2, "action": "move", "vec": [-1.0, 0.0]},
+    {"frame": 510, "seat": 1, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 510, "seat": 2, "action": "move", "vec": [0.0, 0.0]},
+    {"frame": 540, "seat": 2, "action": "jump", "type": "press"},
+    {"frame": 546, "seat": 2, "action": "jump", "type": "release"},
+    {"frame": 570, "seat": 1, "action": "jump", "type": "press"},
+    {"frame": 576, "seat": 1, "action": "jump", "type": "release"}
+  ]
+}
